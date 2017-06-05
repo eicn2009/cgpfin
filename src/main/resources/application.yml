@@ -1,0 +1,16 @@
+banner:
+  location: boot.txt
+server:
+  port: 1111
+  contextPath: /cgpweb
+spring:
+  ds_sqlite:
+    url: jdbc:sqlite:/Users/cgp/Downloads/timeDB.sqlite
+    driverClassName: org.sqlite.JDBC
+logging:
+  level:
+    org:
+      springframework: trace
+config:
+  test:
+    value1: sdfsffs
