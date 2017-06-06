@@ -10,7 +10,12 @@ public class TimeLogController {
 	
 	@RequestMapping("/index")
 	public String index(){
-		return "/timelog/timelogIndex";
+		return "/timelog/timelogIndex.jsp";
+	}
+	@RequestMapping("/")
+	public String writelog(){
+		
+		return "/timelog/timelogWrite.jsp";
 	}
 
 }
