@@ -2,6 +2,7 @@ package cc.cgp.timelog.controller;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jdt.internal.compiler.ast.FalseLiteral;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,13 @@ public class TimeLogController {
 	 */
 	@RequestMapping("")
 	public String loghome(Model model){
-		model.addAttribute(new Timelog());
+		List<Map<String, Object>> list = tservice.getTimeLogListByDay(Calendar.getInstance());
+		model.addAttribute("list", list);
+		String endTime = (String) list.get(0).get("endtime");
+		Timelog timelog = new Timelog();
+		timelog.setStartTime(endTime);
+		model.addAttribute(timelog);
+		
 		return "/timelog/timelogWrite.jsp";
 	}
 	/**

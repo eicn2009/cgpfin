@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import cc.cgp.timelog.bean.Timelog;
+import cc.cgp.util.DateTimeUtils;
 
 @Service
 public class TimelogService {
@@ -17,7 +18,8 @@ public class TimelogService {
 	private JdbcTemplate jdt;
 
 	public List<Map<String, Object>> getTimeLogListByDay(Calendar calendar) {
-		List<Map<String, Object>> maplist = jdt.queryForList("select * from timelog");
+		String dateStr = DateTimeUtils.getDateStr(calendar.getTime());
+		List<Map<String, Object>> maplist = jdt.queryForList("select * from timelog where date(starttime)=? or date(endtime)=? or date(createtime)=? order by id desc",dateStr,dateStr,dateStr);
 		return maplist;
 	}
 
