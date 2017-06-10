@@ -1,4 +1,4 @@
-package cc.cgp.cgpfin.framework.db.sqlite;
+package cc.cgp.framework.db.sqlite;
 
 import javax.sql.DataSource;
 
@@ -17,7 +17,7 @@ public class SqliteJDBCTempleConfig {
 	
 //	生成jdbcTemple
 	@Bean(name="sqliteJDBCTemple")
-//	@Qualifier("sqliteJDBCTemple")
+	@Qualifier("sqliteJDBCTemple")
 	public JdbcTemplate getmysqlJDBCTemple(){
 		return new JdbcTemplate(ds);
 	}

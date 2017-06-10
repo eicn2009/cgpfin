@@ -1,4 +1,4 @@
-package cc.cgp.cgpfin.framework;
+package cc.cgp.framework;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 /**
  * web配置类
  */
-@ComponentScan("cc.cgp")
+//@ComponentScan("cc.cgp")
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	@Override // 默认首页
 	public void addViewControllers(ViewControllerRegistry registry) {

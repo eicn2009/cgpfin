@@ -1,4 +1,4 @@
-package cc.cgp.cgpfin.framework.db.sqlite;
+package cc.cgp.framework.db.sqlite;
 
 import javax.sql.DataSource;
 

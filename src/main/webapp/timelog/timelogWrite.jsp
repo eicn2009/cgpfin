@@ -63,7 +63,8 @@
 			setTimeCosted();
 		});
 		
-
+// 		进入页面后初始化计算耗时
+		setTimeCosted();
 	});
 </script>
 </head>
@@ -78,23 +79,32 @@
 					<tbody>
 						<tr>
 							<td colspan="5">设置当前默认日期：<input id="defaultDate"
-								name="defaultDate" value="${timelog.defaultDate}" />
+								name="defaultDate" value="${timelog.defaultDate}">
 							</td>
 
 						</tr>
 						<tr>
 							<td>开始时间：<input id="startTime" name="startTime"
-								value="${timelog.startTime}" /><br /> <input type="button"
-								id="getStartTime" value="使用当前时间" />
+								value="${timelog.startTime}" /> <input type="button"
+								id="getStartTime" value="使用当前时间">
 							</td>
 							<td>结束时间：<input id="endTime" name="endTime"
-								value="${timelog.endTime}" /><br /> <input type="button"
-								id="getEndTime" value="使用当前时间" />
+								value="${timelog.endTime}" /><input type="button"
+								id="getEndTime" value="使用当前时间">
 							</td>
 							<td>耗时：<input id="timeCosted" name="timeCosted"
-								value="${timelog.timeCosted}" readonly />分钟
+								value="${timelog.timeCosted}" readonly>分钟
 							</td>
-							<td>内容： <textarea id="content" name="content">${timelog.content}</textarea>
+						</tr>
+						<tr>
+							<td colspan="5">
+								<div class="row">
+									<div class="col-xs-1">内容:</div>
+									<div class="col-xs-8">
+										<textarea id="content" name="content" cols="90" rows="7">${timelog.content}</textarea>
+									</div>
+								</div>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="5">

@@ -19,42 +19,57 @@ import cc.cgp.util.DateTimeUtils;
 @Controller
 @RequestMapping("/timelog")
 public class TimeLogController {
-	
+
 	@Autowired
 	private TimelogService tservice;
-	
+
 	@RequestMapping("/index")
-	public String index(){
+	public String index() {
 		return "/timelog/timelogIndex.jsp";
 	}
+
 	/**
 	 * 进入列表和添加日志页
+	 * 
 	 * @param model
 	 * @return 2017年6月7日 下午4:09:40 by cgp
 	 */
 	@RequestMapping("")
-	public String loghome(Model model){
+	public String loghome(Model model) {
+//		获取当日 日志记录信息列表并输出到页面
 		List<Map<String, Object>> list = tservice.getTimeLogListByDay(Calendar.getInstance());
 		model.addAttribute("list", list);
-		String endTime = (String) list.get(0).get("endtime");
-		Timelog timelog = new Timelog();
-		timelog.setStartTime(endTime);
-		model.addAttribute(timelog);
 		
+//		获取下一步要增加的记录信息输出到页面
+		Timelog timelog = new Timelog();
+		if (list != null && list.size() > 0) {
+			String endTime = (String) list.get(0).get("endtime");
+			timelog.setStartTime(endTime);
+		}
+		model.addAttribute(timelog);
 		return "/timelog/timelogWrite.jsp";
 	}
+
 	/**
 	 * 添加事件
+	 * 
 	 * @param timelog
 	 * @param model
 	 * @return 2017年6月7日 下午4:10:05 by cgp
 	 */
-	@RequestMapping(value="/add",method=RequestMethod.POST)
-	public String writelog(Timelog timelog ,Model model){
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public String writelog(Timelog timelog, Model model) {
+//		增加一条日志记录
 		tservice.addOne(timelog);
-		model.addAttribute(timelog);
-		List list = tservice.getTimeLogListByDay(Calendar.getInstance());
-		model.addAttribute("list", list);
-		return "/timelog/timelogWrite.jsp";
+		
+//		获取下一步要增加的记录信息输出到页面
+//		timelog.setStartTime(timelog.getEndTime());
+//		timelog.setEndTime(DateTimeUtils.getDateTimeStr());
+//		model.addAttribute(timelog);
+//		
+//		获取当日 日志记录信息列表并输出到页面
+//		List list = tservice.getTimeLogListByDay(Calendar.getInstance());
+//		model.addAttribute("list", list);
+		return "redirect:/timelog";
 	}
 }

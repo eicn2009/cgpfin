@@ -10,7 +10,7 @@
 	<description>实现财务管理</description>
 
 	<properties>
-		<start-class>cc.cgp.cgpfin.Application</start-class>
+		<start-class>cc.cgp.Application</start-class>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<parent>
@@ -41,26 +41,27 @@
 			<artifactId>sqlite-jdbc</artifactId>
 		</dependency>
 		<!-- 用于支持热部署，便于开发调试 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.springframework.boot</groupId> -->
+<!-- 			<artifactId>spring-boot-devtools</artifactId> -->
+<!-- 			<scope>provided</scope> -->
+<!-- 		</dependency> -->
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>
-				spring-boot-starter-data-elasticsearch
-			</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.springframework.boot</groupId> -->
+<!-- 			<artifactId>spring-boot-configuration-processor</artifactId> -->
+<!-- 			<optional>true</optional> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.springframework.boot</groupId> -->
+<!-- 			<artifactId> -->
+<!-- 				spring-boot-starter-data-elasticsearch -->
+<!-- 			</artifactId> -->
+<!-- 		</dependency> -->
 	</dependencies>
 	<build>
 		<finalName>cgpfin</finalName>
@@ -69,28 +70,28 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
+<!-- 				<artifactId>maven-compiler-plugin</artifactId> -->
+<!-- 				<configuration> -->
+<!-- 					<source>1.8</source> -->
+<!-- 					<target>1.8</target> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
 		</plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>moko</id>
-			<name>moko</name>
-			<url>http://maven.moko.io/content/repositories/public</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>moko</id>
-			<name>moko</name>
-			<url>http://maven.moko.io/content/repositories/public</url>
-		</pluginRepository>
-	</pluginRepositories>
+<!-- 	<repositories> -->
+<!-- 		<repository> -->
+<!-- 			<id>moko</id> -->
+<!-- 			<name>moko</name> -->
+<!-- 			<url>http://maven.moko.io/content/repositories/public</url> -->
+<!-- 		</repository> -->
+<!-- 	</repositories> -->
+<!-- 	<pluginRepositories> -->
+<!-- 		<pluginRepository> -->
+<!-- 			<id>moko</id> -->
+<!-- 			<name>moko</name> -->
+<!-- 			<url>http://maven.moko.io/content/repositories/public</url> -->
+<!-- 		</pluginRepository> -->
+<!-- 	</pluginRepositories> -->
 </project>

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+//import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import cc.cgp.timelog.bean.Timelog;
@@ -19,7 +20,7 @@ public class TimelogService {
 
 	public List<Map<String, Object>> getTimeLogListByDay(Calendar calendar) {
 		String dateStr = DateTimeUtils.getDateStr(calendar.getTime());
-		List<Map<String, Object>> maplist = jdt.queryForList("select * from timelog where date(starttime)=? or date(endtime)=? or date(createtime)=? order by id desc",dateStr,dateStr,dateStr);
+		List<Map<String, Object>> maplist = jdt.queryForList("select * from timelog where date(starttime)=? or date(endtime)=? or date(createtime)=? order by endtime desc",dateStr,dateStr,dateStr);
 		return maplist;
 	}
 
