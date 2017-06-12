@@ -13,9 +13,7 @@ import ch.qos.logback.core.subst.Token.Type;
  *
  */
 public class Timelog {
-public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
+
 	//	开始时间
 	private String startTime;
 //	结束时间
@@ -28,7 +26,20 @@ public void setEndTime(String endTime) {
 	private String timeCosted;
 //	类型,默认为0：其他
 	private int type;
+//	timelog的id
+	private int id;
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
 	
 	public int getType() {
 		return type;

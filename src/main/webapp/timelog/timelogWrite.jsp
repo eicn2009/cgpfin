@@ -65,7 +65,49 @@
 		
 // 		进入页面后初始化计算耗时
 		setTimeCosted();
+		
+		if(typeof jQuery.timelog == "undefined"){jQuery.timelog = {};};
+// 		点击编辑操作
+		jQuery.timelog.editTimelog = function(id,startTime,endTime,timeCosted,content){
+			$("input[name='id']").val(id);
+			$("input[name='startTime']").val(startTime);
+			$("input[name='endTime']").val(endTime);
+			$("input[name='timeCosted']").val(timeCosted);
+			$("textarea[name='content']").text(content);
+			var date = new Date(startTime);
+			$("#defaultDate").val(date.pattern("yyyy-MM-dd"));
+			setTimeCosted();
+			$('html, body').animate({scrollTop:0}, 'slow'); 
+		}
+// 		点击删除操作
+		jQuery.timelog.deleteTimelog = function(id){
+			console.log("deleteTimelog");
+			if(!confirm("确定要删除该日志吗?")){
+				return;
+			}
+
+			$.ajax({
+				type:"post",
+				url:"/timelog/delete",
+				data: {"id":id},
+				dataType: "text",
+				success:function(data){
+					if(data == "success"){
+						window.location.reload();
+					}else{
+						alert("删除出错！");
+					}
+				}
+			});
+		}
+		
+// 		$("#defaultDate").on('input',function(e){  
+// 			console.log('Changed!')  
+// 			});  
+		
 	});
+	
+	
 </script>
 </head>
 
@@ -75,6 +117,7 @@
 		<div class="table-responsive">
 			<table class="table table-striped table-bordered ">
 				<form action="/timelog/add" method="post">
+				<input type="hidden" name="id" id="id" value="${timelog.id}">
 					<caption>timelog</caption>
 					<tbody>
 						<tr>
@@ -124,12 +167,16 @@
 				<tbody>
 					<c:forEach var="datamap" items="${list}">
 						<tr>
-							<td>${datamap.id}</td>
-							<td>${datamap.starttime}</td>
-							<td>${datamap.endtime}</td>
-							<td>${datamap.timecosted}</td>
-							<td>${datamap.content}</td>
-							<td>${datamap.createtime}</td>
+							<td style="width: 5%">${datamap.id}</td>
+							<td style="width: 15%">${datamap.starttime}</td>
+							<td style="width: 15%">${datamap.endtime}</td>
+							<td style="width: 5%">${datamap.timecosted}</td>
+							<td style="width: 35%">${datamap.content}</td>
+							<td style="width: 15%">${datamap.createtime}</td>
+							<td style="width: 10%"><button type="button"
+									id="editTimelog" onclick="jQuery.timelog.editTimelog('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.content}')">编辑</button>
+								<button type="button" id="deleteTimelog"
+									onclick="jQuery.timelog.deleteTimelog('${datamap.id}')">删除</button></td>
 						</tr>
 					</c:forEach>
 				</tbody>
