@@ -73,7 +73,7 @@
 			$("input[name='startTime']").val(startTime);
 			$("input[name='endTime']").val(endTime);
 			$("input[name='timeCosted']").val(timeCosted);
-			$("textarea[name='content']").text(content);
+			$("textarea[name='content']").val(content);
 			var date = new Date(startTime);
 			$("#defaultDate").val(date.pattern("yyyy-MM-dd"));
 			setTimeCosted();
