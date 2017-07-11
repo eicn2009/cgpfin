@@ -1,4 +1,7 @@
 <html>
+<script type="text/javascript">
+
+</script>
 <body>
 <h2>Hello index.jsp</h2>
 </body>
