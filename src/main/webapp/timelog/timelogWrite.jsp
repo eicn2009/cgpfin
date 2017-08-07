@@ -35,10 +35,7 @@
 				console.log("输入日期不合法退出！！");
 				return;
 			}
-
-
-			
-			var timeCosted = Math.round((endTime.getTime() - startTime.getTime())/1000/60);
+			var timeCosted = Math.round((endTime.getTime() - startTime.getTime()) / 1000/60);
 			$("#timeCosted").val(timeCosted);
 		}
 		// 获取当前时间设置开始时间后重新计算耗时
@@ -67,7 +64,7 @@
 				console.log("输入日期不合法退出！！");
 				return;
 			}
-			
+
 			var startTimeStr = $("#startTime").val();
 			var endTimeStr = $("#endTime").val();
 			var startTime = datetimefromStr(startTimeStr);
@@ -76,13 +73,46 @@
 			$("#endTime").val(defaultDate + " " + endTime.pattern("HH:mm:ss"));
 			setTimeCosted();
 		});
+
+		$("#todoItemContent").keyup(function() {
+			var todoItemContent = $("#todoItemContent").val(); 
+			
+			var ulcontent = $("#ulcontent"); 
+			$.ajax({
+				type:"get",
+				url:"/todoItem/getTodoItemListContent",
+				data: {"content":todoItemContent},
+				dataType: "json",
+				success:function(data){
+					var innerhtml = "<li id='selectcancel' onclick='selectcancel()'>取消</li>";
+// 						"<li id='selectliId12' onclick='selectli(selectli12)'>内容1</li>"
+					for(valitem in data){
+						innerhtml += "<li id='selectliId"+data[valitem].id;
+						innerhtml += "' onclick='selectli(" + data[valitem].id;
+						innerhtml += ")'>" + data[valitem].content ;
+						innerhtml += "</li>";
+					}
+					if(data.length>0){
+						ulcontent.html(innerhtml);
+						$("#todoItemList").css("display","block");
+					}else{
+						$("#todoItemList").css("display","none");
+					}
+					
+				}
+			});
+			
+		});
+		
 		
 // 		进入页面后初始化计算耗时
 		setTimeCosted();
 		
 		if(typeof jQuery.timelog == "undefined"){jQuery.timelog = {};};
 // 		点击编辑操作
-		jQuery.timelog.editTimelog = function(id,startTime,endTime,timeCosted,content){
+		jQuery.timelog.editTimelog = function(id,startTime,endTime,timeCosted,content,todoItemId,todoItemContent){
+			$("#todoItemId").val(todoItemId); 
+			$("#todoItemContent").val(todoItemContent); 
 			$("input[name='id']").val(id);
 			$("input[name='startTime']").val(startTime);
 			$("input[name='endTime']").val(endTime);
@@ -90,7 +120,9 @@
 			$("textarea[name='content']").val(content);
 			var date = new Date(startTime);
 			$("#defaultDate").val(date.pattern("yyyy-MM-dd"));
+			
 			setTimeCosted();
+			
 			$('html, body').animate({scrollTop:0}, 'slow'); 
 		}
 // 		点击删除操作
@@ -120,8 +152,18 @@
 // 			});  
 		
 	});
+
+	function selectcancel(){
+		$("#todoItemId").val(0); 
+		$("#todoItemContent").val("");
+		$("#todoItemList").css("display","none");
+	}
 	
-	
+	function selectli(id){
+		$("#todoItemId").val(id); 
+		$("#todoItemContent").val($("#selectliId"+id).text());
+		$("#todoItemList").css("display","none");
+	}
 </script>
 </head>
 
@@ -135,10 +177,24 @@
 					<caption>timelog</caption>
 					<tbody>
 						<tr>
-							<td colspan="5">设置当前默认日期：<input id="defaultDate"
+							<td colspan="1">设置当前默认日期：<input id="defaultDate"
 								name="defaultDate" value="${timelog.defaultDate}">
 							</td>
-
+							<td colspan="4">
+									<div style="display:inline;vertical-align: top;">对应事项：</div>
+									<div style="display:inline-block;">
+										<div style="width:300px">
+											<input id="todoItemId" type="hidden" name="todoItemId" value="${timelog.todoItemId}">
+											<input style="width:300px" id="todoItemContent" name="todoItemContent" 	value="${timelog.todoItemContent}">
+										</div>
+										<div style="position:relative;z-index:1">
+											<div id="todoItemList" style="display:none;border: 1px solid;position: absolute;width:300px;background-color: white">
+												<ul style="list-style-type: none;" id="ulcontent" >
+												</ul>
+											</div>
+										</div>
+									</div>
+							</td>
 						</tr>
 						<tr>
 							<td>开始时间：<input id="startTime" name="startTime"
@@ -155,7 +211,7 @@
 						</tr>
 						<tr>
 							<td colspan="5">
-								<div class="row">
+								<div class="row" style="position: relative">
 									<div class="col-xs-1">内容:</div>
 									<div class="col-xs-8">
 										<textarea id="content" name="content" cols="90" rows="7">${timelog.content}</textarea>
@@ -181,14 +237,14 @@
 				<tbody>
 					<c:forEach var="datamap" items="${list}">
 						<tr>
-							<td style="width: 5%">${datamap.id}</td>
+							<td style="width: 5%">${datamap.id}-${datamap.todoItemId}</td>
 							<td style="width: 15%">${datamap.starttime}</td>
 							<td style="width: 15%">${datamap.endtime}</td>
 							<td style="width: 5%">${datamap.timecosted}</td>
-							<td style="width: 35%">${datamap.content}</td>
+							<td style="width: 35%">${datamap.content}<span style="color:gray;font-size: 0.8em;">---('${datamap.todoItemContent}')</span></td>
 							<td style="width: 15%">${datamap.createtime}</td>
 							<td style="width: 10%"><button type="button"
-									id="editTimelog" onclick="jQuery.timelog.editTimelog('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.content}')">编辑</button>
+									id="editTimelog" onclick="jQuery.timelog.editTimelog('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.content}','${datamap.todoItemId}','${datamap.todoItemContent}')">编辑</button>
 								<button type="button" id="deleteTimelog"
 									onclick="jQuery.timelog.deleteTimelog('${datamap.id}')">删除</button></td>
 						</tr>

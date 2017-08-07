@@ -21,7 +21,7 @@ public class TimelogService {
 	public List<Map<String, Object>> getTimeLogListByDay(Calendar calendar) {
 		String dateStr = DateTimeUtils.getDateStr(calendar.getTime());
 		List<Map<String, Object>> maplist = jdt.queryForList(
-				"select * from timelog where (date(starttime)=? or date(endtime)=? or date(createtime)=?) and isdelete = 0 order by endtime desc",
+				"select ti.*,todo.id todoItemId,todo.content todoItemContent from timelog ti,todoitem todo where ti.todoitemid = todo.id and  (date(ti.starttime)=? or date(ti.endtime)=? or date(ti.createtime)=?) and ti.isdelete = 0 order by ti.endtime desc",
 				dateStr, dateStr, dateStr);
 		return maplist;
 	}
@@ -33,13 +33,13 @@ public class TimelogService {
 	public int addOrUpdateOne(Timelog timelog) {
 		int result = 0;
 		if (timelog.getId() > 0) {
-			result = jdt.update("update timelog set content=?,type=?,starttime=?,endtime=?,timecosted=? where id =? ",
+			result = jdt.update("update timelog set content=?,type=?,starttime=?,endtime=?,timecosted=?,todoitemid=? where id =? ",
 					timelog.getContent(), timelog.getType(), timelog.getStartTime(), timelog.getEndTime(),
-					timelog.getTimeCosted(),timelog.getId());
+					timelog.getTimeCosted(),timelog.getTodoItemId(),timelog.getId());
 		} else if (timelog.getId() == 0) {
-			result = jdt.update("insert into timelog(content,type,starttime,endtime,timecosted) values(?,?,?,?,?)",
+			result = jdt.update("insert into timelog(content,type,starttime,endtime,timecosted,todoitemid) values(?,?,?,?,?,?)",
 					timelog.getContent(), timelog.getType(), timelog.getStartTime(), timelog.getEndTime(),
-					timelog.getTimeCosted());
+					timelog.getTimeCosted(),timelog.getTodoItemId());
 		}
 		return result;
 	}

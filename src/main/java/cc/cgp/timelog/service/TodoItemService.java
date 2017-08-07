@@ -26,6 +26,14 @@ public class TodoItemService {
 	@Autowired
 	private JdbcTemplate jdt;
 
+	public List<Map<String, Object>> getTodoItemListByContent(String content) {
+		String sql = "select t.id,t.content from todoitem t where  t.isdelete = 0  and t.status = 8  and t.content like ? order by t.endtime desc";
+		List <Object> queryList=new  ArrayList<Object>();
+		queryList.add("%"+content+"%");
+		List<Map<String, Object>> maplist = jdt.queryForList(sql,queryList.toArray());
+		return maplist;
+	}
+	
 	public List<Map<String, Object>> getTodoItemListByDay(Calendar calendar) {
 		String dateStr = DateTimeUtils.getDateStr(calendar.getTime());
 		return getTodoItemListByDay(dateStr);
@@ -77,9 +85,11 @@ public class TodoItemService {
 		return jdt.update("update todoItem set isdelete = 1 where id = ?", id);
 	}
 
+	
 	public int addOrUpdateOne(TodoItem todoItem) {
 		int result = 0;
 		if(org.springframework.util.StringUtils.isEmpty(todoItem.getIstoday()))todoItem.setIstoday("0");
+				
 		if (todoItem.getId() > 0) {
 			result = jdt.update("update todoItem set content=?,type=?,starttime=?,endtime=?,timecosted=?,remark=?,istoday=?,status=?,updatetime=? where id =? ",
 					todoItem.getContent(), todoItem.getType(), todoItem.getStartTime(), todoItem.getEndTime(),

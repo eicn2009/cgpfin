@@ -29,6 +29,9 @@ public class Timelog {
 //	timelog的id
 	private int id;
 	
+	private int todoItemId;
+	private String todoItemContent;
+	
 	public int getId() {
 		return id;
 	}
@@ -88,5 +91,21 @@ public class Timelog {
 	}
 	public void timelog(String endTime) {
 		this.endTime = endTime;
+	}
+
+	public int getTodoItemId() {
+		return todoItemId;
+	}
+
+	public void setTodoItemId(int todoItemId) {
+		this.todoItemId = todoItemId;
+	}
+
+	public String getTodoItemContent() {
+		return todoItemContent;
+	}
+
+	public void setTodoItemContent(String todoItemContent) {
+		this.todoItemContent = todoItemContent;
 	}
 }

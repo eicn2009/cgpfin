@@ -36,7 +36,7 @@
 				return;
 			}
 			
-			var timeCosted = Math.round((endTime.getTime() - startTime.getTime())/1000/60/60);
+			var timeCosted = Math.round((endTime.getTime() - startTime.getTime()) /1000 /60/60);
 			$("#timeCosted").val(timeCosted);
 		}
 		
