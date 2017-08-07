@@ -1,5 +1,6 @@
 package cc.cgp.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,7 +11,7 @@ public class DateTimeUtils {
 	 	private static Logger logger = Logger.getLogger(DateTimeUtils.class);  
 	    private static String defaultDatePattern = null;  
 	    private static String timePattern = "HH:mm";  
-	    private static Calendar cale = Calendar.getInstance();  
+//	    private static Calendar cale = Calendar.getInstance();  
 	    public static final String TS_FORMAT = DateTimeUtils.getDatePattern() + " HH:mm:ss.S";  
 	    /** 日期格式yyyy-MM字符串常量 */  
 	    private static final String MONTH_FORMAT = "yyyy-MM";  
@@ -34,11 +35,11 @@ public class DateTimeUtils {
 	     */
 	    public static String getDateTimeStr() {  
 	        try {  
-	        	cale = Calendar.getInstance();
-	            return FMDATETIME.format(cale.getTime());  
+	            return FMDATETIME.format(Calendar.getInstance().getTime());  
 	        } catch (Exception e) {  
-	            logger.debug("DateUtil.getDateTime():" + e.getMessage());  
-	            return "";  
+	        	logger.debug(e.getMessage());  
+	        	logger.debug(e.getMessage());  
+	        	return "";  
 	        }  
 	    }  
 	    /**
@@ -47,11 +48,10 @@ public class DateTimeUtils {
 	     */
 	    public static String getTimeStr() {  
 	        try {  
-	        	cale = Calendar.getInstance();
-	            return FMTIME.format(cale.getTime());  
+	            return FMTIME.format(Calendar.getInstance().getTime());  
 	        } catch (Exception e) {  
-	            logger.debug("DateUtil.getDateTime():" + e.getMessage());  
-	            return "";  
+	            logger.debug(e.getMessage());  
+	        	return "";  
 	        }  
 	    }  
 	    /**
@@ -60,11 +60,10 @@ public class DateTimeUtils {
 	     */
 	    public static String getDateStr() {  
 	        try {  
-	        	cale = Calendar.getInstance();
-	            return FMDATE.format(cale.getTime());  
+	            return FMDATE.format(Calendar.getInstance().getTime());  
 	        } catch (Exception e) {  
-	            logger.debug("DateUtil.getDateTime():" + e.getMessage());  
-	            return "";  
+	            logger.debug(e.getMessage());  
+	        	return "";  
 	        }  
 	    }  
 	    
@@ -74,12 +73,10 @@ public class DateTimeUtils {
 	     */
 	    public static String getDateTimeStr(Date date) {  
 	        try {  
-	        	cale = Calendar.getInstance();
-	        	cale.setTime(date);
-	            return FMDATETIME.format(cale.getTime());  
+	            return FMDATETIME.format(date);  
 	        } catch (Exception e) {  
-	            logger.debug("DateUtil.getDateTime():" + e.getMessage());  
-	            return "";  
+	            logger.debug(e.getMessage());  
+	        	return "";  
 	        }  
 	    }  
 	    /**
@@ -88,12 +85,10 @@ public class DateTimeUtils {
 	     */
 	    public static String getTimeStr(Date date) {  
 	        try {  
-	        	cale = Calendar.getInstance();
-	        	cale.setTime(date);
-	            return FMTIME.format(cale.getTime());  
+	            return FMTIME.format(date);  
 	        } catch (Exception e) {  
-	            logger.debug("DateUtil.getDateTime():" + e.getMessage());  
-	            return "";  
+	            logger.debug(e.getMessage());  
+	        	return "";  
 	        }  
 	    }  
 	    /**
@@ -102,14 +97,59 @@ public class DateTimeUtils {
 	     */
 	    public static String getDateStr(Date date) {  
 	        try {  
-	        	cale = Calendar.getInstance();
-	        	cale.setTime(date);
-	            return FMDATE.format(cale.getTime());  
+	            return FMDATE.format(date);  
 	        } catch (Exception e) {  
-	            logger.debug("DateUtil.getDateTime():" + e.getMessage());  
-	            return "";  
+	            logger.debug(e.getMessage());  
+	        	return "";  
 	        }  
 	    }  
+	    /**
+	     * 格式为 yyyy-MM-dd 的字符串转化为日历对象
+	     * @param datestr
+	     * @return 2017年8月4日 下午4:00:11 by cgp
+	     */
+	    public static Calendar getDate(String datestr){
+	    	Calendar calendar = Calendar.getInstance();
+	    	try {
+				calendar.setTime(FMDATE.parse(datestr));
+			} catch (ParseException e) {
+				logger.debug(e.getMessage());  
+				return null;
+			}
+        	return calendar;
+	    }
+	    
+	    /**
+	     * 格式为 yyyy-MM-dd HH:mm:ss 的字符串转化为日历对象
+	     * @param datestr
+	     * @return 2017年8月4日 下午4:00:11 by cgp
+	     */
+	    public static Calendar getDatetime(String datestr){
+	    	Calendar calendar = Calendar.getInstance();
+	    	try {
+				calendar.setTime(FMDATETIME.parse(datestr));
+			} catch (ParseException e) {
+				logger.debug(e.getMessage());  
+				return null;
+			}
+        	return calendar;
+	    }
+	    
+	    /**
+	     * 格式为 HH:mm:ss 的字符串转化为日历对象
+	     * @param datestr
+	     * @return 2017年8月4日 下午4:00:11 by cgp
+	     */
+	    public static Calendar getTime(String datestr){
+	    	Calendar calendar = Calendar.getInstance();
+	    	try {
+				calendar.setTime(FMTIME.parse(datestr));
+			} catch (ParseException e) {
+				logger.debug(e.getMessage());  
+				return null;
+			}
+        	return calendar;
+	    }
 	    
 	    public static synchronized String getDatePattern() {  
 	        defaultDatePattern = DATE_FORMAT;  

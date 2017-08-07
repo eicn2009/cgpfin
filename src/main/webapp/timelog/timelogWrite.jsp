@@ -28,8 +28,16 @@
 			var defaultDate = $("#defaultDate").val();
 			var startTimeStr = $("#startTime").val();
 			var endTimeStr = $("#endTime").val();
-			var startTime = new Date(startTimeStr);
-			var endTime = new Date(endTimeStr);
+			var startTime = datetimefromStr(startTimeStr);
+			var endTime = datetimefromStr(endTimeStr);
+// 			输入日期不合法退出
+			if(startTime==null||endTime==null){
+				console.log("输入日期不合法退出！！");
+				return;
+			}
+
+
+			
 			var timeCosted = Math.round((endTime.getTime() - startTime.getTime())/1000/60);
 			$("#timeCosted").val(timeCosted);
 		}
@@ -54,10 +62,16 @@
 		// 修改默认日期后，同步修改开始时间和结束时间，并计算耗时
 		$("#defaultDate").keyup(function() {
 			var defaultDate = $("#defaultDate").val(); 
+// 			输入日期不合法退出
+			if(!checkDateStr(defaultDate)){
+				console.log("输入日期不合法退出！！");
+				return;
+			}
+			
 			var startTimeStr = $("#startTime").val();
 			var endTimeStr = $("#endTime").val();
-			var startTime = new Date(startTimeStr);
-			var endTime = new Date(endTimeStr);
+			var startTime = datetimefromStr(startTimeStr);
+			var endTime = datetimefromStr(endTimeStr);
 			$("#startTime").val(defaultDate + " " + startTime.pattern("HH:mm:ss"));
 			$("#endTime").val(defaultDate + " " + endTime.pattern("HH:mm:ss"));
 			setTimeCosted();

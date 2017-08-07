@@ -39,3 +39,35 @@ Date.prototype.pattern=function(fmt) {
     }         
     return fmt;         
 }  
+
+//将格式为 2014-08-12 09:25:24 字符串转化为date 如果字符串非法返回null
+function datetimefromStr(datetimeStr){
+	var reg = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/;
+	if(!reg.test(datetimeStr))return null;
+	datetimeStr=datetimeStr.replace(/-/g,':').replace(' ',':');
+	var time=datetimeStr.split(':');
+	var datetime = new Date(time[0],(time[1]-1),time[2],time[3],time[4],time[5]);
+	if(datetime.getDate()==datetimeStr.substring(8,10))return datetime;
+	return null;
+}
+
+
+//将格式为 2014-08-12 字符串转化为date 如果字符串非法返回null
+function datefromStr(datetimeStr){
+	var reg = /^(\d{4})-(\d{2})-(\d{2})/;
+	if(!reg.test(datetimeStr))return null;
+	datetimeStr=datetimeStr.replace(/-/g,':').replace(' ',':');
+	var time=datetimeStr.split(':');
+	var datetime = new Date(time[0],(time[1]-1),time[2]);
+	if(datetime.getDate()==datetimeStr.substring(8,10))return datetime;
+	return null;
+}
+
+function checkDateStr(date){
+	if(datefromStr(date)==null)return false;
+	return true;
+}
+function checkDatetimeStr(datetime){
+	if(datetimefromStr(datetime)==null)return false;
+	return true;
+}
