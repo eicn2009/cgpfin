@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 //import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import cc.cgp.timelog.bean.Timelog;
 import cc.cgp.util.DateTimeUtils;
@@ -20,6 +21,10 @@ public class TimelogService {
 
 	public List<Map<String, Object>> getTimeLogListByDay(Calendar calendar) {
 		String dateStr = DateTimeUtils.getDateStr(calendar.getTime());
+		return getTimeLogListByDay(dateStr);
+	}
+	
+	public List<Map<String, Object>> getTimeLogListByDay(String dateStr) {
 		List<Map<String, Object>> maplist = jdt.queryForList(
 				"select ti.*,todo.id todoItemId,todo.content todoItemContent from timelog ti,todoitem todo where ti.todoitemid = todo.id and  (date(ti.starttime)=? or date(ti.endtime)=? or date(ti.createtime)=?) and ti.isdelete = 0 order by ti.endtime desc",
 				dateStr, dateStr, dateStr);
@@ -42,5 +47,13 @@ public class TimelogService {
 					timelog.getTimeCosted(),timelog.getTodoItemId());
 		}
 		return result;
+	}
+
+	/**
+	 * @param timelogSearch
+	 * @return 2017年8月8日 上午11:34:19 by cgp
+	 */
+	public List<Map<String, Object>> getTimelogList(Timelog timelogSearch) {
+		return getTimeLogListByDay(timelogSearch.getDefaultDate());
 	}
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cc.cgp.timelog.bean.Timelog;
+import cc.cgp.timelog.bean.TodoItem;
 import cc.cgp.timelog.service.TimelogService;
 import cc.cgp.util.DateTimeUtils;
 
@@ -56,6 +57,26 @@ public class TimeLogController {
 			timelog.setStartTime(endTime);
 		}
 		model.addAttribute(timelog);
+		return "/timelog/timelogWrite.jsp";
+	}
+	
+	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	public String search(Timelog timelogSearch, Model model){
+		Calendar searchdate = DateTimeUtils.getDate(timelogSearch.getDefaultDate());
+		// 获取当日 日志记录信息列表并输出到页面
+		List<Map<String, Object>> list = tservice.getTimelogList(timelogSearch);
+		model.addAttribute("list", list);
+		// 获取下一步要增加的记录信息输出到页面
+		if (list != null && list.size() > 0) {
+			String endTime = (String) list.get(0).get("endtime");
+			timelogSearch.setStartTime(endTime);
+		}
+//		查询数据保持
+		model.addAttribute("timelogSearch",timelogSearch);
+//		编辑区数据保留默认时间TodoItem
+		Timelog timelogEdit = new Timelog();
+		timelogEdit.setDefaultDate(timelogSearch.getDefaultDate());
+		model.addAttribute("timelog",timelogEdit);
 		return "/timelog/timelogWrite.jsp";
 	}
 
@@ -99,4 +120,6 @@ public class TimeLogController {
 		// model.addAttribute("list", list);
 		return "redirect:/timelog";
 	}
+	
+	
 }

@@ -146,7 +146,10 @@
 				}
 			});
 		}
-		
+		jQuery.timelog.searchList = function(){
+// 			$("#searchform").attr("action","/todoItem/search")
+			$("#searchform").submit();
+		}
 // 		$("#defaultDate").on('input',function(e){  
 // 			console.log('Changed!')  
 // 			});  
@@ -169,6 +172,29 @@
 
 <body>
 	<div class="container">
+	
+		<!-- 		查询 开始 -->
+		<div class="table-responsive">
+					<table class="table table-hover table-striped table-bordered ">
+						<form id="searchform" action="/timelog/search" method="post">
+						<tbody>
+						<tr>
+							<td colspan="5">当前日期：
+							<input id="defaultDateSearch" name="defaultDate" value="${timelogSearch.defaultDate}">
+							</td>
+						</tr>
+						<tr>
+							<td colspan="5">
+								<input type="button" id="searchList" value="查询" onclick="jQuery.timelog.searchList()">
+							</td>
+
+						</tr>
+						</form>
+					</table>
+		</div>				
+<!-- 		查询 结束 -->
+		
+	
 		<!-- 		增加timelog记录 开始-->
 		<div class="table-responsive">
 			<table class="table table-striped table-bordered ">
@@ -234,6 +260,17 @@
 		<!-- 		展示默认时间当天的timelog历史记录 开始-->
 		<div class="table-responsive">
 			<table class="table table-hover table-striped table-bordered ">
+			<thead>
+			<tr>
+							<th style="width: 5%">id-todoid</th>
+							<th style="width: 15%">开始时间</th>
+							<th style="width: 15%">结束时间</th>
+							<th style="width: 5%">耗时(分钟)</th>
+							<th style="width: 35%">内容</th>
+							<th style="width: 15%">创建时间</th>
+							<th style="width: 10%">操作</th>
+						</tr>
+			</thead>
 				<tbody>
 					<c:forEach var="datamap" items="${list}">
 						<tr>
@@ -241,7 +278,7 @@
 							<td style="width: 15%">${datamap.starttime}</td>
 							<td style="width: 15%">${datamap.endtime}</td>
 							<td style="width: 5%">${datamap.timecosted}</td>
-							<td style="width: 35%">${datamap.content}<span style="color:gray;font-size: 0.8em;">---('${datamap.todoItemContent}')</span></td>
+							<td style="width: 35%">${datamap.content}<span style="color:gray;font-size: 0.8em;">---(${datamap.todoItemContent})</span></td>
 							<td style="width: 15%">${datamap.createtime}</td>
 							<td style="width: 10%"><button type="button"
 									id="editTimelog" onclick="jQuery.timelog.editTimelog('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.content}','${datamap.todoItemId}','${datamap.todoItemContent}')">编辑</button>

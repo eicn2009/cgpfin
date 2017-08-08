@@ -125,7 +125,7 @@
 		}
 		
 		jQuery.todoItem.searchList = function(){
-			$("#searchform").attr("action","/todoItem/search")
+// 			$("#searchform").attr("action","/todoItem/search")
 			$("#searchform").submit();
 		}
 		
