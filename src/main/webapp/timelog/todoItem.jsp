@@ -167,9 +167,9 @@
 							</td>
 							<td  colspan="1">
 							今日事项：
-							<input id="istoday" name="istoday" type="radio" value="-1" ${todoItemSearch.istoday=="-1"?"checked='checked'":"" }>不限
-							<input id="istoday" name="istoday" type="radio" value="0" ${todoItemSearch.istoday=="0"?"checked='checked'":"" }>否
-							<input id="istoday" name="istoday" type="radio" value="1" ${todoItemSearch.istoday=="1"?"checked='checked'":"" }>是
+							<input id="istodaySearch" name="istoday" type="radio" value="-1" ${todoItemSearch.istoday=="-1"?"checked='checked'":"" }>不限
+							<input id="istodaySearch" name="istoday" type="radio" value="0" ${todoItemSearch.istoday=="0"?"checked='checked'":"" }>否
+							<input id="istodaySearch" name="istoday" type="radio" value="1" ${todoItemSearch.istoday=="1"?"checked='checked'":"" }>是
 							</td>
 							
 						</tr>

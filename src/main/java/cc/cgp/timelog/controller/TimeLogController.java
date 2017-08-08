@@ -66,16 +66,17 @@ public class TimeLogController {
 		// 获取当日 日志记录信息列表并输出到页面
 		List<Map<String, Object>> list = tservice.getTimelogList(timelogSearch);
 		model.addAttribute("list", list);
-		// 获取下一步要增加的记录信息输出到页面
-		if (list != null && list.size() > 0) {
-			String endTime = (String) list.get(0).get("endtime");
-			timelogSearch.setStartTime(endTime);
-		}
+		
 //		查询数据保持
 		model.addAttribute("timelogSearch",timelogSearch);
 //		编辑区数据保留默认时间TodoItem
 		Timelog timelogEdit = new Timelog();
 		timelogEdit.setDefaultDate(timelogSearch.getDefaultDate());
+		// 获取下一步要增加的记录信息输出到页面
+		if (list != null && list.size() > 0) {
+			String endTime = (String) list.get(0).get("endtime");
+			timelogEdit.setStartTime(endTime);
+		}
 		model.addAttribute("timelog",timelogEdit);
 		return "/timelog/timelogWrite.jsp";
 	}

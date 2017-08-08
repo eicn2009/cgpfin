@@ -211,7 +211,7 @@
 									<div style="display:inline-block;">
 										<div style="width:300px">
 											<input id="todoItemId" type="hidden" name="todoItemId" value="${timelog.todoItemId}">
-											<input style="width:300px" id="todoItemContent" name="todoItemContent" 	value="${timelog.todoItemContent}">
+											<input style="width:300px" id="todoItemContent" name="todoItemContent" 	value="${timelog.todoItemContent}" autocomplete="off">
 										</div>
 										<div style="position:relative;z-index:1">
 											<div id="todoItemList" style="display:none;border: 1px solid;position: absolute;width:300px;background-color: white">
