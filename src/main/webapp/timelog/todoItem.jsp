@@ -88,7 +88,7 @@
 			$("input[name='startTime']").val(startTime);
 			$("input[name='endTime']").val(endTime);
 			$("input[name='timeCosted']").val(timeCosted);
-			$("input[name='content']").val(content);
+			$("#content").val(content);
 			$("textarea[name='remark']").val(remark);
 			var date = datetimefromStr(startTime);
 			$("#defaultDate").val(date.pattern("yyyy-MM-dd"));
@@ -101,7 +101,7 @@
 // 				$("#istoday").removeAttr("checked");
 				$("#istoday").attr("checked",false);
 			}
-			$('html, body').animate({scrollTop:100}, 'slow'); 
+			$('html, body').animate({scrollTop:200}, 'slow'); 
 		}
 // 		点击删除操作
 		jQuery.todoItem.deleteTodoItem = function(id){
@@ -175,7 +175,7 @@
 						</tr>
 						<tr>
 							<td>
-								内容：<input id="content" name="content" class="form-control" value="${todoItemSearch.content}" />
+								内容：<input id="contentSearch" name="content" class="form-control" value="${todoItemSearch.content}" />
 							</td>
 						</tr>
 						<tr>
@@ -301,13 +301,14 @@
 							<td style="width: 10%">${datamap.strstatus}</td>
 							<td style="width: 5%">${datamap.timecosted}</td>
 							<td style="width: 15%">${datamap.content}</td>
-							<td style="width: 20%">${datamap.remark}</td>
+							<td style="width: 20%" id="tdremark${datamap.id}">${datamap.remark}</td>
 							<td style="width: 14%">${datamap.createtime}</td>
 							<td style="width: 13%"><button type="button"
-									id="editTodoItem" onclick="jQuery.todoItem.editTodoItem('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.content}','${datamap.remark}','${datamap.type}','${datamap.status}','${datamap.istoday}')">编辑</button>
+									id="editTodoItem" onclick="var tdremark = $('#tdremark${datamap.id}').html();jQuery.todoItem.editTodoItem('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.content}',tdremark,'${datamap.type}','${datamap.status}','${datamap.istoday}')">编辑</button>
 								<button type="button" id="deleteTodoItem"
 									onclick="jQuery.todoItem.deleteTodoItem('${datamap.id}')">删除</button></td>
 						</tr>
+						
 					</c:forEach>
 				</tbody>
 			</table>
