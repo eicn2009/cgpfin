@@ -47,6 +47,7 @@ public class TodoItem {
 	private List<Map<String, Object>> typeList = TimelogConstant.TodoItemTypeList;
 	private List<Map<String, Object>> statusList = TimelogConstant.TodoItemStatusList;
 
+	private String StatusChecked;
 	
 	/**
 	 * 
@@ -150,6 +151,14 @@ public class TodoItem {
 
 	public String getStrStatus() {
 		return strStatus;
+	}
+
+	public String getStatusChecked() {
+		return StatusChecked;
+	}
+
+	public void setStatusChecked(String statusChecked) {
+		StatusChecked = statusChecked;
 	}
 
 	

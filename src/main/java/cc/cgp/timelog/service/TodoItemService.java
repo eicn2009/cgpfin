@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -25,9 +26,19 @@ import cc.cgp.util.DateTimeUtils;
 public class TodoItemService {
 	@Autowired
 	private JdbcTemplate jdt;
+	
+	@Autowired
+	private NamedParameterJdbcTemplate njdt;
+	
+//	String insertSql = "insert into test(name) values(:name)";  
+//    String selectSql = "select * from test where name=:name";  
+//    String deleteSql = "delete from test where name=:name";  
+//    Map<String, Object> paramMap = new HashMap<String, Object>();  
+//    paramMap.put("name", "name5");  
+//    namedParameterJdbcTemplate.update(insertSql, paramMap);  
 
 	public List<Map<String, Object>> getTodoItemListByContent(String content) {
-		String sql = "select t.id,t.content from todoitem t where  t.isdelete = 0  and t.status = 8  and t.content like ? order by t.endtime desc";
+		String sql = "select t.id,t.content from todoitem t where  t.isdelete = 0  and t.status = 8  and t.content like ? order by t.createtime desc";
 		List <Object> queryList=new  ArrayList<Object>();
 		queryList.add("%"+content+"%");
 		List<Map<String, Object>> maplist = jdt.queryForList(sql,queryList.toArray());
@@ -41,7 +52,7 @@ public class TodoItemService {
 	
 	public List<Map<String, Object>> getTodoItemListByDay(String dateStr) {
 		List<Map<String, Object>> maplist = jdt.queryForList(
-				"select t.*,tc1.content strstatus,tc.content strtype from timelog_constant tc,timelog_constant tc1,todoitem t where tc.keyid = t.type and tc.type = 2 and tc1.keyid = t.status and tc1.type = 3 and t.isdelete = 0  and (date(t.starttime)=? or date(t.endtime)=? or date(t.createtime)=?) order by t.endtime desc",
+				"select t.*,tc1.content strstatus,tc.content strtype from timelog_constant tc,timelog_constant tc1,todoitem t where tc.keyid = t.type and tc.type = 2 and tc1.keyid = t.status and tc1.type = 3 and t.isdelete = 0  and (date(t.starttime)=? or date(t.endtime)=? or date(t.createtime)=?) order by t.createtime desc",
 				dateStr, dateStr, dateStr);
 		return maplist;
 	}
@@ -60,22 +71,27 @@ public class TodoItemService {
 				sql += " and t.istoday = '1' ";
 			}else if("0".equals(todoItem.getIstoday())){
 				sql += " and t.istoday = '0' ";
+			}else if("2".equals(todoItem.getIstoday())){
+				sql += " and t.istoday = '2' ";
+			}else if("3".equals(todoItem.getIstoday())){
+				sql += " and t.istoday != '2' ";
+			}else if("-1".equals(todoItem.getIstoday())){
+				
 			}
 		}
 		if(todoItem.getType()!=0){
 			sql += " and t.type = ? ";
 			queryList.add(todoItem.getType());
 		}
-		if(todoItem.getStatus()!=0){
-			sql += " and t.status = ? ";
-			queryList.add(todoItem.getStatus());
+		if((!StringUtils.isEmpty(todoItem.getStatusChecked()))&&(!todoItem.getStatusChecked().contains("0"))){
+			sql += " and t.status in ("+ todoItem.getStatusChecked()  +") ";
 		}
 		if(!StringUtils.isEmpty(todoItem.getContent())){
 			sql += " and t.content like ? ";
 			queryList.add("%"+todoItem.getContent()+"%");
 		}
 		
-		sql += " order by t.id,t.endtime desc";
+		sql += " order by t.createtime desc";
 		
 		List<Map<String, Object>> maplist = jdt.queryForList(sql, queryList.toArray());
 		return maplist;

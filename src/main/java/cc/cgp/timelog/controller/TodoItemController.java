@@ -62,17 +62,27 @@ public class TodoItemController {
 		}else{
 			todoItem.setDefaultDate(defaultDateParam);
 		}
+		
+		
+		
+		TodoItem todoItemSearch = new TodoItem();
+		todoItemSearch.setDefaultDate("");
+		todoItemSearch.setIstoday("3");//非持续事项
+		todoItemSearch.setStatusChecked("1,8");
+		
 		// 获取当日 日志记录信息列表并输出到页面
-		List<Map<String, Object>> list = tservice.getTodoItemListByDay(defaultDateParam);
+		List<Map<String, Object>> list = tservice.getTodoItemList(todoItemSearch);
 		model.addAttribute("list", list);
 		// 获取下一步要增加的记录信息输出到页面
 		if (list != null && list.size() > 0) {
 			String endTime = (String) list.get(0).get("endtime");
 			todoItem.setStartTime(endTime);
 		}
+		
+		
 		model.addAttribute(todoItem);
 //		查询数据保持
-		model.addAttribute("todoItemSearch",todoItem);
+		model.addAttribute("todoItemSearch",todoItemSearch);
 		return "/timelog/todoItem.jsp";
 	}
 

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8"
 	language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -128,6 +129,16 @@
 // 			$("#searchform").attr("action","/todoItem/search")
 			$("#searchform").submit();
 		}
+		jQuery.todoItem.save = function(){
+// 			$("#searchform").attr("action","/todoItem/search")
+			var content = $("#content").val();
+			if(content==""){
+				alert("输入内容不能为空");
+				return false;
+			}
+			$("#editform").submit();
+		}
+		
 		
 // 		$("#defaultDate").on('input',function(e){  
 // 			console.log('Changed!')  
@@ -158,24 +169,28 @@
 										</c:forEach>
 									</select>
 							</td>
-							<td colspan="1">状态:
-									<select id="statusSearch" name="status" value="${todoItemSearch.status}">
-										<c:forEach var="map" items="${todoItem.statusList}">
-											<option value="${map.keyid}" ${todoItemSearch.status==map.keyid?'selected':''}  >${map.content}</option>
-										</c:forEach>
-									</select>
-							</td>
+							
 							<td  colspan="1">
-							今日事项：
 							<input id="istodaySearch" name="istoday" type="radio" value="-1" ${todoItemSearch.istoday=="-1"?"checked='checked'":"" }>不限
-							<input id="istodaySearch" name="istoday" type="radio" value="0" ${todoItemSearch.istoday=="0"?"checked='checked'":"" }>否
-							<input id="istodaySearch" name="istoday" type="radio" value="1" ${todoItemSearch.istoday=="1"?"checked='checked'":"" }>是
+							<input id="istodaySearch" name="istoday" type="radio" value="0" ${todoItemSearch.istoday=="0"?"checked='checked'":"" }>非今日事项
+							<input id="istodaySearch" name="istoday" type="radio" value="1" ${todoItemSearch.istoday=="1"?"checked='checked'":"" }>今日事项
+							<input id="istodaySearch" name="istoday" type="radio" value="2" ${todoItemSearch.istoday=="2"?"checked='checked'":"" }>日常事项
+							<input id="istodaySearch" name="istoday" type="radio" value="3" ${todoItemSearch.istoday=="3"?"checked='checked'":"" }>非日常事项
 							</td>
 							
 						</tr>
 						<tr>
-							<td>
+							<td colspan="5">
 								内容：<input id="contentSearch" name="content" class="form-control" value="${todoItemSearch.content}" />
+							</td>
+							
+						</tr>
+						<tr>
+							<td colspan="5">状态:
+									
+										<c:forEach var="map" items="${todoItem.statusList}">
+											<input type="checkbox" id="statusSearch${map.keyid}" name="statusChecked" value="${map.keyid}"  ${fn:containsIgnoreCase(todoItemSearch.statusChecked,map.keyid)?"checked='checked'":""}>${map.content}
+										</c:forEach>
 							</td>
 						</tr>
 						<tr>
@@ -228,7 +243,7 @@
 							</td>
 							
 							<td colspan="2">
-							<div class="col-xs-4">类型:
+							<div class="col-xs-3">类型:
 									<select id="type" name="type" value="${todoItem.type}">
 									<c:forEach var="map" items="${todoItem.typeList}">
 										<option value="${map.keyid}" ${todoItem.type==map.keyid?'selected':''}  >${map.content}</option>
@@ -236,15 +251,17 @@
 										
 									</select>
 							</div>
-							<div class="col-xs-5">状态:
+							<div class="col-xs-4">状态:
 									<select id="status" name="status" value="${todoItem.status}">
 										<c:forEach var="map" items="${todoItem.statusList}">
 											<option value="${map.keyid}" ${todoItem.status==map.keyid?'selected':''}  >${map.content}</option>
 										</c:forEach>
 									</select>
 							</div>	
-							<div class="col-xs-3">
-									今日事项：<input id="istoday" name="istoday" type="checkbox" value="1" ${todoItem.istoday=="1"?"checked='checked'":"" }>
+							<div class="col-xs-5">
+									<input id="istoday0" name="istoday" type="radio" value="0" ${todoItem.istoday=="0"?"checked='checked'":"" }>非今日事项
+									<input id="istoday0" name="istoday" type="radio" value="1" ${todoItem.istoday=="1"?"checked='checked'":"" }>今日事项
+									<input id="istoday0" name="istoday" type="radio" value="2" ${todoItem.istoday=="2"?"checked='checked'":"" }>日常事项
 							</div>	
 							</td>
 							
@@ -261,8 +278,7 @@
 						</tr>
 						<tr>
 							<td colspan="4">
-								<button type="submit">保存</button>
-
+								<input type="button" id="searchList" value="保存" onclick="jQuery.todoItem.save()">
 							</td>
 						</tr>
 						
