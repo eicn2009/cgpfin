@@ -97,10 +97,11 @@
 			$("#type").val(type);
 			$("#status").val(status);
 			if(istoday=="1"){
-				$("#istoday").attr("checked",true);
-			}else{
-// 				$("#istoday").removeAttr("checked");
-				$("#istoday").attr("checked",false);
+				$("#istoday1").attr("checked",true);
+			}else if(istoday=="2"){
+				$("#istoday2").attr("checked",true);
+			}else if(istoday=="0"){
+				$("#istoday0").attr("checked",true);
 			}
 			$('html, body').animate({scrollTop:200}, 'slow'); 
 		}
@@ -260,8 +261,8 @@
 							</div>	
 							<div class="col-xs-5">
 									<input id="istoday0" name="istoday" type="radio" value="0" ${todoItem.istoday=="0"?"checked='checked'":"" }>非今日事项
-									<input id="istoday0" name="istoday" type="radio" value="1" ${todoItem.istoday=="1"?"checked='checked'":"" }>今日事项
-									<input id="istoday0" name="istoday" type="radio" value="2" ${todoItem.istoday=="2"?"checked='checked'":"" }>日常事项
+									<input id="istoday1" name="istoday" type="radio" value="1" ${todoItem.istoday=="1"?"checked='checked'":"" }>今日事项
+									<input id="istoday2" name="istoday" type="radio" value="2" ${todoItem.istoday=="2"?"checked='checked'":"" }>日常事项
 							</div>	
 							</td>
 							
@@ -312,7 +313,12 @@
 						<tr>
 							<td style="width: 5%">${datamap.id}</td>
 							<td style="width: 14%">${datamap.endtime}<br>${datamap.starttime}</td>
-							<td style="width: 5%">${datamap.istoday=="1"?'今天':'否' }</td>
+							<td style="width: 5%">
+								<c:if test='${datamap.istoday=="0"}'>今天</c:if>
+								<c:if test='${datamap.istoday=="1"}'>否</c:if>
+								<c:if test='${datamap.istoday=="2"}'>日常</c:if>
+							
+							</td>
 							<td style="width: 5%">${datamap.strtype}</td>
 							<td style="width: 10%">${datamap.strstatus}</td>
 							<td style="width: 5%">${datamap.timecosted}</td>
