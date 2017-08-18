@@ -62,7 +62,7 @@ public class TodoItemController {
 		}else{
 			todoItem.setDefaultDate(defaultDateParam);
 		}
-		
+		todoItem.setStatus(1);
 		
 		
 		TodoItem todoItemSearch = new TodoItem();
@@ -140,6 +140,8 @@ public class TodoItemController {
 //		编辑区数据保留默认时间TodoItem
 		TodoItem todoItemEdit = new TodoItem();
 		todoItemEdit.setDefaultDate(todoItemSearch.getDefaultDate());
+		todoItemEdit.setStatus(1);
+		todoItemEdit.setIstoday("0");
 		model.addAttribute("todoItem",todoItemEdit);
 		return "/timelog/todoItem.jsp";
 	}

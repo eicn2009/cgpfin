@@ -269,7 +269,7 @@
 						</tr>
 						<tr>
 							<td colspan="3">
-								<div class="row">
+								<div class="row" style="margin:0">
 									<div class="col-xs-1">详细描述:</div>
 									<div class="col-xs-8">
 										<textarea id="remark" name="remark" cols="90" rows="7">${todoItem.remark}</textarea>

@@ -197,10 +197,11 @@
 	
 		<!-- 		增加timelog记录 开始-->
 		<div class="table-responsive">
-			<table class="table table-striped table-bordered ">
-				<form action="/timelog/add" method="post">
+		<form action="/timelog/add" method="post">
 				<input type="hidden" name="id" id="id" value="${timelog.id}">
-					<caption>timelog</caption>
+			<table class="table table-striped table-bordered ">
+				
+<%-- 					<caption>timelog</caption> --%>
 					<tbody>
 						<tr>
 							<td colspan="1">设置当前默认日期：<input id="defaultDate"
@@ -237,7 +238,7 @@
 						</tr>
 						<tr>
 							<td colspan="5">
-								<div class="row" style="position: relative">
+								<div class="row" style="position: relative;margin:0">
 									<div class="col-xs-1">内容:</div>
 									<div class="col-xs-8">
 										<textarea id="content" name="content" cols="90" rows="7">${timelog.content}</textarea>
@@ -252,8 +253,8 @@
 							</td>
 						</tr>
 					</tbody>
-				</form>
 			</table>
+			</form>
 		</div>
 		<!-- 		增加timelog记录 结束-->
 
