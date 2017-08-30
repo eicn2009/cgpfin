@@ -193,7 +193,7 @@
 
 	
 	
-		<!-- 		增加todoItem记录 开始-->
+		<!-- 		增加或编辑todoItem记录 开始-->
 		<div class="table-responsive">
 			<table class="table table-hover table-striped table-bordered ">
 				<form id="editform" action="/todoItem/add" method="post">
@@ -239,6 +239,15 @@
 							<td>优先级：<input id="priority" name="priority"
 								value="${todoItem.priority}" /> 
 							</td>
+							<td colspan="2">
+								<div class="col-xs-5">
+										<input id="istoday0" name="istoday" type="radio" value="0" ${todoItem.istoday=="0"?"checked='checked'":"" }>非今日事项
+										<input id="istoday1" name="istoday" type="radio" value="1" ${todoItem.istoday=="1"?"checked='checked'":"" }>今日事项
+										<input id="istoday2" name="istoday" type="radio" value="2" ${todoItem.istoday=="2"?"checked='checked'":"" }>日常事项
+								</div>	
+							</td>
+							
+							
 						</tr>
 						<tr>
 							<td  >
@@ -252,26 +261,23 @@
 							</td>
 							
 							<td colspan="2">
-							<div class="col-xs-3">类型:
-									<select id="type" name="type" value="${todoItem.type}">
-									<c:forEach var="map" items="${todoItem.typeList}">
-										<option value="${map.keyid}" ${todoItem.type==map.keyid?'selected':''}  >${map.content}</option>
-									</c:forEach>
-										
-									</select>
-							</div>
-							<div class="col-xs-4">状态:
-									<select id="status" name="status" value="${todoItem.status}">
-										<c:forEach var="map" items="${todoItem.statusList}">
-											<option value="${map.keyid}" ${todoItem.status==map.keyid?'selected':''}  >${map.content}</option>
-										</c:forEach>
-									</select>
-							</div>	
-							<div class="col-xs-5">
-									<input id="istoday0" name="istoday" type="radio" value="0" ${todoItem.istoday=="0"?"checked='checked'":"" }>非今日事项
-									<input id="istoday1" name="istoday" type="radio" value="1" ${todoItem.istoday=="1"?"checked='checked'":"" }>今日事项
-									<input id="istoday2" name="istoday" type="radio" value="2" ${todoItem.istoday=="2"?"checked='checked'":"" }>日常事项
-							</div>	
+								<div class="row">
+									<div class="col-xs-4">类型:
+											<select id="type" name="type" value="${todoItem.type}">
+											<c:forEach var="map" items="${todoItem.typeList}">
+												<option value="${map.keyid}" ${todoItem.type==map.keyid?'selected':''}  >${map.content}</option>
+											</c:forEach>
+												
+											</select>
+									</div>
+									<div class="col-xs-4">状态:
+											<select id="status" name="status" value="${todoItem.status}">
+												<c:forEach var="map" items="${todoItem.statusList}">
+													<option value="${map.keyid}" ${todoItem.status==map.keyid?'selected':''}  >${map.content}</option>
+												</c:forEach>
+											</select>
+									</div>	
+								</div>
 							</td>
 							
 						</tr>
@@ -304,10 +310,10 @@
 			<table class="table table-hover table-striped table-bordered ">
 			<thead>
 			<tr>
-							<th >事项信息</th>
-							<th  >开始时间-结束时间-耗时(小时)</th>
+							<th style="width:300px;">事项信息</th>
+							<th  style="width:400px;">开始时间-结束时间-耗时(小时)</th>
 							<th  >内容</th>
-							<th  >操作</th>
+							<th  style="width:80px;">操作</th>
 						</tr>
 			</thead>
 				<tbody style="font-size: 13px;">
@@ -371,7 +377,7 @@
 							
 							<td>
 								<div class="row" style="margin:0">
-									<div class="col-xs-12">${datamap.content}</div>
+									<div style="font-size: 14px;font-weight: bold;" class="col-xs-12">${datamap.content}</div>
 								</div>
 								<div class="row" style="margin:0">
 									<div class="col-xs-12"  id="tdremark${datamap.id}">${datamap.remark}</div>
