@@ -15,6 +15,7 @@
 <script src="/common/js/jquery-3.2.1.js"></script>
 <script src="/common/js/jquery-migrate-3.0.0.js"></script>
 <script src="/common/js/datetime.js"></script>
+<script src="/common/js/cgputils.js"></script>
 <script src="/common/js/bootstrap.js"></script>
 
 
@@ -24,41 +25,24 @@
 
 		console.log("todoItem start");
 
-		// 计算耗时
-		var setTimeCosted = function() {
-			var defaultDate = $("#defaultDate").val();
-			var startTimeStr = $("#startTime").val();
-			var endTimeStr = $("#endTime").val();
-			var startTime = datetimefromStr(startTimeStr);
-			var endTime = datetimefromStr(endTimeStr);
-// 			输入日期不合法退出
-			if(startTime==null||endTime==null){
-				console.log("输入日期不合法退出！！");
-				return;
-			}
-			
-			var timeCosted = Math.round((endTime.getTime() - startTime.getTime()) /1000 /60/60);
-			$("#timeCosted").val(timeCosted);
-		}
 		
 		// 获取当前时间设置开始时间后重新计算耗时
 		$("#getStartTime").click(function() {
 			$("#startTime").val((new Date()).pattern("yyyy-MM-dd HH:mm:ss"));
-			setTimeCosted();
 		});
 		// 获取当前时间设置结束时间后重新计算耗时
 		$("#getEndTime").click(function() {
 			$("#endTime").val((new Date()).pattern("yyyy-MM-dd HH:mm:ss"));
-			setTimeCosted();
 		});
-		// 手动设置开始时间后重新计算耗时
-		$("#startTime").keyup(function() {
-			setTimeCosted();
+		// 获取当前时间设置开始时间后重新计算耗时
+		$("#getPlanStartTime").click(function() {
+			$("#planStartTime").val((new Date()).pattern("yyyy-MM-dd HH:mm:ss"));
 		});
-		// 手动设置结束时间后重新计算耗时
-		$("#endTime").keyup(function() {
-			setTimeCosted();
+		// 获取当前时间设置结束时间后重新计算耗时
+		$("#getPlanEndTime").click(function() {
+			$("#planEndTime").val((new Date()).pattern("yyyy-MM-dd HH:mm:ss"));
 		});
+		
 		// 修改默认日期后，同步修改开始时间和结束时间，并计算耗时
 		$("#defaultDate").keyup(function() {
 			var defaultDate = $("#defaultDate").val(); 
@@ -76,24 +60,26 @@
 
 			$("#startTime").val(defaultDate + " " + startTime.pattern("HH:mm:ss"));
 			$("#endTime").val(defaultDate + " " + endTime.pattern("HH:mm:ss"));
-			setTimeCosted();
 		});
-		
-// 		进入页面后初始化计算耗时
-		setTimeCosted();
 		
 		if(typeof jQuery.todoItem == "undefined"){jQuery.todoItem = {};};
 // 		点击编辑操作
-		jQuery.todoItem.editTodoItem = function(id,startTime,endTime,timeCosted,content,remark,type,status,istoday,priority){
+		jQuery.todoItem.editTodoItem = function(id,startTime,endTime,timeCosted,planStartTime,planEndTime,planTimeCosted,content,remark,type,status,istoday,priority){
 			$("input[name='id']").val(id);
 			$("input[name='startTime']").val(startTime);
 			$("input[name='endTime']").val(endTime);
 			$("input[name='timeCosted']").val(timeCosted);
+			$("input[name='planStartTime']").val(planStartTime);
+			$("input[name='planEndTime']").val(planEndTime);
+			$("input[name='planTimeCosted']").val(planTimeCosted);
 			$("#content").val(content);
 			$("textarea[name='remark']").val(remark);
 			var date = datetimefromStr(startTime);
-			$("#defaultDate").val(date.pattern("yyyy-MM-dd"));
-			setTimeCosted();
+			if(date!=null){
+				$("#defaultDate").val(date.pattern("yyyy-MM-dd"));
+			}else{
+				$("#defaultDate").val("");
+			}
 			$("#type").val(type);
 			$("#status").val(status);
 			$("#priority").val(priority);
@@ -140,7 +126,6 @@
 			}
 			$("#editform").submit();
 		}
-		
 		
 // 		$("#defaultDate").on('input',function(e){  
 // 			console.log('Changed!')  
@@ -221,16 +206,33 @@
 							</td>
 						</tr>
 						<tr>
+							<td>计划开始时间：<input id="planStartTime" name="planStartTime"
+								value="${todoItem.planStartTime}" /> <input type="button"
+								id="getPlanStartTime" value="使用当前时间">
+								<input type="button" onclick="jQuery.cgp.utils.clear('planStartTime')" value="清空">
+							</td>
+							<td>计划结束时间：<input id="planEndTime" name="planEndTime"
+								value="${todoItem.planEndTime}" /> <input type="button"
+								id="getPlanEndTime" value="使用当前时间">
+								<input type="button" onclick="jQuery.cgp.utils.clear('planEndTime')" value="清空">
+							</td>
+							<td>计划耗时：<input id="planTimeCosted" name="planTimeCosted" 
+								value="${todoItem.planTimeCosted}" >小时
+							</td>
+						</tr>
+						<tr>
 							<td>开始时间：<input id="startTime" name="startTime"
 								value="${todoItem.startTime}" /> <input type="button"
 								id="getStartTime" value="使用当前时间">
+								<input type="button" onclick="jQuery.cgp.utils.clear('startTime')" value="清空">
 							</td>
 							<td>结束时间：<input id="endTime" name="endTime"
 								value="${todoItem.endTime}" /> <input type="button"
 								id="getEndTime" value="使用当前时间">
+								<input type="button" onclick="jQuery.cgp.utils.clear('endTime')" value="清空">
 							</td>
 							<td>耗时：<input id="timeCosted" name="timeCosted" 
-								value="${todoItem.timeCosted}" readonly>小时
+								value="${todoItem.timeCosted}" >小时
 							</td>
 						</tr>
 						<tr>
@@ -302,37 +304,81 @@
 			<table class="table table-hover table-striped table-bordered ">
 			<thead>
 			<tr>
-							<th style="width: 5%">id</th>
-							<th style="width: 14%">结束时间<br>开始时间</th>
-							<th style="width: 5%">是否今日事项</th>
-							<th style="width: 5%">事项类型</th>
-							<th style="width: 10%">优先级-事项状态</th>
-							<th style="width: 5%">耗时(小时)</th>
-							<th style="width: 15%">内容</th>
-							<th style="width: 20%">描述</th>
-							<th style="width: 14%">创建时间</th>
-							<th style="width: 13%">操作</th>
+							<th >事项信息</th>
+							<th  >开始时间-结束时间-耗时(小时)</th>
+							<th  >内容</th>
+							<th  >操作</th>
 						</tr>
 			</thead>
-				<tbody>
+				<tbody style="font-size: 13px;">
 					<c:forEach var="datamap" items="${list}">
 						<tr>
-							<td style="width: 5%">${datamap.id}</td>
-							<td style="width: 14%">${datamap.endtime}<br>${datamap.starttime}</td>
-							<td style="width: 5%">
-								<c:if test='${datamap.istoday=="0"}'>今天</c:if>
-								<c:if test='${datamap.istoday=="1"}'>否</c:if>
-								<c:if test='${datamap.istoday=="2"}'>日常</c:if>
-							
+							<td >
+								<table class="table table-hover table-striped table-bordered table-condensed">
+									<tr>
+										<td >ID:</td>
+										<td >${datamap.id}</td>
+									</tr>
+									<tr>
+										<td>是否今日事项:</td>
+										<td>
+											<c:if test='${datamap.istoday=="1"}'>今天</c:if>
+											<c:if test='${datamap.istoday=="0"}'>否</c:if>
+											<c:if test='${datamap.istoday=="2"}'>日常</c:if>
+										</td>
+									</tr>
+									<tr>
+										<td>类型:</td>
+										<td>${datamap.strtype}</td>
+									</tr>
+									<tr>
+										<td>优先级:</td>
+										<td>${datamap.priority}</td>
+									</tr>
+									<tr>
+										<td>状态:</td>
+										<td>${datamap.strstatus}</td>
+									</tr>
+									<tr>
+										<td>创建时间:</td>
+										<td>${datamap.createtime}</td>
+									</tr>
+									
+								</table>
 							</td>
-							<td style="width: 5%">${datamap.strtype}</td>
-							<td style="width: 10%">${datamap.priority}-${datamap.strstatus}</td>
-							<td style="width: 5%">${datamap.timecosted}</td>
-							<td style="width: 15%">${datamap.content}</td>
-							<td style="width: 20%" id="tdremark${datamap.id}">${datamap.remark}</td>
-							<td style="width: 14%">${datamap.createtime}</td>
-							<td style="width: 13%"><button type="button"
-									id="editTodoItem" onclick="var tdremark = $('#tdremark${datamap.id}').html();jQuery.todoItem.editTodoItem('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.content}',tdremark,'${datamap.type}','${datamap.status}','${datamap.istoday}','${datamap.priority}')">编辑</button>
+							<td >
+								<table class="table table-hover table-striped table-bordered table-condensed">
+									<tr>
+										<th >计划<br>/实际</td>
+										<th >开始时间</td>
+										<th >结束时间</td>
+										<th >耗时<br>(小时)</td>
+									</tr>
+									<tr>
+										<td>计划</td>
+										<td>${datamap.planstarttime}</td>
+										<td>${datamap.planendtime}</td>
+										<td>${datamap.plantimecosted}</td>
+									</tr>
+									<tr>
+										<td>实际</td>
+										<td>${datamap.starttime}</td>
+										<td>${datamap.endtime}</td>
+										<td>${datamap.timecosted}</td>
+									</tr>
+								</table>
+							</td>
+							
+							<td>
+								<div class="row" style="margin:0">
+									<div class="col-xs-12">${datamap.content}</div>
+								</div>
+								<div class="row" style="margin:0">
+									<div class="col-xs-12"  id="tdremark${datamap.id}">${datamap.remark}</div>
+								</div>
+							</td>
+							<td ><button type="button"
+									id="editTodoItem" onclick="var tdremark = $('#tdremark${datamap.id}').html();jQuery.todoItem.editTodoItem('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.planstarttime}','${datamap.planendtime}','${datamap.plantimecosted}','${datamap.content}',tdremark,'${datamap.type}','${datamap.status}','${datamap.istoday}','${datamap.priority}')">编辑</button>
 								<button type="button" id="deleteTodoItem"
 									onclick="jQuery.todoItem.deleteTodoItem('${datamap.id}')">删除</button></td>
 						</tr>

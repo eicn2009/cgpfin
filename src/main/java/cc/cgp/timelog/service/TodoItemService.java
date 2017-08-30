@@ -107,13 +107,15 @@ public class TodoItemService {
 		if(org.springframework.util.StringUtils.isEmpty(todoItem.getIstoday()))todoItem.setIstoday("0");
 				
 		if (todoItem.getId() > 0) {
-			result = jdt.update("update todoItem set content=?,type=?,starttime=?,endtime=?,timecosted=?,remark=?,istoday=?,priority=?,status=?,updatetime=? where id =? ",
+			result = jdt.update("update todoItem set content=?,type=?,starttime=?,endtime=?,timecosted=?,planstarttime=?,planendtime=?,plantimecosted=?,remark=?,istoday=?,priority=?,status=?,updatetime=? where id =? ",
 					todoItem.getContent(), todoItem.getType(), todoItem.getStartTime(), todoItem.getEndTime(),
-					todoItem.getTimeCosted(),todoItem.getRemark(),todoItem.getIstoday(),todoItem.getPriority(),todoItem.getStatus(),DateTimeUtils.getDateTimeStr(),todoItem.getId());
+					todoItem.getTimeCosted(),todoItem.getPlanStartTime(),todoItem.getPlanEndTime(),todoItem.getPlanTimeCosted(),
+					todoItem.getRemark(),todoItem.getIstoday(),todoItem.getPriority(),todoItem.getStatus(),DateTimeUtils.getDateTimeStr(),todoItem.getId());
 		} else if (todoItem.getId() == 0) {
-			result = jdt.update("insert into todoItem(content,type,starttime,endtime,timecosted,remark,istoday,priority,status) values(?,?,?,?,?,?,?,?,?)",
+			result = jdt.update("insert into todoItem(content,type,starttime,endtime,timecosted,planstarttime,planendtime,plantimecosted,remark,istoday,priority,status) values(?,?,?,?,?,?,?,?,?,?,?,?)",
 					todoItem.getContent(), todoItem.getType(), todoItem.getStartTime(), todoItem.getEndTime(),
-					todoItem.getTimeCosted(),todoItem.getRemark(),todoItem.getIstoday(),todoItem.getPriority(),todoItem.getStatus());
+					todoItem.getTimeCosted(),todoItem.getPlanStartTime(),todoItem.getPlanEndTime(),todoItem.getPlanTimeCosted(),
+					todoItem.getRemark(),todoItem.getIstoday(),todoItem.getPriority(),todoItem.getStatus());
 		}
 		return result;
 	}

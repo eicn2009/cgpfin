@@ -20,14 +20,23 @@ public class TodoItem {
 	private String startTime;
 //	结束时间
 	private String endTime;
+//	消耗时间，小时为单位
+	private String timeCosted;
+	
+//	开始时间
+	private String planStartTime;
+//	结束时间
+	private String planEndTime;
+//	消耗时间，小时为单位
+	private String planTimeCosted;
+	
 //	默认日期
 	private String defaultDate;
 //	内容简述
 	private String content;
 //	内容详情
 	private String remark;
-//	消耗时间，小时为单位
-	private String timeCosted;
+
 //	类型,默认为0：其他
 	private int type;
 //	todoitem的id
@@ -58,6 +67,8 @@ public class TodoItem {
 		defaultDate = DateTimeUtils.getDateStr();
 		startTime = DateTimeUtils.getDateTimeStr();
 		endTime = DateTimeUtils.getDateTimeStr();
+		planStartTime = DateTimeUtils.getDateTimeStr();
+		planEndTime = DateTimeUtils.getDateTimeStr();
 	}
 	
 	public String getStartTime() {
@@ -169,6 +180,30 @@ public class TodoItem {
 
 	public void setPriority(int priority) {
 		this.priority = priority;
+	}
+
+	public String getPlanStartTime() {
+		return planStartTime;
+	}
+
+	public void setPlanStartTime(String planStartTime) {
+		this.planStartTime = planStartTime;
+	}
+
+	public String getPlanEndTime() {
+		return planEndTime;
+	}
+
+	public void setPlanEndTime(String planEndTime) {
+		this.planEndTime = planEndTime;
+	}
+
+	public String getPlanTimeCosted() {
+		return planTimeCosted;
+	}
+
+	public void setPlanTimeCosted(String planTimeCosted) {
+		this.planTimeCosted = planTimeCosted;
 	}
 
 	

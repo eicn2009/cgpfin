@@ -63,7 +63,7 @@ public class TodoItemController {
 			todoItem.setDefaultDate(defaultDateParam);
 		}
 		todoItem.setStatus(1);
-		
+		todoItem.setIstoday("0");
 		
 		TodoItem todoItemSearch = new TodoItem();
 		todoItemSearch.setDefaultDate("");
@@ -73,13 +73,6 @@ public class TodoItemController {
 		// 获取当日 日志记录信息列表并输出到页面
 		List<Map<String, Object>> list = tservice.getTodoItemList(todoItemSearch);
 		model.addAttribute("list", list);
-		// 获取下一步要增加的记录信息输出到页面
-		if (list != null && list.size() > 0) {
-			String endTime = (String) list.get(0).get("endtime");
-			todoItem.setStartTime(endTime);
-		}
-		
-		
 		model.addAttribute(todoItem);
 //		查询数据保持
 		model.addAttribute("todoItemSearch",todoItemSearch);
