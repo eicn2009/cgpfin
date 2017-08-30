@@ -84,7 +84,7 @@
 		
 		if(typeof jQuery.todoItem == "undefined"){jQuery.todoItem = {};};
 // 		点击编辑操作
-		jQuery.todoItem.editTodoItem = function(id,startTime,endTime,timeCosted,content,remark,type,status,istoday){
+		jQuery.todoItem.editTodoItem = function(id,startTime,endTime,timeCosted,content,remark,type,status,istoday,priority){
 			$("input[name='id']").val(id);
 			$("input[name='startTime']").val(startTime);
 			$("input[name='endTime']").val(endTime);
@@ -96,6 +96,7 @@
 			setTimeCosted();
 			$("#type").val(type);
 			$("#status").val(status);
+			$("#priority").val(priority);
 			if(istoday=="1"){
 				$("#istoday1").attr("checked",true);
 			}else if(istoday=="2"){
@@ -233,6 +234,11 @@
 							</td>
 						</tr>
 						<tr>
+							<td>优先级：<input id="priority" name="priority"
+								value="${todoItem.priority}" /> 
+							</td>
+						</tr>
+						<tr>
 							<td  >
 								<div class="row">
 									<div class="col-xs-2">内容:</div>
@@ -302,7 +308,7 @@
 							<th style="width: 5%">事项类型</th>
 							<th style="width: 10%">事项进度</th>
 							<th style="width: 5%">耗时(小时)</th>
-							<th style="width: 15%">内容</th>
+							<th style="width: 15%">(优先级)内容</th>
 							<th style="width: 20%">描述</th>
 							<th style="width: 14%">创建时间</th>
 							<th style="width: 13%">操作</th>
@@ -322,11 +328,11 @@
 							<td style="width: 5%">${datamap.strtype}</td>
 							<td style="width: 10%">${datamap.strstatus}</td>
 							<td style="width: 5%">${datamap.timecosted}</td>
-							<td style="width: 15%">${datamap.content}</td>
+							<td style="width: 15%">(${datamap.priority})${datamap.content}</td>
 							<td style="width: 20%" id="tdremark${datamap.id}">${datamap.remark}</td>
 							<td style="width: 14%">${datamap.createtime}</td>
 							<td style="width: 13%"><button type="button"
-									id="editTodoItem" onclick="var tdremark = $('#tdremark${datamap.id}').html();jQuery.todoItem.editTodoItem('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.content}',tdremark,'${datamap.type}','${datamap.status}','${datamap.istoday}')">编辑</button>
+									id="editTodoItem" onclick="var tdremark = $('#tdremark${datamap.id}').html();jQuery.todoItem.editTodoItem('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.content}',tdremark,'${datamap.type}','${datamap.status}','${datamap.istoday}','${datamap.priority}')">编辑</button>
 								<button type="button" id="deleteTodoItem"
 									onclick="jQuery.todoItem.deleteTodoItem('${datamap.id}')">删除</button></td>
 						</tr>

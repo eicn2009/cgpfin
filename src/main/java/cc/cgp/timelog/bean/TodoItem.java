@@ -40,6 +40,8 @@ public class TodoItem {
 	private String istoday;
 //	状态变更时间（编辑时间）
 	private String updateTime;
+//	事项的优先级 用于排序等
+	private int priority;
 	
 	private String strType;
 	private String strStatus;
@@ -159,6 +161,14 @@ public class TodoItem {
 
 	public void setStatusChecked(String statusChecked) {
 		StatusChecked = statusChecked;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 
 	
