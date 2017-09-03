@@ -65,10 +65,10 @@ public class TodoItem {
 	 */
 	public TodoItem() {
 		defaultDate = DateTimeUtils.getDateStr();
-		startTime = DateTimeUtils.getDateTimeStr();
-		endTime = DateTimeUtils.getDateTimeStr();
-		planStartTime = DateTimeUtils.getDateTimeStr();
-		planEndTime = DateTimeUtils.getDateTimeStr();
+//		startTime = DateTimeUtils.getDateTimeStr();
+//		endTime = DateTimeUtils.getDateTimeStr();
+//		planStartTime = DateTimeUtils.getDateTimeStr();
+//		planEndTime = DateTimeUtils.getDateTimeStr();
 	}
 	
 	public String getStartTime() {
