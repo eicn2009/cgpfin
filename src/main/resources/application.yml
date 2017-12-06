@@ -12,6 +12,8 @@ logging:
   level:
     org:
       springframework: debug
+    cc:
+      cgp: debug
 config:
   test:
     value1: sdfsffs

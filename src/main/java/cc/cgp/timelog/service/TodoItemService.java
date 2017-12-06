@@ -27,16 +27,6 @@ public class TodoItemService {
 	@Autowired
 	private JdbcTemplate jdt;
 	
-	@Autowired
-	private NamedParameterJdbcTemplate njdt;
-	
-//	String insertSql = "insert into test(name) values(:name)";  
-//    String selectSql = "select * from test where name=:name";  
-//    String deleteSql = "delete from test where name=:name";  
-//    Map<String, Object> paramMap = new HashMap<String, Object>();  
-//    paramMap.put("name", "name5");  
-//    namedParameterJdbcTemplate.update(insertSql, paramMap);  
-
 	public List<Map<String, Object>> getTodoItemListByContent(String content) {
 		String sql = "select t.id,t.content from todoitem t where  t.isdelete = 0  and t.status = 8  and t.content like ? order by t.priority desc,t.createtime desc";
 		List <Object> queryList=new  ArrayList<Object>();
