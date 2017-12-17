@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cc.cgp.timelog.bean.Timelog;
 import cc.cgp.timelog.bean.TodoItem;
 import cc.cgp.timelog.service.TimelogService;
-import cc.cgp.util.DateTimeUtils;
+import cc.cgp.util.DateTimeUtil;
 
 @Controller
 @RequestMapping("/timelog")
@@ -62,7 +62,7 @@ public class TimeLogController {
 	
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	public String search(Timelog timelogSearch, Model model){
-		Calendar searchdate = DateTimeUtils.getDate(timelogSearch.getDefaultDate());
+		Calendar searchdate = DateTimeUtil.getDate(timelogSearch.getDefaultDate());
 		// 获取当日 日志记录信息列表并输出到页面
 		List<Map<String, Object>> list = tservice.getTimelogList(timelogSearch);
 		model.addAttribute("list", list);

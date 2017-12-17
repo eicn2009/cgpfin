@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import cc.cgp.timelog.bean.TodoItem;
-import cc.cgp.util.DateTimeUtils;
+import cc.cgp.util.DateTimeUtil;
 
 /**
  * cc.cgp.timelog.service.TodoItemService.java
@@ -36,7 +36,7 @@ public class TodoItemService {
 	}
 	
 	public List<Map<String, Object>> getTodoItemListByDay(Calendar calendar) {
-		String dateStr = DateTimeUtils.getDateStr(calendar.getTime());
+		String dateStr = DateTimeUtil.getDateStr(calendar.getTime());
 		return getTodoItemListByDay(dateStr);
 	}
 	
@@ -100,7 +100,7 @@ public class TodoItemService {
 			result = jdt.update("update todoItem set content=?,type=?,starttime=?,endtime=?,timecosted=?,planstarttime=?,planendtime=?,plantimecosted=?,remark=?,istoday=?,priority=?,status=?,updatetime=? where id =? ",
 					todoItem.getContent(), todoItem.getType(), todoItem.getStartTime(), todoItem.getEndTime(),
 					todoItem.getTimeCosted(),todoItem.getPlanStartTime(),todoItem.getPlanEndTime(),todoItem.getPlanTimeCosted(),
-					todoItem.getRemark(),todoItem.getIstoday(),todoItem.getPriority(),todoItem.getStatus(),DateTimeUtils.getDateTimeStr(),todoItem.getId());
+					todoItem.getRemark(),todoItem.getIstoday(),todoItem.getPriority(),todoItem.getStatus(),DateTimeUtil.getDateTimeStr(),todoItem.getId());
 		} else if (todoItem.getId() == 0) {
 			result = jdt.update("insert into todoItem(content,type,starttime,endtime,timecosted,planstarttime,planendtime,plantimecosted,remark,istoday,priority,status) values(?,?,?,?,?,?,?,?,?,?,?,?)",
 					todoItem.getContent(), todoItem.getType(), todoItem.getStartTime(), todoItem.getEndTime(),

@@ -5,7 +5,7 @@ package cc.cgp.timelog.bean;
 
 import org.springframework.stereotype.Component;
 
-import cc.cgp.util.DateTimeUtils;
+import cc.cgp.util.DateTimeUtil;
 import ch.qos.logback.core.subst.Token.Type;
 
 /**
@@ -69,9 +69,9 @@ public class Timelog {
 	}
 
 	public Timelog(){
-		defaultDate = DateTimeUtils.getDateStr();
-		startTime = DateTimeUtils.getDateTimeStr();
-		endTime = DateTimeUtils.getDateTimeStr();
+		defaultDate = DateTimeUtil.getDateStr();
+		startTime = DateTimeUtil.getDateTimeStr();
+		endTime = DateTimeUtil.getDateTimeStr();
 	}
 	
 	public String getDefaultDate() {

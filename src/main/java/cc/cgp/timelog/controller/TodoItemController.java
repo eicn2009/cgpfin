@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cc.cgp.timelog.bean.TodoItem;
 import cc.cgp.timelog.constant.TimelogConstant;
 import cc.cgp.timelog.service.TodoItemService;
-import cc.cgp.util.DateTimeUtils;
+import cc.cgp.util.DateTimeUtil;
 
 /**
  * cc.cgp.timelog.controller.TodoItemController.java
@@ -58,7 +58,7 @@ public class TodoItemController {
 	public String loghome(TodoItem todoItem, Model model,@RequestParam(required=false) String defaultDateParam) {
 		//获取默认日期		
 		if(StringUtils.isEmpty(defaultDateParam)){
-			defaultDateParam = DateTimeUtils.getDateStr();
+			defaultDateParam = DateTimeUtil.getDateStr();
 		}else{
 			todoItem.setDefaultDate(defaultDateParam);
 		}
@@ -119,7 +119,7 @@ public class TodoItemController {
 	
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	public String search(TodoItem todoItemSearch, Model model){
-		Calendar searchdate = DateTimeUtils.getDate(todoItemSearch.getDefaultDate());
+		Calendar searchdate = DateTimeUtil.getDate(todoItemSearch.getDefaultDate());
 		// 获取当日 日志记录信息列表并输出到页面
 		List<Map<String, Object>> list = tservice.getTodoItemList(todoItemSearch);
 		model.addAttribute("list", list);

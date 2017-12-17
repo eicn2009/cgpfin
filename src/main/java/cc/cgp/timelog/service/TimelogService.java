@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import cc.cgp.timelog.bean.Timelog;
-import cc.cgp.util.DateTimeUtils;
+import cc.cgp.util.DateTimeUtil;
 
 @Service
 public class TimelogService {
@@ -20,7 +20,7 @@ public class TimelogService {
 	private JdbcTemplate jdt;
 
 	public List<Map<String, Object>> getTimeLogListByDay(Calendar calendar) {
-		String dateStr = DateTimeUtils.getDateStr(calendar.getTime());
+		String dateStr = DateTimeUtil.getDateStr(calendar.getTime());
 		return getTimeLogListByDay(dateStr);
 	}
 	

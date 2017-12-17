@@ -9,7 +9,7 @@ import java.util.Map;
 
 
 import cc.cgp.timelog.constant.TimelogConstant;
-import cc.cgp.util.DateTimeUtils;
+import cc.cgp.util.DateTimeUtil;
 
 /**
  * cc.cgp.timelog.bean.TodoItem.java
@@ -64,7 +64,7 @@ public class TodoItem {
 	 * 
 	 */
 	public TodoItem() {
-		defaultDate = DateTimeUtils.getDateStr();
+		defaultDate = DateTimeUtil.getDateStr();
 //		startTime = DateTimeUtils.getDateTimeStr();
 //		endTime = DateTimeUtils.getDateTimeStr();
 //		planStartTime = DateTimeUtils.getDateTimeStr();
