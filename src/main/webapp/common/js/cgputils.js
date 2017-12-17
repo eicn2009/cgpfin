@@ -1,12 +1,8 @@
-//依赖jquery
-(function(){
-	if(typeof jQuery.cgp == "undefined"){jQuery.cgp = {};};
-	if(typeof jQuery.cgp.utils == "undefined"){jQuery.cgp.utils = {};};
-	jQuery.cgp.utils.clear = function(id){
-		var e = $("#"+id);
-		if(e!=null && e!="undefined"){
-			e.val("");
-		}
-	};
-	
-})(jQuery);
+/**
+ * 纯js工具
+ */
+
+//判断是否为数字，是返回true 否则返回false
+function checknum(num) {
+	return !isNaN(parseFloat(num)); 
+}

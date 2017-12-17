@@ -13,7 +13,8 @@ logging:
     org:
       springframework: debug
     cc:
-      cgp: debug
+      cgp: 
+        fin: debug
 config:
   test:
     value1: sdfsffs

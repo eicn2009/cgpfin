@@ -1,106 +1,79 @@
-/*
- Navicat Premium Data Transfer
+CREATE TABLE "main"."fin_account" (
+	 "ac_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	 "ac_name" TEXT,
+	 "ac_desc" TEXT,
+	 "ac_balance" real(11,2) DEFAULT 0,
+	 "ac_init_balance" real(11,2) DEFAULT 0,
+	 "ac_canused" INTEGER DEFAULT 1,
+	 "ac_isdelete" INTEGER DEFAULT 0,
+	 "ac_create_time" INTEGER DEFAULT (datetime('now', 'localtime')),
+	 "ac_update_time" INTEGER DEFAULT (datetime('now', 'localtime')),
+	 "actype_id" INTEGER,
+	 "org_id" INTEGER DEFAULT 0,
+	 "user_id" INTEGER DEFAULT 1
+);
 
- Source Server         : timeDB-dev
- Source Server Type    : SQLite
- Source Server Version : 3008004
- Source Database       : main
+CREATE TABLE "main"."fin_account_type" (
+	 "actype_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	 "actype_name" TEXT,
+	 "actype_desc" TEXT,
+	 "actype_create_time" INTEGER DEFAULT (datetime('now', 'localtime')),
+	 "actype_isdelete" INTEGER DEFAULT 0
+);
+CREATE TABLE "main"."fin_account_inout" (
+	 "acio_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	 "acio_desc" TEXT,
+	 "acio_money" real(11,2),
+	 "acio_balance" real(11,2),
+	 "acio_happened_time" INTEGER DEFAULT (datetime('now', 'localtime')),
+	 "acio_create_time" INTEGER DEFAULT (datetime('now', 'localtime')),
+	 "acio_isdelete" INTEGER DEFAULT 0,
+	 "ac_id" INTEGER,
+	 "user_id" INTEGER,
+	 "aciotype_id" TEXT
+);
 
- Target Server Type    : SQLite
- Target Server Version : 3008004
- File Encoding         : utf-8
-
-CREATE TABLE "cgp_fin_account" (
-	 "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	 "name" TEXT,
-	 "desc" TEXT,
-	 "type" INTEGER,
-	 "orgid" INTEGER DEFAULT 0,
-	 "balance" real DEFAULT 0,
-	 "initbalance" real DEFAULT 0,
-	 "userid" INTEGER DEFAULT 1,
-	 "canused" INTEGER DEFAULT 1,
-	 "isdelete" INTEGER DEFAULT 0,
-	 "createtime" INTEGER DEFAULT (datetime('now', 'localtime')),
-	 "updatetime" INTEGER DEFAULT (datetime('now', 'localtime'))
+CREATE TABLE "main"."fin_account_inout_type" (
+	 "aciotype_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	 "aciotype_inorout" integer DEFAULT 0,
+	 "aciotype_name" TEXT,
+	 "aciotype_desc" TEXT,
+	 "aciotype_level" INTEGER,
+	 "aciotype_parent_id" INTEGER,
+	 "aciotype_create_time" INTEGER DEFAULT (datetime('now', 'localtime')),
+	 "aciotype_isdelete" INTEGER DEFAULT 0,
+	 "aciotype_seq" INTEGER DEFAULT 0
 );
 
 
-CREATE TABLE "cgp_fin_account_type" (
-"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-"name" TEXT,
-"desc" TEXT,
-"key" TEXT,
-"value" INTEGER,
-"createtime" INTEGER DEFAULT (datetime('now', 'localtime')),
-"isdelete" INTEGER DEFAULT 0
+CREATE TABLE "main"."fin_org" (
+	 "org_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	 "org_name" TEXT,
+	 "org_desc" TEXT,
+	 "org_create_time" INTEGER DEFAULT (datetime('now', 'localtime')),
+	 "org_isdelete" INTEGER DEFAULT 0
 );
 
 
-CREATE TABLE "cgp_fin_inoutdetail" (
-"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-"type" TEXT,
-"desc" TEXT,
-"money" real,
-"balance" real,
-"accountid" INTEGER,
-"year" INTEGER,
-"month" INTEGER,
-"day" INTEGER,
-"happenedtime" INTEGER DEFAULT (datetime('now', 'localtime')),
-"createtime" INTEGER DEFAULT (datetime('now', 'localtime')),
-"isdelete" INTEGER DEFAULT 0
+CREATE TABLE "main"."fin_account_transfer" (
+	 "actr_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	 "actr_desc" TEXT,
+	 "actr_money" real,
+	 "actr_happened_time" INTEGER DEFAULT (datetime('now', 'localtime')),
+	 "actr_create_time" INTEGER DEFAULT (datetime('now', 'localtime')),
+	 "actr_isdelete" INTEGER DEFAULT 0,
+	 "ac_id_from" INTEGER,
+	 "ac_id_to" INTEGER
 );
 
 
-CREATE TABLE "cgp_fin_inouttype" (
-"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-"name" TEXT,
-"desc" TEXT,
-"key" TEXT,
-"value" INTEGER,
-"level" INTEGER,
-"parentid" INTEGER,
-"createtime" INTEGER DEFAULT (datetime('now', 'localtime')),
-"isdelete" INTEGER DEFAULT 0
-);
-
-
-CREATE TABLE "cgp_fin_org" (
-"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-"name" TEXT,
-"desc" TEXT,
-"isdelete" INTEGER DEFAULT 0,
-"createtime" INTEGER DEFAULT (datetime('now', 'localtime'))
-);
-
-
-CREATE TABLE "cgp_fin_transfer" (
-"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-"type" TEXT,
-"desc" TEXT,
-"money" real,
-"frombalance" real,
-"tobalance" real,
-"fromaccountid" INTEGER,
-"toaccountid" INTEGER,
-"year" INTEGER,
-"month" INTEGER,
-"day" INTEGER,
-"happenedtime" INTEGER DEFAULT (datetime('now', 'localtime')),
-"createtime" INTEGER DEFAULT (datetime('now', 'localtime')),
-"isdelete" INTEGER DEFAULT 0
-);
-
-
-CREATE TABLE "cgp_fin_user" (
-	 "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	 "name" TEXT,
-	 "desc" TEXT,
-	 "createtime" INTEGER DEFAULT (datetime('now', 'localtime')),
-	 "code" TEXT,
-	 "isowner" integer DEFAULT 1,
-	 "isdelete" INTEGER DEFAULT 0
+CREATE TABLE "main"."fin_user" (
+	 "user_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	 "user_name" TEXT,
+	 "user_desc" TEXT,
+	 "user_create_time" INTEGER DEFAULT (datetime('now', 'localtime')),
+	 "user_isowner" integer DEFAULT 1,
+	 "user_isdelete" INTEGER DEFAULT 0
 );
 
 

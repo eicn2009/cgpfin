@@ -15,6 +15,7 @@ import javax.security.auth.login.AccountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,6 +40,13 @@ public class FinController {
 		return "/fin/fin.jsp";
 
 	}
+	
+	
+	@RequestMapping("/accountinout")
+	public String accountInout() throws IOException {
+		return "/fin/fin_account_inout.jsp";
+
+	}
 	/**
 	 * 账户信息列表
 	 * @param finAccount
@@ -46,11 +54,11 @@ public class FinController {
 	 */
 	@RequestMapping(value="/accountlist",method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> finAcountList(@RequestBody(required=false) FinAccount finAccount) {
-		List<Map<String, Object>> list = finService.getAccountList(finAccount);
-		float balancesum = finService.getAccountBalanceSum(finAccount);
+		List<FinAccount> accountList = finService.getAccountList(finAccount);
+		float balanceSum = finService.getAccountBalanceSum(finAccount);
 		Map<String, Object> map = new HashMap<>();
-		map.put("list", list);
-		map.put("balancesum", balancesum);
+		map.put("accountList", accountList);
+		map.put("acBalanceSum", balanceSum);
 		return map;
 	}
 	
@@ -60,8 +68,8 @@ public class FinController {
 	 */
 	@RequestMapping(value="/accounttypelist",method = RequestMethod.GET)
 	public @ResponseBody List<Map<String, Object>> finAcountTypeList() {
-		List<Map<String, Object>> map = finService.getAccountTypeList();
-		return map;
+		List<Map<String, Object>> accountTypeList = finService.getAccountTypeList();
+		return accountTypeList;
 	}
 	/**
 	 * 用户列表
@@ -69,8 +77,8 @@ public class FinController {
 	 */
 	@RequestMapping(value="/userlist",method = RequestMethod.GET)
 	public @ResponseBody List<Map<String, Object>> finUserList() {
-		List<Map<String, Object>> map = finService.getUserList();
-		return map ;
+		List<Map<String, Object>> userList = finService.getUserList();
+		return userList;
 	}
 	/**
 	 * 金融机构列表
@@ -78,8 +86,45 @@ public class FinController {
 	 */
 	@RequestMapping(value="/orglist",method = RequestMethod.GET)
 	public @ResponseBody List<Map<String, Object>> finOrgList() {
-		List<Map<String, Object>> map = finService.getOrgList();
-		return map ;
+		List<Map<String, Object>> orgList = finService.getOrgList();
+		return orgList;
+	}
+	/**
+	 * 查询收支明细
+	 * @return 2017年12月9日 下午7:31:32 by cgp
+	 */
+	@RequestMapping(value="/accountinouttypelist/{inorout}",method = RequestMethod.GET)
+	public @ResponseBody List<Map<String, Object>> getFinAccountInOutTypeList(@PathVariable("inorout") int inorout) {
+		List<Map<String, Object>> accountInoutTypeList = finService.getAccountInoutTypeList(inorout);
+		return accountInoutTypeList;
+	}
+	/**
+	 * 保存或者更新收支明细
+	 * @param finAccountInOut
+	 * @return 2017年12月16日 下午3:42:42 by cgp
+	 */
+	@RequestMapping(value="/accountinout",method = RequestMethod.POST)
+	public @ResponseBody int saveFinAccountInOut(@RequestBody(required=false) FinAccountInout finAccountInOut) {
+		return finService.addOrUpdateFinAccountInout(finAccountInOut);
+	}
+	/**
+	 * 删除收支明细
+	 * @param acioId
+	 * @return 2017年12月16日 下午3:44:35 by cgp
+	 */
+	@RequestMapping(value="/accountinout/{acioId}",method = RequestMethod.DELETE)
+	public @ResponseBody int deleteFinAccountInOut(@PathVariable("acioId") int acioId) {
+		return finService.deleteFinAccountInout(acioId);
+	}
+	/**
+	 * 根据指定信息查询收支明细
+	 * @param finAccountInout
+	 * @return 2017年12月16日 下午3:44:49 by cgp
+	 */
+	@RequestMapping(value="/accountinoutlist",method = RequestMethod.GET)
+	public @ResponseBody List<Map<String, Object>> getFinAccountInoutList(@RequestBody(required=false) FinAccountInout finAccountInout) {
+		List<Map<String, Object>> finAccountInoutList = finService.getAccountInoutList(finAccountInout);
+		return finAccountInoutList;
 	}
 	/**
 	 * 测试用，返回字符串

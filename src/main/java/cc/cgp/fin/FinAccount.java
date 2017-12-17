@@ -9,104 +9,106 @@ package cc.cgp.fin;
  * 2017年12月5日 下午7:59:52 by cgp
  */
 public class FinAccount {
-	private int id;
-	private int userid;
-	private String username;
-	private int orgid;
-	private String orgname;
-	private int type;
-	private String typename;
-	private String name;
-	private float balance;
-	private float initbalance;
-	private String createtime;
-	private String updatetime;
-	private int canused;
-	private int isdelete;
-	public int getId() {
-		return id;
+	private int acId;
+	private String acName;
+	private float acBalance;
+	private float acInitbalance;
+	private String acCreateTime;
+	private String acUpdateTime;
+	private int acCanused;
+	private int acIsdelete;
+	private int userId;
+	private String userName;
+	private int orgId;
+	private String orgName;
+	private int actypeId;
+	private String actypeName;
+	
+	public int getUserId() {
+		return userId;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
-	public int getUserid() {
-		return userid;
+	public String getUserName() {
+		return userName;
 	}
-	public void setUserid(int userid) {
-		this.userid = userid;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-	public String getUsername() {
-		return username;
+	public int getOrgId() {
+		return orgId;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	public void setOrgId(int orgId) {
+		this.orgId = orgId;
 	}
-	public int getOrgid() {
-		return orgid;
+	public String getOrgName() {
+		return orgName;
 	}
-	public void setOrgid(int orgid) {
-		this.orgid = orgid;
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
 	}
-	public String getOrgname() {
-		return orgname;
+	public int getAcId() {
+		return acId;
 	}
-	public void setOrgname(String orgname) {
-		this.orgname = orgname;
+	public void setAcId(int acId) {
+		this.acId = acId;
 	}
-	public int getType() {
-		return type;
+	public String getAcName() {
+		return acName;
 	}
-	public void setType(int type) {
-		this.type = type;
+	public void setAcName(String acName) {
+		this.acName = acName;
 	}
-	public String getTypename() {
-		return typename;
+	public float getAcBalance() {
+		return acBalance;
 	}
-	public void setTypename(String typename) {
-		this.typename = typename;
+	public void setAcBalance(float acBalance) {
+		this.acBalance = acBalance;
 	}
-	public String getName() {
-		return name;
+	public float getAcInitbalance() {
+		return acInitbalance;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setAcInitbalance(float acInitbalance) {
+		this.acInitbalance = acInitbalance;
 	}
-	public float getBalance() {
-		return balance;
+	public String getAcCreateTime() {
+		return acCreateTime;
 	}
-	public void setBalance(float balance) {
-		this.balance = balance;
+	public void setAcCreateTime(String acCreateTime) {
+		this.acCreateTime = acCreateTime;
 	}
-	public float getInitbalance() {
-		return initbalance;
+	public String getAcUpdateTime() {
+		return acUpdateTime;
 	}
-	public void setInitbalance(float initbalance) {
-		this.initbalance = initbalance;
+	public void setAcUpdateTime(String acUpdateTime) {
+		this.acUpdateTime = acUpdateTime;
 	}
-	public String getCreatetime() {
-		return createtime;
+	public int getAcCanused() {
+		return acCanused;
 	}
-	public void setCreatetime(String createtime) {
-		this.createtime = createtime;
+	public void setAcCanused(int acCanused) {
+		this.acCanused = acCanused;
 	}
-	public String getUpdatetime() {
-		return updatetime;
+	public int getAcIsdelete() {
+		return acIsdelete;
 	}
-	public void setUpdatetime(String updatetime) {
-		this.updatetime = updatetime;
+	public void setAcIsdelete(int acIsdelete) {
+		this.acIsdelete = acIsdelete;
 	}
-	public int getCanused() {
-		return canused;
+	public int getActypeId() {
+		return actypeId;
 	}
-	public void setCanused(int canused) {
-		this.canused = canused;
+	public void setActypeId(int actypeId) {
+		this.actypeId = actypeId;
 	}
-	public int getIsdelete() {
-		return isdelete;
+	public String getActypeName() {
+		return actypeName;
 	}
-	public void setIsdelete(int isdelete) {
-		this.isdelete = isdelete;
+	public void setActypeName(String actypeName) {
+		this.actypeName = actypeName;
 	}
+	
 
 }
 

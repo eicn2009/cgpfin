@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>fin</title>
 <link href="/common/css/bootstrap.css" rel="stylesheet">
 
+<script src="/common/js/jquery-3.2.1.js"></script>
 <script src="/common/js/jquery-3.2.1.js"></script>
 <script src="/common/js/jquery-migrate-3.0.0.js"></script>
 <script src="/common/js/datetime.js"></script>
@@ -15,24 +15,24 @@
 
 <script type="text/javascript">
 $(function(){
-	var finindexhome = new Vue({
-		  el: '#finindexhome',
+	var finIndexHome = new Vue({
+		  el: '#finIndexHome',
 		  data: {
 		    date: (new Date()).pattern("yyyy-MM-dd"),
 		    time: (new Date()).pattern("HH:mm:ss"),
-		    returnstr:'',
-		    accounttypelist:null,
-		    userlist:null,
-		    orglist:null,
-		    accountlist:null,
-		    balancesum:0,
+		    returnStr:'',
+		    accountTypeList:null,
+		    userList:null,
+		    orgList:null,
+		    accountList:null,
+		    acBalanceSum:0,
 		    log:"this is log!",
-		    searchform:{
-		    	canused:1,
-		    	orgid:-1,
-		    	type:-1,
-		    	accountname:null,
-		    	userid:-1
+		    searchForm:{
+		    	acCanused:1,
+		    	orgId:-1,
+		    	actypeId:-1,
+		    	acName:null,
+		    	userId:-1
 		    }
 		  },
 		  methods: {
@@ -44,113 +44,62 @@ $(function(){
 	if(typeof jQuery.cgp == "undefined"){jQuery.cgp = {};};
 	if(typeof jQuery.cgp.fin == "undefined"){jQuery.cgp.fin = {};};
 	
-	jQuery.cgp.fin.teststr = function(id){
-		console.log("finindexhome.welcomemessage:"+finindexhome.welcomemessage);
-		finindexhome.time = (new Date()).pattern("HH:mm:ss");
-		
-		$.ajax({
-			type:"post",
-			url:"/fin/teststr",
-			data: {"id":id},
-			dataType: "text",
-			success:function(data){
-				console.log(data);
-				finindexhome.returnstr = data;
-			}
-		});
-	}
 	
-	jQuery.cgp.fin.testjson = function(id){
-		console.log("finindexhome.welcomemessage:"+finindexhome.welcomemessage);
-		finindexhome.time = (new Date()).pattern("HH:mm:ss");
-		
-		$.ajax({
-			type:"post",
-			url:"/fin/testjson",
-			data: {"id":id},
-			dataType: "json",
-			success:function(data){
-				console.log(data);
-				finindexhome.returnstr = data.id;
-				
-			}
-		});
-	};
 // 	获取机构列表
-	jQuery.cgp.fin.getOrglist = function(){
+	jQuery.cgp.fin.getOrgList = function(){
 		$.ajax({
 			type:"get",
 			url:"/fin/orglist",
 			dataType: "json",
 			success:function(data){
-				console.log(data);
-				finindexhome.orglist = data;
+				finIndexHome.orgList = data;
 			}
 		});
 	};
 // 	获取用户列表
-	jQuery.cgp.fin.getUserlist = function(){
+	jQuery.cgp.fin.getUserList = function(){
 		$.ajax({
 			type:"get",
 			url:"/fin/userlist",
 			dataType: "json",
 			success:function(data){
-				console.log(data);
-				finindexhome.userlist = data;
+				finIndexHome.userList = data;
 			}
 		});
 	};
 // 	获取账户类型列表
-	jQuery.cgp.fin.getAccounttypelist = function(){
+	jQuery.cgp.fin.getAccountTypeList = function(){
 		$.ajax({
 			type:"get",
 			url:"/fin/accounttypelist",
 			dataType: "json",
 			success:function(data){
-				console.log(data);
-				finindexhome.accounttypelist = data;
+				finIndexHome.accountTypeList = data;
 			}
 		});
 	};
 	
-// 	获取账户列表
-	jQuery.cgp.fin.getAccountList = function(){
-		console.log("finindexhome.welcomemessage:"+finindexhome.welcomemessage);
-		finindexhome.time = (new Date()).pattern("HH:mm:ss");
-		
-		$.ajax({
-			type:"post",
-			url:"/fin/accountlist",
-			data: null,
-			dataType: "json",
-			success:function(data){
-				console.log(data);
-				finindexhome.accountlist = data.list;
-				finindexhome.balancesum = data.balancesum;
-			}
-		});
-	};
+
 	jQuery.cgp.fin.searchAccountList = function(){
-		console.log("finindexhome.welcomemessage:"+finindexhome.welcomemessage);
-		finindexhome.time = (new Date()).pattern("HH:mm:ss");
+		finIndexHome.time = (new Date()).pattern("HH:mm:ss");
 		
 		$.ajax({
 			type:"post",
 			url:"/fin/accountlist",
-			data: JSON.stringify(finindexhome.searchform),
+			data: JSON.stringify(finIndexHome.searchForm),
 			dataType: "json",
 			contentType:"application/json;charset=utf-8",
 			success:function(data){
 				console.log(data);
-				finindexhome.accountlist = data.list;
-				finindexhome.balancesum = data.balancesum;
+				finIndexHome.accountList = data.accountList;
+				finIndexHome.acBalanceSum = data.acBalanceSum;
 			}
 		});
 	};
-	
-	jQuery.cgp.fin.getOrglist();
-	jQuery.cgp.fin.getUserlist();
-	jQuery.cgp.fin.getAccounttypelist();
+
+	jQuery.cgp.fin.getOrgList();
+	jQuery.cgp.fin.getUserList();
+	jQuery.cgp.fin.getAccountTypeList();
 	jQuery.cgp.fin.searchAccountList();
 }
 )
@@ -173,14 +122,26 @@ $(function(){
 </style>
 </head>
 <body>
-<div  id="finindexhome">
+<div  id="finIndexHome">
 <!-- 页头导航开始 -->
-	<div  class="navdiv" >
-		<div>今天:{{ date }} 现在时间:{{time}}</div>
-		<div onclick="window.location='/fin'">账户首页</div>
-		<div onclick="alert('it is building....')">账户收支页</div>
-	</div>
-<!-- 页头导航结束 -->
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">账户管理系统</a>
+				</div>
+				<div>
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="/fin">账户列表</a></li>
+						<li><a href="/fin/accountinout">收支明细</a></li>
+
+					</ul>
+				</div>
+			</div>
+			<div class="navdiv">
+				<div>今天:{{ date }} 现在时间:{{time}}</div>
+			</div>
+		</nav>
+		<!-- 页头导航结束 -->
 
 	
 <!-- 	正文开始 -->
@@ -188,31 +149,27 @@ $(function(){
 		<table class="table table-hover table-striped table-bordered ">
 			<tbody>
 				<tr>
-					<td colspan="5">返回值： {{returnstr}}
-					</td>
-				</tr>
-				<tr>
 					<td colspan="1">资金是否可用： 
-						<input type="radio" value="1" v-model="searchform.canused" id="canused1"/>  <label for="canused1">可用</label>
-						<input type="radio" value="0" v-model="searchform.canused" id="canused0"/>  <label for="canused0">不可用</label>
-						<input type="radio" value="-1" v-model="searchform.canused" id="canused-1"/>  <label for="canused-1">不限</label>
+						<input type="radio" value="1" v-model="searchForm.acCanused" id="acCanused1"/>  <label for="acCanused1">可用</label>
+						<input type="radio" value="0" v-model="searchForm.acCanused" id="acCanused0"/>  <label for="acCanused0">不可用</label>
+						<input type="radio" value="-1" v-model="searchForm.acCanused" id="acCanused-1"/>  <label for="acCanused-1">不限</label>
 					</td>
 					<td colspan="1">用户： 
-						<select v-model="searchform.userid" >
+						<select v-model="searchForm.userId" >
 							<option value="-1">不限</option>
-							<option  v-for="option in userlist" :value="option.id">{{option.name}}</option>
+							<option  v-for="option in userList" :value="option.userId">{{option.userName}}</option>
 						</select>
 					</td>
 					<td colspan="1">账户类别： 
-						<select v-model="searchform.type">
+						<select v-model="searchForm.actypeId">
 							<option value="-1">不限</option>
-							<option  v-for="option in accounttypelist" :value="option.id">{{option.name}}</option>
+							<option  v-for="option in accountTypeList" :value="option.actypeId">{{option.actypeName}}</option>
 						</select>
 					</td>
 					<td colspan="1">归属机构： 
-						<select v-model="searchform.orgid">
+						<select v-model="searchForm.orgId">
 							<option value="-1">不限</option>
-							<option  v-for="option in orglist" :value="option.id">{{option.name}}</option>
+							<option  v-for="option in orgList" :value="option.orgId">{{option.orgName}}</option>
 						</select>
 					</td>
 				</tr>
@@ -224,31 +181,30 @@ $(function(){
 				</tr>
 		</table>
 		<table class="table table-hover table-striped table-bordered ">
-			<tbody>
+			<thead>
 				<tr>
-<!-- 				账户名、归属金融机构（银行）id、余额、初始余额、 记录时间、开户时间、是否有效标识、账户归属用户id、账户类别(现金，银行理财，活期，定期等），资金是否可用 -->
-					<td >id</td>
-					<td >账户名</td>
-					<td >归属金融机构（银行）id</td>
-					<td >余额(总和：{{balancesum}})</td>
-					<td >账户归属用户id</td>
-					<td >资金是否可用</td>
-					<td >账户类别</td>
-					<td >记录时间</td>
-					
+					<th >id</th>
+					<th >账户名</th>
+					<th >归属金融机构（银行）id</th>
+					<th >余额(总和：{{acBalanceSum}})</th>
+					<th >账户归属用户id</th>
+					<th >资金是否可用</th>
+					<th >账户类别</th>
+					<th >记录时间</th>
 				</tr>
-				
-
-				<tr v-for="account in accountlist">
-					<td >{{ account.id }}</td>
-					<td >{{ account.name }}</td>
-					<td >{{ account.orgname }}</td>
-					<td >{{ account.balance }}</td>
-					<td >{{ account.username }}</td>
-					<td >{{ account.canused }}</td>
-					<td >{{ account.typename }}</td>
-					<td >{{ account.updatetime }}</td>
+			</thead>	
+			<tbody>
+				<tr v-for="account in accountList">
+					<td >{{ account.acId }}</td>
+					<td >{{ account.acName }}</td>
+					<td >{{ account.orgName }}</td>
+					<td >{{ account.acBalance }}</td>
+					<td >{{ account.userName }}</td>
+					<td >{{ account.acCanused==1?'是':'否' }}</td>
+					<td >{{ account.actypeName }}</td>
+					<td >{{ account.acUpdateTime }}</td>
 				</tr>
+			</tbody>
 		</table>
 	</div>
 <!-- 	正文结束 -->

@@ -62,6 +62,15 @@
 <!-- 				spring-boot-starter-data-elasticsearch -->
 <!-- 			</artifactId> -->
 <!-- 		</dependency> -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>2.1_3</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>cgpfin</finalName>

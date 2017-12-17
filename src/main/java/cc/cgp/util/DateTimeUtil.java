@@ -7,12 +7,12 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-public class DateTimeUtils {
-	 	private static Logger logger = Logger.getLogger(DateTimeUtils.class);  
+public class DateTimeUtil {
+	 	private static Logger logger = Logger.getLogger(DateTimeUtil.class);  
 	    private static String defaultDatePattern = null;  
 	    private static String timePattern = "HH:mm";  
 //	    private static Calendar cale = Calendar.getInstance();  
-	    public static final String TS_FORMAT = DateTimeUtils.getDatePattern() + " HH:mm:ss.S";  
+	    public static final String TS_FORMAT = DateTimeUtil.getDatePattern() + " HH:mm:ss.S";  
 	    /** 日期格式yyyy-MM字符串常量 */  
 	    private static final String MONTH_FORMAT = "yyyy-MM";  
 	    /** 日期格式yyyy-MM-dd字符串常量 */  
