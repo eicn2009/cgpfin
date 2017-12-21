@@ -164,7 +164,7 @@ $(function(){
 			}
 		}
 // 		保存和更新收支信息 1保存 2保存并继续
-		jQuery.cgp.fin.accountInoutAddSave = function(savetype){
+		jQuery.cgp.fin.accountInoutAddSave = function(saveType){
 			if(finAccountInout.accountInoutForm.aciotypeId<0){
 				alert("请选择收支详细类别");
 				return false;
@@ -195,7 +195,7 @@ $(function(){
 						jQuery.cgp.fin.getAccountList();
 						jQuery.cgp.fin.getInoutList();
 // 						保存不继续添加
-						if(savetype == 1)	{
+						if(saveType == 1)	{
 							jQuery.cgp.fin.accountInoutAddCancel();
 						}	
 						finAccountInout.accountInoutForm = jQuery.cgp.fin.initAccountInout();
@@ -305,7 +305,7 @@ $(function(){
 					<ul class="nav navbar-nav">
 						<li><a href="/fin">账户列表</a></li>
 						<li class="active"><a href="/fin/accountinout">收支明细</a></li>
-
+						<li><a href="/fin/accounttransfer">转账明细</a></li>
 					</ul>
 				</div>
 			</div>

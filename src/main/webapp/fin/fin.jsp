@@ -133,7 +133,7 @@ $(function(){
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="/fin">账户列表</a></li>
 						<li><a href="/fin/accountinout">收支明细</a></li>
-
+						<li><a href="/fin/accounttransfer">转账明细</a></li>
 					</ul>
 				</div>
 			</div>

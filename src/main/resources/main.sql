@@ -63,8 +63,10 @@ CREATE TABLE "main"."fin_account_transfer" (
 	 "actr_create_time" INTEGER DEFAULT (datetime('now', 'localtime')),
 	 "actr_isdelete" INTEGER DEFAULT 0,
 	 "ac_id_from" INTEGER,
-	 "ac_id_to" INTEGER
+	 "ac_id_to" INTEGER,
+	 "user_id" INTEGER
 );
+
 
 
 CREATE TABLE "main"."fin_user" (

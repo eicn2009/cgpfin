@@ -246,10 +246,20 @@ public class FinService {
 			FinAccountInout finAccountInoutOld = getFinAccountInout(finAccountInout.getAcioId());
 			float oldAcioMoney = finAccountInoutOld.getAcioMoney();
 			changeMoney = acioMoney - oldAcioMoney;
+			if(finAccountInoutOld.getAcId()==finAccountInout.getAcId()){
+//				调整余额 为收入则增加余额，支出则减少余额
+				changeAccountBalance(changeMoney, finAccountInout.getAcId());
+			}else{
+				changeAccountBalance(-oldAcioMoney, finAccountInoutOld.getAcId());
+				changeAccountBalance(acioMoney, finAccountInout.getAcId());
+			}
+			
+		}else{
+//			调整余额 为收入则增加余额，支出则减少余额
+			changeAccountBalance(changeMoney, finAccountInout.getAcId());
 		}
 		
-//		调整余额 为收入则增加余额，支出则减少余额
-		changeAccountBalance(changeMoney, finAccountInout.getAcId());
+
 		
 		
 		int result = 0;
@@ -304,6 +314,126 @@ public class FinService {
 
 		return  CamelUtil.getCamelMapList (njdt.queryForList(sql, paramMap));
 		
+	}
+	/**
+	 * @param finAccountTransfer
+	 * @return 2017年12月17日 下午5:13:23 by cgp
+	 */
+	public List<FinAccountTransfer> getAccountTransferList(FinAccountTransfer finAccountTransfer) {
+		String sql =  "select acf.ac_id as acIdFrom,acf.ac_name as acNameFrom,act.ac_id as acIdTo,act.ac_name as acNameTo,user.user_id,user.user_name, "
+				+ " actr.actr_id,actr.actr_desc,actr.actr_money,actr.actr_happened_time,actr.actr_create_time "
+				+ " from fin_account_transfer actr,fin_account acf,fin_account act,fin_user user "
+				+ " where actr.actr_isdelete = :actrIsdelete and actr.ac_id_from = acf.ac_id "
+				+ " and actr.ac_id_to = act.ac_id and actr.user_id = user.user_id "
+				+ " order by actr.actr_happened_time DESC,actr.ac_id_from DESC,actr.actr_id DESC";
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>(); 
+		paramMap.put("actrIsdelete", 0);
+		return  njdt.query(sql, paramMap,new BeanPropertyRowMapper<FinAccountTransfer>(FinAccountTransfer.class));
+	}
+	/**
+	 * @param finAccountTransfer
+	 * @return 2017年12月17日 下午7:49:33 by cgp
+	 */
+	public int addOrUpdateFinAccountTransfer(FinAccountTransfer finAccountTransfer) {
+		
+		boolean isupdate = false;
+		if (finAccountTransfer.getActrId() != -1){
+			isupdate = true;
+		}
+		
+		
+
+		
+//		如果为更新数据，需要调整更新后账户余额		
+		float changeMoney = finAccountTransfer.getActrMoney();
+		if(isupdate){
+			FinAccountTransfer finAccountTransferOld = getFinAccountTransfer(finAccountTransfer.getActrId());
+			float oldMoney = finAccountTransferOld.getActrMoney();
+			
+			if(finAccountTransferOld.getAcIdFrom() == finAccountTransfer.getAcIdFrom()){
+				changeMoney = changeMoney - oldMoney;
+				changeAccountBalance(-changeMoney, finAccountTransfer.getAcIdFrom());
+			}else{
+				changeAccountBalance(oldMoney, finAccountTransferOld.getAcIdFrom());
+				changeAccountBalance(-changeMoney, finAccountTransfer.getAcIdFrom());
+			}
+			
+			if(finAccountTransferOld.getAcIdTo() == finAccountTransfer.getAcIdTo()){
+				changeMoney = changeMoney - oldMoney;
+				changeAccountBalance(changeMoney, finAccountTransfer.getAcIdTo());
+			}else{
+				changeAccountBalance(-oldMoney, finAccountTransferOld.getAcIdTo());
+				changeAccountBalance(changeMoney, finAccountTransfer.getAcIdTo());
+			}
+			
+			
+		}else{
+//			调整余额 转出账户减少，转入账户增加
+			changeAccountBalance(-changeMoney, finAccountTransfer.getAcIdFrom());
+			changeAccountBalance(changeMoney, finAccountTransfer.getAcIdTo());
+		}
+		
+
+		
+		
+		int result = 0;
+		String sql = "";
+		if (isupdate) {
+			sql = "update fin_account_transfer set actr_desc=:actrDesc,actr_money=:actrMoney,user_id=:userId,"
+					+ "ac_id_from=:acIdFrom,ac_id_to=:acIdTo,actr_happened_time=:actrHappenedTime,actr_isdelete=:actrIsdelete where actr_id = :actrId";
+		} else {
+			sql = "insert into fin_account_transfer(actr_desc,actr_money,user_id,ac_id_from,ac_id_to,actr_happened_time,actr_isdelete) "
+					+ "values(:actrDesc,:actrMoney,:userId,:acIdFrom,:acIdTo,:actrHappenedTime,:actrIsdelete)";
+		}
+		Map<String, Object> paramMap = new HashMap<String, Object>(); 
+		paramMap.put("actrDesc", finAccountTransfer.getActrDesc());
+		paramMap.put("actrMoney", finAccountTransfer.getActrMoney()+"");
+		paramMap.put("userId", finAccountTransfer.getUserId()+"");
+		paramMap.put("acIdFrom", finAccountTransfer.getAcIdFrom());
+		paramMap.put("acIdTo", finAccountTransfer.getAcIdTo());
+		paramMap.put("actrHappenedTime", finAccountTransfer.getActrHappenedTime());
+		paramMap.put("actrIsdelete", 0);
+		if(isupdate){
+			paramMap.put("actrId", finAccountTransfer.getActrId());
+		}
+		result = njdt.update(sql, paramMap);
+		return result;
+	}
+	/**
+	 * @param actrId
+	 * @return 2017年12月17日 下午9:48:48 by cgp
+	 */
+	private FinAccountTransfer getFinAccountTransfer(int actrId) {
+		String sql =  "select acf.ac_id as acIdFrom,acf.ac_name as acNameFrom,act.ac_id as acIdTo,act.ac_name as acNameTo,user.user_id,user.user_name, "
+				+ " actr.actr_id,actr.actr_desc,actr.actr_money,actr.actr_happened_time,actr.actr_create_time "
+				+ " from fin_account_transfer actr,fin_account acf,fin_account act,fin_user user "
+				+ " where actr.actr_isdelete = :actrIsdelete and actr.ac_id_from = acf.ac_id "
+				+ " and actr.ac_id_to = act.ac_id and actr.user_id = user.user_id and actr.actr_id = :actrId"
+				+ " order by actr.actr_happened_time DESC,actr.ac_id_from DESC,actr.actr_id DESC";
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>(); 
+		paramMap.put("actrIsdelete", 0);
+		paramMap.put("actrId", actrId);
+		return  njdt.queryForObject(sql, paramMap,new BeanPropertyRowMapper<FinAccountTransfer>(FinAccountTransfer.class));
+	
+	}
+	/**
+	 * @param actrId
+	 * @return 2017年12月17日 下午10:27:27 by cgp
+	 */
+	public int deleteFinAccountTransfer(int actrId) {
+		FinAccountTransfer accountTransfer = getFinAccountTransfer(actrId);
+		
+		changeAccountBalance(accountTransfer.getActrMoney(), accountTransfer.getAcIdFrom());
+		changeAccountBalance(-accountTransfer.getActrMoney(), accountTransfer.getAcIdTo());
+		
+		int result = 0;
+		String sql =  "update fin_account_transfer set actr_isdelete=1 where actr_id = :actrId";
+			Map<String, Object> paramMap = new HashMap<String, Object>(); 
+			paramMap.put("actrId", actrId);
+		result = njdt.update(sql, paramMap);
+		return result;
 	}
 
 	

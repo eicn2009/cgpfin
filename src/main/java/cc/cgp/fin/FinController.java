@@ -47,6 +47,13 @@ public class FinController {
 		return "/fin/fin_account_inout.jsp";
 
 	}
+	
+	@RequestMapping("/accounttransfer")
+	public String accountTransfer() throws IOException {
+		return "/fin/fin_account_transfer.jsp";
+
+	}
+	
 	/**
 	 * 账户信息列表
 	 * @param finAccount
@@ -125,6 +132,23 @@ public class FinController {
 	public @ResponseBody List<Map<String, Object>> getFinAccountInoutList(@RequestBody(required=false) FinAccountInout finAccountInout) {
 		List<Map<String, Object>> finAccountInoutList = finService.getAccountInoutList(finAccountInout);
 		return finAccountInoutList;
+	}
+	
+	
+	
+	@RequestMapping(value="/accounttransferlist",method = RequestMethod.GET)
+	public @ResponseBody List<FinAccountTransfer> getFinAccountTransferList(@RequestBody(required=false) FinAccountTransfer finAccountTransfer) {
+		List<FinAccountTransfer> finAccountTransferList = finService.getAccountTransferList(finAccountTransfer);
+		return finAccountTransferList;
+	}
+	
+	@RequestMapping(value="/accounttransfer",method = RequestMethod.POST)
+	public @ResponseBody int saveFinAccountTransfer(@RequestBody(required=false) FinAccountTransfer finAccountTransfer) {
+		return finService.addOrUpdateFinAccountTransfer(finAccountTransfer);
+	}
+	@RequestMapping(value="/accounttransfer/{actrId}",method = RequestMethod.DELETE)
+	public @ResponseBody int deleteFinAccountTransfer(@PathVariable("actrId") int actrId) {
+		return finService.deleteFinAccountTransfer(actrId);
 	}
 	/**
 	 * 测试用，返回字符串
