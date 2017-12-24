@@ -318,6 +318,10 @@ public class FinService {
 				sql += " and faciotype.aciotype_inorout = :aciotypeInorout";
 				paramMap.put("aciotypeInorout", finAccountInout.getAciotypeInorout());
 			}
+			if(finAccountInout.getAcioHappenedTime()!=null){
+				sql += " and facio.acio_happened_time like :acioHappenedTime";
+				paramMap.put("acioHappenedTime", finAccountInout.getAcioHappenedTime()+"%");
+			}
 		}
 		sql += " order by facio.acio_happened_time desc,facio.acio_id desc";
 

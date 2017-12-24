@@ -5,9 +5,9 @@ server:
 spring:
   ds_sqlite:
     #url: jdbc:sqlite:timeDB.sqlite
-    #url: jdbc:sqlite:/Users/cgp/worksapcemoko/cgpfin/src/main/resources/timeDB.sqlite
+    url: jdbc:sqlite:/Users/cgp/worksapcemoko/cgpfin/src/main/resources/timeDB.sqlite
     #url: jdbc:sqlite:C:/mydata/timeDB.sqlite
-    url: jdbc:sqlite:C:/Users/guoguo/git/cgpfin/src/main/resources/timeDB.sqlite
+    #url: jdbc:sqlite:C:/Users/guoguo/git/cgpfin/src/main/resources/timeDB.sqlite
     driverClassName: org.sqlite.JDBC
 logging:
   level:

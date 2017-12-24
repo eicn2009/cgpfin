@@ -62,22 +62,26 @@ $(function(){
 		  data: {
 		    date: (new Date()).pattern("yyyy-MM-dd"),
 		    time: (new Date()).pattern("HH:mm:ss"),
+		    yearList:[2017,2018,2019,2020],
+		    monthList:["01","02","03","04","05","06","07","08","09","10","11","12"],
 		    accountList:null,
 		    userList:null,
 		    searchForm:{
 		    	acId:-1,
-		    	acHappenedTimeBegin:null,
-		    	acHappenedTimeEnd:null,
+		    	acioHappenedTime:(new Date()).pattern("yyyy-MM"),
+		    	acioHappenedYear:(new Date()).pattern("yyyy"),
+		    	acioHappenedMonth:(new Date()).pattern("MM"),
 		    	aciotypeInorout:-1,
 		    	aciotypeId:-1,
 		    	acUserId:-1,
 		    	acioUserId:-1
+		    	
 		    },
 		    user:{
 		    	userId:-1,
 		    	userName:''
 		    },
-		    acId:4,
+		    acId:-1,
 // 		    account:accountInfo,
 		   	aciotypeList:null,
 		   	acioList:null,
@@ -97,11 +101,6 @@ $(function(){
 		  },
 		  computed:{
 			  account:function(){
-				  if(this.acioList!=null){
-					  if(this.acioList[0]!=null){
-						  this.acId = this.acioList[0].acId;
-					  }
-				  }
 				  for(item in this.accountList){
 						if(this.acId == this.accountList[item].acId){
 							return this.accountList[item];
@@ -109,6 +108,13 @@ $(function(){
 					}
 // 				  此处若不返回，控制台会有报错信息，提示account对应的id未定义，可能与加载顺序有关
 				  return accountInfo;
+			  }
+		  },
+		  mounted:function(){
+			  if(this.acioList!=null){
+				  if(this.acioList[0]!=null){
+					  this.acId = this.acioList[0].acId;
+				  }
 			  }
 		  },
 		  methods: {
@@ -206,6 +212,8 @@ $(function(){
 				success:function(data){
 					if(data>0){
 						jQuery.cgp.fin.getAccountList();
+						finAccountInout.searchForm.acioHappenedYear = finAccountInout.accountInoutForm.acioHappenedTime.substr(0,4);
+						finAccountInout.searchForm.acioHappenedMonth = finAccountInout.accountInoutForm.acioHappenedTime.substr(5,2);
 						jQuery.cgp.fin.getInoutList();
 // 						保存不继续添加
 						if(saveType == 1)	{
@@ -257,6 +265,20 @@ $(function(){
 //	 	获取收支明细列表
 		jQuery.cgp.fin.getInoutList = function(){
 			finAccountInout.searchForm.acId = finAccountInout.acId;
+			if(parseInt(finAccountInout.searchForm.acioHappenedYear)>-1){
+				if(parseInt(finAccountInout.searchForm.acioHappenedMonth)>-1){
+					finAccountInout.searchForm.acioHappenedTime = finAccountInout.searchForm.acioHappenedYear + "-" + finAccountInout.searchForm.acioHappenedMonth;;	
+				}else{
+					finAccountInout.searchForm.acioHappenedTime = finAccountInout.searchForm.acioHappenedYear;
+				}
+			}else{
+				if(parseInt(finAccountInout.searchForm.acioHappenedMonth)>-1){
+					finAccountInout.searchForm.acioHappenedTime = (new Date()).pattern("yyyy") + "-" + finAccountInout.searchForm.acioHappenedMonth;;	
+				}else{
+					finAccountInout.searchForm.acioHappenedTime = null;
+				}
+			}
+// 			finAccountInout.searchForm.aciotypeInorout = finAccountInout.accountInoutForm.aciotypeInorout;
 			$.ajax({
 				type:"post",
 				url:"/fin/accountinoutlist",
@@ -383,14 +405,21 @@ $(function(){
 								<option value="-1">不限</option>
 								<option v-for="option in accountList" :value="option.acId">{{option.acName}}</option>
 						</select>
+					</td>
+					<td width="15%">
+						<select v-model="searchForm.acioHappenedYear"  >
+								<option value="-1">不限</option>
+								<option v-for="option in yearList" :value="option">{{option}}</option>
+						</select>年 
+						<select v-model="searchForm.acioHappenedMonth"  >
+								<option value="-1">不限</option>
+								<option v-for="option in monthList" :value="option">{{option}}</option>
+						</select>月
 						
 					</td>
-					
-					<td colspan="5" ><input type="button" id="searchList" 
-						value="查询" onclick="jQuery.cgp.fin.getInoutList()">
-					</td>
-					<td colspan="5" ><input type="button" id="searchList" 
-						value="添加" onclick="jQuery.cgp.fin.accountInoutAdd()">
+					<td colspan="5" >
+						<input type="button" id="searchListBtn"  value="查询" onclick="jQuery.cgp.fin.getInoutList()">
+						<input type="button" id="addBtn"  value="添加" onclick="jQuery.cgp.fin.accountInoutAdd()">
 					</td>
 				</tr>
 		</table>
