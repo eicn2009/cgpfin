@@ -133,6 +133,16 @@ public class FinController {
 		List<Map<String, Object>> finAccountInoutList = finService.getAccountInoutList(finAccountInout);
 		return finAccountInoutList;
 	}
+	/**
+	 * 收支明细统计
+	 * @param finAccountInout
+	 * @return 2017年12月24日 下午5:57:02 by cgp
+	 */
+	@RequestMapping(value="/accountinoutstatistics",method = RequestMethod.POST)
+	public @ResponseBody List<Map<String, Object>> getFinAccountInoutStatistics(@RequestBody(required=false) FinAccountInout finAccountInout,@RequestParam(value="acioStatisticsKeyList",required=false) String acioStatisticsKeyList ) {
+		List<Map<String, Object>> aicoStatisticsList = finService.getAccountInoutStatistics(finAccountInout,acioStatisticsKeyList);
+		return aicoStatisticsList;
+	}
 	
 	
 	

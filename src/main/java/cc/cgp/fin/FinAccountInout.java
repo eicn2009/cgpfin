@@ -4,6 +4,8 @@
  */
 package cc.cgp.fin;
 
+import java.lang.reflect.Array;
+import java.util.List;
 
 /**
  * cc.cgp.fin.FinAccountInOut.java
@@ -17,12 +19,12 @@ public class FinAccountInout {
 	private int userId;
 	private float acioBalance;
 	private int acId;
-	FinAccount finAccount;
+	private FinAccount finAccount;
 	private String acioHappenedTime;
 	private String acioCreateTime;
 	private int acioIsdelete;
 	private int aciotypeInorout;
-	
+	private List<String> acioStatisticsKeyList;
 	public int getAcioId() {
 		return acioId;
 	}
@@ -94,6 +96,12 @@ public class FinAccountInout {
 	}
 	public void setAciotypeInorout(int aciotypeInorout) {
 		this.aciotypeInorout = aciotypeInorout;
+	}
+	public List<String> getAcioStatisticsKeyList() {
+		return acioStatisticsKeyList;
+	}
+	public void setAcioStatisticsKeyList(List<String> acioStatisticsKeyList) {
+		this.acioStatisticsKeyList = acioStatisticsKeyList;
 	}
 	
 	

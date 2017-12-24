@@ -5,9 +5,11 @@
 package cc.cgp.fin;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.tomcat.jdbc.pool.interceptor.SlowQueryReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -447,6 +449,87 @@ public class FinService {
 			paramMap.put("actrId", actrId);
 		result = njdt.update(sql, paramMap);
 		return result;
+	}
+	/**
+	 * @param finAccountInout
+	 * @param acioStatisticsKeyList
+	 * @return 2017年12月24日 下午6:01:35 by cgp
+	 */
+	public List<Map<String, Object>> getAccountInoutStatistics(FinAccountInout finAccountInout,
+			String sacioStatisticsKeyList) {
+		String sqlSelect = "SELECT sum(facio.acio_money) sum,";
+		String sql = " from fin_account_inout facio,fin_account_inout_type faciotype,fin_user fuser,fin_account fac"
+				+ ",fin_account_type factype,fin_org forg,fin_user faciouser"
+				+ " where facio.acio_isdelete = :isdelete and facio.aciotype_id = faciotype.aciotype_id and fac.actype_id = factype.actype_id "
+				+ " and fac.user_id = fuser.user_id and facio.ac_id = fac.ac_id and fac.org_id = forg.org_id and facio.user_id = faciouser.user_id";
+		String sqlgroup = "";
+		String sqlorder = "";
+		Map<String, Object> paramMap = new HashMap<String, Object>(); 
+		paramMap.put("isdelete", 0);
+		if(finAccountInout!=null){
+			if(finAccountInout.getAcId()>-1){
+				sql += " and facio.ac_id = :acId";
+				paramMap.put("acId", finAccountInout.getAcId());
+			}
+			if(finAccountInout.getAciotypeInorout()>-1){
+				sql += " and faciotype.aciotype_inorout = :aciotypeInorout";
+				paramMap.put("aciotypeInorout", finAccountInout.getAciotypeInorout());
+			}
+			if(finAccountInout.getAcioHappenedTime()!=null){
+				sql += " and facio.acio_happened_time like :acioHappenedTime";
+				paramMap.put("acioHappenedTime", finAccountInout.getAcioHappenedTime()+"%");
+			}
+			
+			List<String> acioStatisticsKeyList = finAccountInout.getAcioStatisticsKeyList();
+//			acId:0,//账号
+//	   		acUserId:0,//账户归属人
+//	   		actypeId:0//账户类别
+//	   		orgId:0,//归属机构
+//	   		aciotypeInorout:0,//收入或支出
+//	   		aciotypeId:0,//收支细分类
+//	   		acioYear:0,//年
+//	   		acioMonth:0,//月
+//	   		acioUserId:0,//经办人
+			if(acioStatisticsKeyList!=null){
+				sqlgroup += " group by ";
+				for (String key : acioStatisticsKeyList) {
+					if(key.equals("acId")){
+						sqlgroup += "fac.ac_id,";
+						sqlSelect += "fac.ac_name as ac_id,";
+					}else if(key.equals("acUserId")){
+						sqlgroup += "fac.user_id,";
+						sqlSelect += "fuser.user_name as ac_user_id,";
+					}else if(key.equals("actypeId")){
+						sqlgroup += "fac.actype_id,";
+						sqlSelect += "factype.actype_name as actype_id,";
+					}else if(key.equals("orgId")){
+						sqlgroup += "fac.org_id,";
+						sqlSelect += "forg.org_name as org_id,";
+					}else if(key.equals("aciotypeInorout")){
+						sqlgroup += "faciotype.aciotype_inorout,";
+						sqlSelect += "faciotype.aciotype_inorout,";
+					}else if(key.equals("aciotypeId")){
+						sqlgroup += "faciotype.aciotype_id,";
+						sqlSelect += "faciotype.aciotype_name as aciotype_id,";
+					}else if(key.equals("acioUserId")){
+						sqlgroup += "facio.user_id,";
+						sqlSelect += "faciouser.user_name as acio_user_id,";
+					}
+				}
+				if(sqlgroup.endsWith(","))sqlgroup = sqlgroup.substring(0,sqlgroup.length()-1);
+				if(sqlSelect.endsWith(","))sqlSelect = sqlSelect.substring(0,sqlSelect.length()-1);
+		
+			}
+			
+		}
+		
+		
+		
+		
+		
+//		sqlorder += " order by facio.acio_happened_time desc,facio.acio_id desc";
+
+		return  CamelUtil.getCamelMapList (njdt.queryForList(sqlSelect+sql+sqlgroup, paramMap));
 	}
 
 	

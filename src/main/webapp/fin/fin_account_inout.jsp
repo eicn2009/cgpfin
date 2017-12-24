@@ -60,7 +60,8 @@ $(function(){
 	var finAccountInout = new Vue({
 		  el: '#finAccountInout',
 		  data: {
-		    date: (new Date()).pattern("yyyy-MM-dd"),
+		    resultType:1,//1为明细列表结果 2为统计结果
+			date: (new Date()).pattern("yyyy-MM-dd"),
 		    time: (new Date()).pattern("HH:mm:ss"),
 		    yearList:[2017,2018,2019,2020],
 		    monthList:["01","02","03","04","05","06","07","08","09","10","11","12"],
@@ -74,8 +75,9 @@ $(function(){
 		    	aciotypeInorout:-1,
 		    	aciotypeId:-1,
 		    	acUserId:-1,
-		    	acioUserId:-1
-		    	
+		    	acioUserId:-1,
+		    	acioStatisticsKeyList:[],
+		    	searchType:1
 		    },
 		    user:{
 		    	userId:-1,
@@ -85,7 +87,19 @@ $(function(){
 // 		    account:accountInfo,
 		   	aciotypeList:null,
 		   	acioList:null,
-		   	accountInoutForm:accountInout
+		   	accountInoutForm:accountInout,
+		   	acioStatisticsForm:{
+		   		acId:0,//账号
+		   		aciotypeInorout:0,//收入或支出
+		   		aciotypeId:0,//收支细分类
+		   		acioYear:0,//年
+		   		acioMonth:0,//月
+		   		acUserId:0,//账户归属人
+		   		acioUserId:0,//经办人
+		   		useOrgId:0,//归属机构
+		   		actypeId:0//账户类别
+		   	},
+		   	acioStatisticsList:null
 		  },
 		  watch:{
 // 			  acId:function(newid){
@@ -121,12 +135,41 @@ $(function(){
 			    methodtest: function () {
 			      console.log("this is method test!!!")
 			    },
+			    getStatisticsName:function(key){
+			    	var name = "";
+			    	if(key=="acId"){
+			    		name = "账号";
+			    	}else if(key=="aciotypeInorout"){
+			    		name = "收入或支出";
+			    	}else if(key=="aciotypeId"){
+			    		name = "收支细分类";
+			    	}else if(key=="acioYear"){
+			    		name = "年";
+			    	}else if(key=="acioMonth"){
+			    		name = "月";
+			    	}else if(key=="acUserId"){
+			    		name = "账户归属人";
+			    	}else if(key=="acioUserId"){
+			    		name = "经办人";
+			    	}else if(key=="orgId"){
+			    		name = "归属机构";
+			    	}else if(key=="actypeId"){
+			    		name = "账户类别";
+			    	}else if(key=="sum"){
+			    		name = "总和";
+			    	}else{
+			    		name = key;
+			    	}
+					return name;			    	
+			    },
 			    getAciotypeList:function(event){
 			    	
 // 			    	jQuery.cgp.fin.getAciotypeList(this.accountInoutForm.aciotypeInorout);
 			    }
 			  }
 		});
+	
+	
 	
 // 	打开收支信息弹窗
 	jQuery.cgp.fin.accountInoutAdd = function(){
@@ -262,8 +305,13 @@ $(function(){
 			});
 		}
 		
+		jQuery.cgp.fin.getInoutList  = function(){
+			finAccountInout.searchForm.searchType = 1;
+			jQuery.cgp.fin.getInoutListCommon();
+		}
+		
 //	 	获取收支明细列表
-		jQuery.cgp.fin.getInoutList = function(){
+		jQuery.cgp.fin.getInoutListCommon = function(){
 			finAccountInout.searchForm.acId = finAccountInout.acId;
 			if(parseInt(finAccountInout.searchForm.acioHappenedYear)>-1){
 				if(parseInt(finAccountInout.searchForm.acioHappenedMonth)>-1){
@@ -279,18 +327,39 @@ $(function(){
 				}
 			}
 // 			finAccountInout.searchForm.aciotypeInorout = finAccountInout.accountInoutForm.aciotypeInorout;
-			$.ajax({
-				type:"post",
-				url:"/fin/accountinoutlist",
-				data: JSON.stringify(finAccountInout.searchForm),
-				dataType: "json",
-				contentType:"application/json;charset=utf-8",
-				success:function(data){
-					finAccountInout.acioList = data;
-				}
-			});
+
+			if(finAccountInout.searchForm.searchType == 1){
+				$.ajax({
+					type:"post",
+					url:"/fin/accountinoutlist",
+					data: JSON.stringify(finAccountInout.searchForm),
+					dataType: "json",
+					contentType:"application/json;charset=utf-8",
+					success:function(data){
+						finAccountInout.resultType = 1;
+						finAccountInout.acioList = data;
+					}
+				});
+			}else if(finAccountInout.searchForm.searchType == 2){
+				$.ajax({
+					type:"post",
+					url:"/fin/accountinoutstatistics",
+					data: JSON.stringify(finAccountInout.searchForm),
+					dataType: "json",
+					contentType:"application/json;charset=utf-8",
+					success:function(data){
+						finAccountInout.resultType = 2;
+						finAccountInout.acioStatisticsList = data;
+					}
+				});
+			}
+			
 		};
 			
+		jQuery.cgp.fin.accountInoutStatistics = function(){
+			finAccountInout.searchForm.searchType = 2;
+			jQuery.cgp.fin.getInoutListCommon();
+		}
 		
 //	 	获取用户列表
 		jQuery.cgp.fin.getUserList = function(){
@@ -387,27 +456,24 @@ $(function(){
 
 	
 <!-- 	正文开始 -->
-		<table class="table table-hover table-striped table-bordered ">
+		<table  class="table table-hover table-striped table-bordered ">
 			<tbody>
 				<tr>
-					
-				</tr>
-				<tr>
 					<td width="15%">
-						<select v-model="searchForm.aciotypeInorout"  >
+						收支分类:<select v-model="searchForm.aciotypeInorout"  >
 								<option value="-1">不限</option>
 								<option value="1">收入</option>
 								<option value="2">支出</option>
 						</select>
 					</td>
 					<td width="15%">
-						<select v-model="acId"  >
+						账户:<select v-model="acId"  >
 								<option value="-1">不限</option>
 								<option v-for="option in accountList" :value="option.acId">{{option.acName}}</option>
 						</select>
 					</td>
-					<td width="15%">
-						<select v-model="searchForm.acioHappenedYear"  >
+					<td width="20%">
+						收支时间:<select v-model="searchForm.acioHappenedYear"  >
 								<option value="-1">不限</option>
 								<option v-for="option in yearList" :value="option">{{option}}</option>
 						</select>年 
@@ -417,13 +483,31 @@ $(function(){
 						</select>月
 						
 					</td>
-					<td colspan="5" >
+					<td colspan="10" >
 						<input type="button" id="searchListBtn"  value="查询" onclick="jQuery.cgp.fin.getInoutList()">
 						<input type="button" id="addBtn"  value="添加" onclick="jQuery.cgp.fin.accountInoutAdd()">
 					</td>
 				</tr>
+				<tr>
+					<td colspan="3">
+					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="acId" id="acId"><label for="acId">账号</label>
+					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="acUserId" id="acUserId"><label for="acUserId">归属人</label>
+					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="actypeId" id="actypeId"><label for="actypeId">账户类别</label>
+					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="orgId" id="orgId"><label for="orgId">归属机构</label>
+					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="aciotypeInorout" id="aciotypeInorout"><label for="aciotypeInorout">收支</label>
+					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="aciotypeId" id="aciotypeId"><label for="aciotypeId">收支分类</label>
+					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="acioUserId" id="acioUserId"><label for="acioUserId">经办人</label>
+					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="acioYear" id="acioYear"><label for="acioYear">年</label>
+					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="acioMonth" id="acioMonth"><label for="acioMonth">月</label>
+					</td>
+					<td colspan="10" >
+						<input type="button" id="statisticsBtn"  value="统计" onclick="jQuery.cgp.fin.accountInoutStatistics()">
+					</td>
+				</tr>
 		</table>
-		<table class="table table-hover table-striped table-bordered ">
+		
+		
+		<table v-if="resultType==1" class="table table-hover table-striped table-bordered ">
 			<thead>
 				<tr>
 					<th >id</th>
@@ -444,7 +528,7 @@ $(function(){
 					<td>{{inout.acioId}}</td>
 					<td>{{inout.acName}}</td>
 					<td>{{inout.acioHappenedTime}}</td>
-					<td>{{inout.aciotypeInorout == 2?-inout.acioMoney:inout.acioMoney}}</td>
+					<td>{{inout.acioMoney}}</td>
 					<td>{{inout.acioBalance}}</td>
 					<td>{{inout.acioDesc}}</td>
 					<td>{{inout.userName}}</td>
@@ -460,7 +544,22 @@ $(function(){
 				</tr>
 			</tbody>
 		</table>
+		
+		<table v-if="resultType==2" class="table table-hover table-striped table-bordered ">
+			<thead>
+				<tr>
+					<th width="8%" v-for="(value,key) in acioStatisticsList[0]">{{ getStatisticsName(key) }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="item in acioStatisticsList">
+					<td width="8%" v-for="(value,key) in item">{{value}} </td>
+				</tr>
+			</tbody>
+		</table>
 <!-- 	正文结束 -->
+
+
 <!-- 添加弹出框开始 -->
 <div id="cover" style=" display:none; width:100%;height:100%;position:fixed;overflow:hidden; left:0;top:0;background-color:#000; opacity:0.5;filter:alpha(opacity=50);z-index: 1;">
 
