@@ -97,7 +97,7 @@ public class FinController {
 		return orgList;
 	}
 	/**
-	 * 查询收支明细
+	 * 查询收支明细类型列表
 	 * @return 2017年12月9日 下午7:31:32 by cgp
 	 */
 	@RequestMapping(value="/accountinouttypelist/{inorout}",method = RequestMethod.GET)
@@ -128,7 +128,7 @@ public class FinController {
 	 * @param finAccountInout
 	 * @return 2017年12月16日 下午3:44:49 by cgp
 	 */
-	@RequestMapping(value="/accountinoutlist",method = RequestMethod.GET)
+	@RequestMapping(value="/accountinoutlist",method = RequestMethod.POST)
 	public @ResponseBody List<Map<String, Object>> getFinAccountInoutList(@RequestBody(required=false) FinAccountInout finAccountInout) {
 		List<Map<String, Object>> finAccountInoutList = finService.getAccountInoutList(finAccountInout);
 		return finAccountInoutList;

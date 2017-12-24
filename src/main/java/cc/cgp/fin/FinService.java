@@ -306,11 +306,20 @@ public class FinService {
 		String sql = "SELECT facio.acio_id,facio.ac_id,fac.ac_name,facio.aciotype_id,faciotype.aciotype_name,faciotype.aciotype_inorout, facio.acio_desc,fuser.user_id,fuser.user_name,"
 				+ " facio.acio_money,facio.acio_balance,facio.acio_happened_time,facio.acio_create_time "
 				+ " from fin_account_inout facio,fin_account_inout_type faciotype,fin_user fuser,fin_account fac "
-				+ " where facio.acio_isdelete = :isdelete and facio.aciotype_id = faciotype.aciotype_id and facio.user_id = fuser.user_id and facio.ac_id = fac.ac_id "
-				+ " order by facio.acio_happened_time desc,facio.acio_id desc";
-		
+				+ " where facio.acio_isdelete = :isdelete and facio.aciotype_id = faciotype.aciotype_id and facio.user_id = fuser.user_id and facio.ac_id = fac.ac_id ";
 		Map<String, Object> paramMap = new HashMap<String, Object>(); 
 		paramMap.put("isdelete", 0);
+		if(finAccountInout!=null){
+			if(finAccountInout.getAcId()>-1){
+				sql += " and facio.ac_id = :acId";
+				paramMap.put("acId", finAccountInout.getAcId());
+			}
+			if(finAccountInout.getAciotypeInorout()>-1){
+				sql += " and faciotype.aciotype_inorout = :aciotypeInorout";
+				paramMap.put("aciotypeInorout", finAccountInout.getAciotypeInorout());
+			}
+		}
+		sql += " order by facio.acio_happened_time desc,facio.acio_id desc";
 
 		return  CamelUtil.getCamelMapList (njdt.queryForList(sql, paramMap));
 		

@@ -64,7 +64,15 @@ $(function(){
 		    time: (new Date()).pattern("HH:mm:ss"),
 		    accountList:null,
 		    userList:null,
-		    searchForm:null,
+		    searchForm:{
+		    	acId:-1,
+		    	acHappenedTimeBegin:null,
+		    	acHappenedTimeEnd:null,
+		    	aciotypeInorout:-1,
+		    	aciotypeId:-1,
+		    	acUserId:-1,
+		    	acioUserId:-1
+		    },
 		    user:{
 		    	userId:-1,
 		    	userName:''
@@ -89,6 +97,11 @@ $(function(){
 		  },
 		  computed:{
 			  account:function(){
+				  if(this.acioList!=null){
+					  if(this.acioList[0]!=null){
+						  this.acId = this.acioList[0].acId;
+					  }
+				  }
 				  for(item in this.accountList){
 						if(this.acId == this.accountList[item].acId){
 							return this.accountList[item];
@@ -241,10 +254,11 @@ $(function(){
 			});
 		}
 		
-//	 	获取用户列表
+//	 	获取收支明细列表
 		jQuery.cgp.fin.getInoutList = function(){
+			finAccountInout.searchForm.acId = finAccountInout.acId;
 			$.ajax({
-				type:"get",
+				type:"post",
 				url:"/fin/accountinoutlist",
 				data: JSON.stringify(finAccountInout.searchForm),
 				dataType: "json",
@@ -267,6 +281,10 @@ $(function(){
 				}
 			});
 		};
+		
+		window.setInterval(function(){
+			finAccountInout.time = (new Date()).pattern("HH:mm:ss");
+		},10*1000);
 		
 		jQuery.cgp.fin.getUserList();
 		jQuery.cgp.fin.getAccountList();
@@ -299,18 +317,16 @@ $(function(){
 		<nav class="navbar navbar-default" role="navigation">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="#">账户管理系统</a>
+					<a class="navbar-brand" href="#">账户管理系统 </a>
 				</div>
 				<div>
 					<ul class="nav navbar-nav">
 						<li><a href="/fin">账户列表</a></li>
 						<li class="active"><a href="/fin/accountinout">收支明细</a></li>
 						<li><a href="/fin/accounttransfer">转账明细</a></li>
+						<li><a>今天:{{ date }} 现在时间:{{time}}</a></li>
 					</ul>
 				</div>
-			</div>
-			<div class="navdiv">
-				<div>今天:{{ date }} 现在时间:{{time}}</div>
 			</div>
 		</nav>
 		<!-- 页头导航结束 -->
@@ -352,6 +368,16 @@ $(function(){
 		<table class="table table-hover table-striped table-bordered ">
 			<tbody>
 				<tr>
+					
+				</tr>
+				<tr>
+					<td width="15%">
+						<select v-model="searchForm.aciotypeInorout"  >
+								<option value="-1">不限</option>
+								<option value="1">收入</option>
+								<option value="2">支出</option>
+						</select>
+					</td>
 					<td width="15%">
 						<select v-model="acId"  >
 								<option value="-1">不限</option>
@@ -359,10 +385,13 @@ $(function(){
 						</select>
 						
 					</td>
+					
+					<td colspan="5" ><input type="button" id="searchList" 
+						value="查询" onclick="jQuery.cgp.fin.getInoutList()">
+					</td>
 					<td colspan="5" ><input type="button" id="searchList" 
 						value="添加" onclick="jQuery.cgp.fin.accountInoutAdd()">
 					</td>
-
 				</tr>
 		</table>
 		<table class="table table-hover table-striped table-bordered ">
