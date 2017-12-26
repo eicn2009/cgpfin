@@ -113,6 +113,20 @@
 			});
 		}
 		
+		jQuery.todoItem.showTodoItemDetail = function(id){
+			$("#showTodoItemDetailBtn"+id).css("display","none");
+			$("#showTodoItemAbstractBtn"+id).css("display","inline");
+			$("#todoItemDetail"+id).css("display","table-row");
+			
+		}
+		
+		jQuery.todoItem.showTodoItemAbstract = function(id){
+			$("#showTodoItemDetailBtn"+id).css("display","inline");
+			$("#showTodoItemAbstractBtn"+id).css("display","none");
+			$("#todoItemDetail"+id).css("display","none");
+			
+		}
+		
 		jQuery.todoItem.searchList = function(){
 // 			$("#searchform").attr("action","/todoItem/search")
 			$("#searchform").submit();
@@ -307,90 +321,40 @@
 
 		<!-- 		展示默认时间当天的todoItem历史记录 开始-->
 		<div class="table-responsive">
-			<table class="table table-hover table-striped table-bordered ">
-			<thead>
-			<tr>
-							<th style="width:300px;">事项信息</th>
-							<th  style="width:400px;">开始时间-结束时间-耗时(小时)</th>
-							<th  >内容</th>
-							<th  style="width:80px;">操作</th>
-						</tr>
-			</thead>
-				<tbody style="font-size: 13px;">
+			<table class="table table-hover table-striped table-bordered " style="font-size: 13px;">
 					<c:forEach var="datamap" items="${list}">
-						<tr>
-							<td >
-								<table class="table table-hover table-striped table-bordered table-condensed">
-									<tr>
-										<td >ID:</td>
-										<td >${datamap.id}</td>
-									</tr>
-									<tr>
-										<td>是否今日事项:</td>
-										<td>
-											<c:if test='${datamap.istoday=="1"}'>今天</c:if>
-											<c:if test='${datamap.istoday=="0"}'>否</c:if>
-											<c:if test='${datamap.istoday=="2"}'>日常</c:if>
-										</td>
-									</tr>
-									<tr>
-										<td>类型:</td>
-										<td>${datamap.strtype}</td>
-									</tr>
-									<tr>
-										<td>优先级:</td>
-										<td>${datamap.priority}</td>
-									</tr>
-									<tr>
-										<td>状态:</td>
-										<td>${datamap.strstatus}</td>
-									</tr>
-									<tr>
-										<td>创建时间:</td>
-										<td>${datamap.createtime}</td>
-									</tr>
-									
-								</table>
-							</td>
-							<td >
-								<table class="table table-hover table-striped table-bordered table-condensed">
-									<tr>
-										<th >计划<br>/实际</td>
-										<th >开始时间</td>
-										<th >结束时间</td>
-										<th >耗时<br>(小时)</td>
-									</tr>
-									<tr>
-										<td>计划</td>
-										<td>${datamap.planstarttime}</td>
-										<td>${datamap.planendtime}</td>
-										<td>${datamap.plantimecosted}</td>
-									</tr>
-									<tr>
-										<td>实际</td>
-										<td>${datamap.starttime}</td>
-										<td>${datamap.endtime}</td>
-										<td>${datamap.timecosted}</td>
-									</tr>
-								</table>
-							</td>
+						<tr id="todoItemAbstract${datamap.id}" style="display: table-row;">
+							<td style="width: 2%">${datamap.id}</td>
+							<td style="width: 12%">优先级: ${datamap.priority}</td>
+							<td style="width: 15%">状态: ${datamap.strstatus}</td>
+							<td style="width: 55%" colspan="2">${datamap.content}<br>${datamap.remark}</td>
 							
-							<td>
-								<div class="row" style="margin:0">
-									<div style="font-size: 14px;font-weight: bold;" class="col-xs-12">${datamap.content}</div>
-								</div>
-								<div class="row" style="margin:0">
-									<div class="col-xs-12"  id="tdremark${datamap.id}">${datamap.remark}</div>
-								</div>
+							<td style="width: 16%">
+								<button type="button" id="showTodoItemDetailBtn${datamap.id}" onclick="jQuery.todoItem.showTodoItemDetail('${datamap.id}')">展开详情</button>
+								<button type="button" style="display: none;" id="showTodoItemAbstractBtn${datamap.id}" onclick="jQuery.todoItem.showTodoItemAbstract('${datamap.id}')">收回详情</button>
+								<button type="button" id="editTodoItem" onclick="var tdremark = $('#tdremark${datamap.id}').html();jQuery.todoItem.editTodoItem('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.planstarttime}','${datamap.planendtime}','${datamap.plantimecosted}','${datamap.content}',tdremark,'${datamap.type}','${datamap.status}','${datamap.istoday}','${datamap.priority}')">编辑</button>
+								<button type="button" id="deleteTodoItem" onclick="jQuery.todoItem.deleteTodoItem('${datamap.id}')">删除</button>
 							</td>
-							<td ><button type="button"
-									id="editTodoItem" onclick="var tdremark = $('#tdremark${datamap.id}').html();jQuery.todoItem.editTodoItem('${datamap.id}','${datamap.starttime}','${datamap.endtime}','${datamap.timecosted}','${datamap.planstarttime}','${datamap.planendtime}','${datamap.plantimecosted}','${datamap.content}',tdremark,'${datamap.type}','${datamap.status}','${datamap.istoday}','${datamap.priority}')">编辑</button>
-								<button type="button" id="deleteTodoItem"
-									onclick="jQuery.todoItem.deleteTodoItem('${datamap.id}')">删除</button></td>
 						</tr>
-						
+						<tr id="todoItemDetail${datamap.id}" style="display: none;">
+							<td></td>
+							<td>是否今日事项:  <c:if test='${datamap.istoday=="1"}'>今天</c:if>
+										    <c:if test='${datamap.istoday=="0"}'>否</c:if>
+											<c:if test='${datamap.istoday=="2"}'>日常</c:if>
+							</td>
+							<td>类型: ${datamap.strtype}</td>
+							<td>计划开始时间:${datamap.planstarttime}<br>
+								计划结束时间:${datamap.planendtime}<br>
+								计划耗时:${datamap.plantimecosted}
+							</td>
+							<td>实际开始时间:${datamap.starttime}<br>
+								实际结束时间:${datamap.endtime}<br>
+								实际耗时:${datamap.timecosted}
+							</td>
+							<td>创建时间: ${datamap.createtime}</td>
+							
+						</tr>
 					</c:forEach>
-				</tbody>
 			</table>
 		</div>
 		<!-- 		展示默认时间当天的todoItem历史记录 结束-->
