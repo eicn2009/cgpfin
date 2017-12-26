@@ -4,6 +4,7 @@
  */
 package cc.cgp.fin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -489,6 +490,11 @@ public class FinService {
 //	   		acioYear:0,//年
 //	   		acioMonth:0,//月
 //	   		acioUserId:0,//经办人
+			if(acioStatisticsKeyList==null||"".equals(acioStatisticsKeyList)){
+				acioStatisticsKeyList =new ArrayList<String>();
+				acioStatisticsKeyList.add("acioYear");
+			}
+			
 			if(acioStatisticsKeyList!=null){
 				sqlgroup += " group by ";
 				for (String key : acioStatisticsKeyList) {
@@ -527,6 +533,8 @@ public class FinService {
 				if(sqlSelect.endsWith(","))sqlSelect = sqlSelect.substring(0,sqlSelect.length()-1);
 		
 			}
+			
+			
 			
 		}
 		
