@@ -16,6 +16,7 @@
 <script src="/common/js/jquery-migrate-3.0.0.js"></script>
 <script src="/common/js/datetime.js"></script>
 <script src="/common/js/cgputils.js"></script>
+<script src="/common/js/cgpjqueryutils.js"></script>
 <script src="/common/js/bootstrap.js"></script>
 
 
