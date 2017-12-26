@@ -327,7 +327,7 @@
 							<td style="width: 2%">${datamap.id}</td>
 							<td style="width: 12%">优先级: ${datamap.priority}</td>
 							<td style="width: 15%">状态: ${datamap.strstatus}</td>
-							<td style="width: 55%" colspan="2">${datamap.content}<br>${datamap.remark}</td>
+							<td style="width: 55%" colspan="2">${datamap.content}<br><span id="tdremark${datamap.id}">${datamap.remark}</span></td>
 							
 							<td style="width: 16%">
 								<button type="button" id="showTodoItemDetailBtn${datamap.id}" onclick="jQuery.todoItem.showTodoItemDetail('${datamap.id}')">展开详情</button>
