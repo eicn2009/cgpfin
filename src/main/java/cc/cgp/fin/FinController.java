@@ -35,19 +35,32 @@ public class FinController {
 	@Autowired
 	FinService finService;
 	
+	/**
+	 * 进入账户列表页
+	 * @return
+	 * @throws IOException 2017年12月26日 下午5:56:24 by cgp
+	 */
 	@RequestMapping("")
 	public String index() throws IOException {
 		return "/fin/fin.jsp";
 
 	}
 	
-	
+	/**
+	 * 进入收支明细信息页
+	 * @return
+	 * @throws IOException 2017年12月26日 下午5:55:42 by cgp
+	 */
 	@RequestMapping("/accountinout")
 	public String accountInout() throws IOException {
 		return "/fin/fin_account_inout.jsp";
 
 	}
-	
+	/**
+	 * 进入转账明细页
+	 * @return
+	 * @throws IOException 2017年12月26日 下午5:56:01 by cgp
+	 */
 	@RequestMapping("/accounttransfer")
 	public String accountTransfer() throws IOException {
 		return "/fin/fin_account_transfer.jsp";
@@ -139,23 +152,37 @@ public class FinController {
 	 * @return 2017年12月24日 下午5:57:02 by cgp
 	 */
 	@RequestMapping(value="/accountinoutstatistics",method = RequestMethod.POST)
-	public @ResponseBody List<Map<String, Object>> getFinAccountInoutStatistics(@RequestBody(required=false) FinAccountInout finAccountInout,@RequestParam(value="acioStatisticsKeyList",required=false) String acioStatisticsKeyList ) {
-		List<Map<String, Object>> aicoStatisticsList = finService.getAccountInoutStatistics(finAccountInout,acioStatisticsKeyList);
+	public @ResponseBody List<Map<String, Object>> getFinAccountInoutStatistics(@RequestBody(required=false) FinAccountInout finAccountInout ) {
+		List<Map<String, Object>> aicoStatisticsList = finService.getAccountInoutStatistics(finAccountInout);
 		return aicoStatisticsList;
 	}
 	
 	
-	
+	/**
+	 * 获取转账信息列表
+	 * @param finAccountTransfer
+	 * @return 2017年12月26日 下午5:54:30 by cgp
+	 */
 	@RequestMapping(value="/accounttransferlist",method = RequestMethod.GET)
 	public @ResponseBody List<FinAccountTransfer> getFinAccountTransferList(@RequestBody(required=false) FinAccountTransfer finAccountTransfer) {
 		List<FinAccountTransfer> finAccountTransferList = finService.getAccountTransferList(finAccountTransfer);
 		return finAccountTransferList;
 	}
 	
+	/**
+	 * 保存和更新转账信息
+	 * @param finAccountTransfer
+	 * @return 2017年12月26日 下午5:54:54 by cgp
+	 */
 	@RequestMapping(value="/accounttransfer",method = RequestMethod.POST)
 	public @ResponseBody int saveFinAccountTransfer(@RequestBody(required=false) FinAccountTransfer finAccountTransfer) {
 		return finService.addOrUpdateFinAccountTransfer(finAccountTransfer);
 	}
+	/**
+	 * 删除转账信息
+	 * @param actrId
+	 * @return 2017年12月26日 下午5:55:14 by cgp
+	 */
 	@RequestMapping(value="/accounttransfer/{actrId}",method = RequestMethod.DELETE)
 	public @ResponseBody int deleteFinAccountTransfer(@PathVariable("actrId") int actrId) {
 		return finService.deleteFinAccountTransfer(actrId);

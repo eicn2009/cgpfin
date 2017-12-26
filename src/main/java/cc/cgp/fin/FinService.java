@@ -455,8 +455,7 @@ public class FinService {
 	 * @param acioStatisticsKeyList
 	 * @return 2017年12月24日 下午6:01:35 by cgp
 	 */
-	public List<Map<String, Object>> getAccountInoutStatistics(FinAccountInout finAccountInout,
-			String sacioStatisticsKeyList) {
+	public List<Map<String, Object>> getAccountInoutStatistics(FinAccountInout finAccountInout) {
 		String sqlSelect = "SELECT sum(facio.acio_money) sum,";
 		String sql = " from fin_account_inout facio,fin_account_inout_type faciotype,fin_user fuser,fin_account fac"
 				+ ",fin_account_type factype,fin_org forg,fin_user faciouser"
@@ -514,6 +513,14 @@ public class FinService {
 					}else if(key.equals("acioUserId")){
 						sqlgroup += "facio.user_id,";
 						sqlSelect += "faciouser.user_name as acio_user_id,";
+					}else if(key.equals("acioYear")){
+						if(!acioStatisticsKeyList.contains("acioMonth")){
+							sqlgroup += "substr(facio.acio_happened_time,1,4),";
+							sqlSelect += "substr(facio.acio_happened_time,1,4) as acio_happened_time,";
+						}
+					}else if(key.equals("acioMonth")){
+						sqlgroup += "substr(facio.acio_happened_time,1,7),";
+						sqlSelect += "substr(facio.acio_happened_time,1,7) as acio_happened_time,";
 					}
 				}
 				if(sqlgroup.endsWith(","))sqlgroup = sqlgroup.substring(0,sqlgroup.length()-1);

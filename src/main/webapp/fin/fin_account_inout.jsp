@@ -143,10 +143,8 @@ $(function(){
 			    		name = "收入或支出";
 			    	}else if(key=="aciotypeId"){
 			    		name = "收支细分类";
-			    	}else if(key=="acioYear"){
-			    		name = "年";
-			    	}else if(key=="acioMonth"){
-			    		name = "月";
+			    	}else if(key=="acioHappenedTime"){
+			    		name = "发生时间";
 			    	}else if(key=="acUserId"){
 			    		name = "账户归属人";
 			    	}else if(key=="acioUserId"){
@@ -304,7 +302,13 @@ $(function(){
 				}
 			});
 		}
-		
+		 
+// 		获取统计信息 finAccountInout.searchForm.searchType = 2;
+		jQuery.cgp.fin.accountInoutStatistics = function(){
+			finAccountInout.searchForm.searchType = 2;
+			jQuery.cgp.fin.getInoutListCommon();
+		}
+// 		获取收支详细信息列表 finAccountInout.searchForm.searchType = 1;
 		jQuery.cgp.fin.getInoutList  = function(){
 			finAccountInout.searchForm.searchType = 1;
 			jQuery.cgp.fin.getInoutListCommon();
@@ -356,10 +360,7 @@ $(function(){
 			
 		};
 			
-		jQuery.cgp.fin.accountInoutStatistics = function(){
-			finAccountInout.searchForm.searchType = 2;
-			jQuery.cgp.fin.getInoutListCommon();
-		}
+		
 		
 //	 	获取用户列表
 		jQuery.cgp.fin.getUserList = function(){
@@ -506,7 +507,7 @@ $(function(){
 				</tr>
 		</table>
 		
-		
+<!-- 		收支明细开始 -->
 		<table v-if="resultType==1" class="table table-hover table-striped table-bordered ">
 			<thead>
 				<tr>
@@ -544,7 +545,10 @@ $(function(){
 				</tr>
 			</tbody>
 		</table>
-		
+<!-- 		收支明细结束 -->	
+
+
+<!-- 		收支明细统计开始 -->
 		<table v-if="resultType==2" class="table table-hover table-striped table-bordered ">
 			<thead>
 				<tr>
@@ -557,6 +561,9 @@ $(function(){
 				</tr>
 			</tbody>
 		</table>
+<!-- 		收支明细统计结束 -->
+
+
 <!-- 	正文结束 -->
 
 
