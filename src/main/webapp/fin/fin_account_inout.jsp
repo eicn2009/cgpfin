@@ -34,7 +34,8 @@ $(function(){
 		   		userId:-1,
 		   		userName:'',
 		   		acioMoney:0,
-		   		acioHappenedTime:(new Date()).pattern("yyyy-MM-dd")
+		   		acioHappenedTime:(new Date()).pattern("yyyy-MM-dd"),
+		   		acioMoneyBalance:0
 		};
 	}
 	
@@ -134,6 +135,9 @@ $(function(){
 		  methods: {
 			    methodtest: function () {
 			      console.log("this is method test!!!")
+			    },
+			    changeBalanceToIoMoney(){
+			    	this.accountInoutForm.acioMoney = Math.round((this.accountInoutForm.acioMoneyBalance -  this.account.acBalance)*100)/100;
 			    },
 			    getStatisticsName:function(key){
 			    	var name = "";
@@ -605,6 +609,20 @@ $(function(){
 						<td colspan="1"> 
 							<input type="text" v-model="accountInoutForm.acioMoney" />
 						</td>
+						
+						<td colspan="2"> 通过余额设置:
+							<input type="text" v-model="accountInoutForm.acioMoneyBalance" @change="changeBalanceToIoMoney" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="1">经办人：
+						</td>
+						<td colspan="1">
+							<select v-model="accountInoutForm.userId" >
+								<option value="-1">未知</option>
+								<option v-for="option in userList" :value="option.userId">{{option.userName}}</option>
+							</select>
+						</td>
 						<td colspan="1">发生时间：
 						</td>
 						<td colspan="1"> 
@@ -617,14 +635,7 @@ $(function(){
 						<td colspan="1">
 							<textarea v-model="accountInoutForm.acioDesc"  row="3" col="10"></textarea>
 						</td>
-						<td colspan="1">经办人：
-						</td>
-						<td colspan="1">
-							<select v-model="accountInoutForm.userId" >
-								<option value="-1">未知</option>
-								<option v-for="option in userList" :value="option.userId">{{option.userName}}</option>
-							</select>
-						</td>
+						
 					</tr>
 					<tr>
 						<td colspan="4"><input type="button" id="add" value="保存"
