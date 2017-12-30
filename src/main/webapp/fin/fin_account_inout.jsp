@@ -138,6 +138,9 @@ $(function(){
 			    },
 			    changeBalanceToIoMoney(){
 			    	this.accountInoutForm.acioMoney = Math.round((this.accountInoutForm.acioMoneyBalance -  this.account.acBalance)*100)/100;
+			    	if(this.accountInoutForm.aciotypeInorout==2){//针对支出和收入的不同数字处理；
+			    		this.accountInoutForm.acioMoney = -this.accountInoutForm.acioMoney;
+			    	}
 			    },
 			    getStatisticsName:function(key){
 			    	var name = "";
@@ -237,7 +240,14 @@ $(function(){
 				alert("请选择经办人");
 				return false;
 			}
-			if(!checknum(finAccountInout.accountInoutForm.acioMoney)||finAccountInout.accountInoutForm.acioMoney<=0){
+			if(checknum(finAccountInout.accountInoutForm.acioMoney)){
+				if(finAccountInout.accountInoutForm.acioMoney<=0){
+					if(finAccountInout.accountInoutForm.aciotypeId!=0){//余额调整时可能出现负值
+						alert("请输入正确金额");
+						return false;
+					}
+				}
+			}else{
 				alert("请输入正确金额");
 				return false;
 			}
@@ -464,14 +474,14 @@ $(function(){
 		<table  class="table table-hover table-striped table-bordered ">
 			<tbody>
 				<tr>
-					<td width="15%">
+					<td width="12%">
 						收支分类:<select v-model="searchForm.aciotypeInorout"  >
 								<option value="-1">不限</option>
 								<option value="1">收入</option>
 								<option value="2">支出</option>
 						</select>
 					</td>
-					<td width="15%">
+					<td width="25%">
 						账户:<select v-model="acId"  >
 								<option value="-1">不限</option>
 								<option v-for="option in accountList" :value="option.acId">{{option.acName}}</option>

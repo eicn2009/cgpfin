@@ -5,15 +5,18 @@ server:
 spring:
   ds_sqlite:
     #url: jdbc:sqlite:timeDB.sqlite
-    url: jdbc:sqlite:/Users/cgp/worksapcemoko/cgpfin/src/main/resources/timeDB.sqlite
     #url: jdbc:sqlite:C:/mydata/timeDB.sqlite
+    #mac开发环境
+    url: jdbc:sqlite:/Users/cgp/worksapcemoko/cgpfin/src/main/resources/timeDB.sqlite
+    #windows开发环境
     #url: jdbc:sqlite:C:/Users/guoguo/git/cgpfin/src/main/resources/timeDB.sqlite
+    #线上验证环境
+    #url: jdbc:sqlite:/Users/cgp/cgpwebapp/timeDB.sqlite
     driverClassName: org.sqlite.JDBC
 logging:
   level: 
     org:
       springframework: debug
-        #jdbc: debug
     cc:
       cgp: 
         fin: debug

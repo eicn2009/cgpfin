@@ -306,7 +306,7 @@ $(function(){
 					余额：{{finAccountFrom.acBalance}}
 					</td>
 					<td width="15%">
-					转入账户:{{finAccountTo.acName}} 余额：
+					转入账户:{{finAccountTo.acName}} 
 					</td>
 					<td width="15%">
 					余额：{{finAccountTo.acBalance}}

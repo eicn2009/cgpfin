@@ -97,9 +97,9 @@ public class FinService {
 		 */
 		public float changeAccountBalance(float acioMoney,int acId){
 			float acBlance = 0f;
-			String sql = "update fin_account set ac_balance = ac_balance + :acioMoney,ac_update_time = :acUpdateTime where ac_id = :acId";
+			String sql = "update fin_account set ac_balance = round((ac_balance + :acioMoney),2),ac_update_time = :acUpdateTime where ac_id = :acId";
 			Map<String, Object> paramMap = new HashMap<String, Object>(); 
-			paramMap.put("acioMoney", acioMoney);
+			paramMap.put("acioMoney", acioMoney+"");
 			paramMap.put("acId", acId);
 			paramMap.put("acUpdateTime", DateTimeUtil.getDateTimeStr());
 			int result = njdt.update(sql, paramMap);
@@ -362,13 +362,13 @@ public class FinService {
 
 		
 //		如果为更新数据，需要调整更新后账户余额		
-		float changeMoney = finAccountTransfer.getActrMoney();
+		float thisChangeMoney = finAccountTransfer.getActrMoney();
 		if(isupdate){
 			FinAccountTransfer finAccountTransferOld = getFinAccountTransfer(finAccountTransfer.getActrId());
 			float oldMoney = finAccountTransferOld.getActrMoney();
-			
+			float changeMoney = 0f; 
 			if(finAccountTransferOld.getAcIdFrom() == finAccountTransfer.getAcIdFrom()){
-				changeMoney = changeMoney - oldMoney;
+				changeMoney = thisChangeMoney - oldMoney;
 				changeAccountBalance(-changeMoney, finAccountTransfer.getAcIdFrom());
 			}else{
 				changeAccountBalance(oldMoney, finAccountTransferOld.getAcIdFrom());
@@ -376,7 +376,7 @@ public class FinService {
 			}
 			
 			if(finAccountTransferOld.getAcIdTo() == finAccountTransfer.getAcIdTo()){
-				changeMoney = changeMoney - oldMoney;
+				changeMoney = thisChangeMoney - oldMoney;
 				changeAccountBalance(changeMoney, finAccountTransfer.getAcIdTo());
 			}else{
 				changeAccountBalance(-oldMoney, finAccountTransferOld.getAcIdTo());
@@ -386,8 +386,8 @@ public class FinService {
 			
 		}else{
 //			调整余额 转出账户减少，转入账户增加
-			changeAccountBalance(-changeMoney, finAccountTransfer.getAcIdFrom());
-			changeAccountBalance(changeMoney, finAccountTransfer.getAcIdTo());
+			changeAccountBalance(-thisChangeMoney, finAccountTransfer.getAcIdFrom());
+			changeAccountBalance(thisChangeMoney, finAccountTransfer.getAcIdTo());
 		}
 		
 
