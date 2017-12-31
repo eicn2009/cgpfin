@@ -75,7 +75,7 @@ public class FinController {
 	@RequestMapping(value="/accountlist",method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> finAcountList(@RequestBody(required=false) FinAccount finAccount) {
 		List<FinAccount> accountList = finService.getAccountList(finAccount);
-		float balanceSum = finService.getAccountBalanceSum(finAccount);
+		double balanceSum = finService.getAccountBalanceSum(finAccount);
 		Map<String, Object> map = new HashMap<>();
 		map.put("accountList", accountList);
 		map.put("acBalanceSum", balanceSum);

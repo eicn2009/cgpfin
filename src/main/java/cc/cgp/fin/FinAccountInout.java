@@ -12,6 +12,7 @@ import java.util.List;
  * 2017年12月9日 下午5:01:14 by cgp
  */
 public class FinAccountInout {
+	private int acCanused;
 	private int acioId;
 	private String acioDesc;
 	private int aciotypeId;
@@ -102,6 +103,12 @@ public class FinAccountInout {
 	}
 	public void setAcioStatisticsKeyList(List<String> acioStatisticsKeyList) {
 		this.acioStatisticsKeyList = acioStatisticsKeyList;
+	}
+	public int getAcCanused() {
+		return acCanused;
+	}
+	public void setAcCanused(int acCanused) {
+		this.acCanused = acCanused;
 	}
 	
 	

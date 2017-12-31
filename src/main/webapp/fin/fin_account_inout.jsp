@@ -76,6 +76,7 @@ $(function(){
 		    	aciotypeInorout:-1,
 		    	aciotypeId:-1,
 		    	acUserId:-1,
+		    	acCanused:1,
 		    	acioUserId:-1,
 		    	acioStatisticsKeyList:[],
 		    	searchType:1
@@ -154,6 +155,8 @@ $(function(){
 			    		name = "发生时间";
 			    	}else if(key=="acUserId"){
 			    		name = "账户归属人";
+			    	}else if(key=="acCanused"){
+			    		name = "是否可用";
 			    	}else if(key=="acioUserId"){
 			    		name = "经办人";
 			    	}else if(key=="orgId"){
@@ -232,6 +235,12 @@ $(function(){
 		}
 // 		保存和更新收支信息 1保存 2保存并继续
 		jQuery.cgp.fin.accountInoutAddSave = function(saveType){
+	
+			
+			if(finAccountInout.acId<0){
+				alert("请选择账号");
+				return false;
+			}
 			if(finAccountInout.accountInoutForm.aciotypeId<0){
 				alert("请选择收支详细类别");
 				return false;
@@ -475,13 +484,20 @@ $(function(){
 			<tbody>
 				<tr>
 					<td width="12%">
+						是否可用:<select v-model="searchForm.acCanused"  >
+								<option value="-1">不限</option>
+								<option value="1">可用</option>
+								<option value="0">不可用</option>
+						</select>
+					</td>
+					<td width="12%">
 						收支分类:<select v-model="searchForm.aciotypeInorout"  >
 								<option value="-1">不限</option>
 								<option value="1">收入</option>
 								<option value="2">支出</option>
 						</select>
 					</td>
-					<td width="25%">
+					<td width="20%">
 						账户:<select v-model="acId"  >
 								<option value="-1">不限</option>
 								<option v-for="option in accountList" :value="option.acId">{{option.acName}}</option>
@@ -504,7 +520,8 @@ $(function(){
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">
+					<td colspan="4">
+					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="acCanused" id="acCanused"><label for="acCanused">是否可用</label>
 					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="acId" id="acId"><label for="acId">账号</label>
 					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="acUserId" id="acUserId"><label for="acUserId">归属人</label>
 					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="actypeId" id="actypeId"><label for="actypeId">账户类别</label>
@@ -515,7 +532,7 @@ $(function(){
 					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="acioYear" id="acioYear"><label for="acioYear">年</label>
 					<input type="checkbox" v-model="searchForm.acioStatisticsKeyList" value="acioMonth" id="acioMonth"><label for="acioMonth">月</label>
 					</td>
-					<td colspan="10" >
+					<td colspan="9" >
 						<input type="button" id="statisticsBtn"  value="统计" onclick="jQuery.cgp.fin.accountInoutStatistics()">
 					</td>
 				</tr>

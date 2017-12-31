@@ -95,8 +95,8 @@ public class FinService {
 		 * @param acId
 		 * @return 2017年12月16日 下午3:38:02 by cgp
 		 */
-		public float changeAccountBalance(float acioMoney,int acId){
-			float acBlance = 0f;
+		public double changeAccountBalance(double acioMoney,int acId){
+			double acBlance = 0f;
 			String sql = "update fin_account set ac_balance = round((ac_balance + :acioMoney),2),ac_update_time = :acUpdateTime where ac_id = :acId";
 			Map<String, Object> paramMap = new HashMap<String, Object>(); 
 			paramMap.put("acioMoney", acioMoney+"");
@@ -115,8 +115,8 @@ public class FinService {
 	 * @param finAccount
 	 * @return 2017年12月6日 下午12:22:27 by cgp
 	 */
-	public float getAccountBalanceSum(FinAccount finAccount) {
-		String sql = "select ifnull( sum(fac.ac_balance),0) as sum from fin_account fac where fac.ac_isdelete = :isdelete ";
+	public double getAccountBalanceSum(FinAccount finAccount) {
+		String sql = "select round(ifnull(sum(fac.ac_balance),0),2) as sum from fin_account fac where fac.ac_isdelete = :isdelete ";
 		Map<String, Object> paramMap = new HashMap<String, Object>(); 
 		paramMap.put("isdelete", 0);
 		
@@ -139,8 +139,8 @@ public class FinService {
 			}
 		}
 		
-		
-		return njdt.queryForObject(sql, paramMap, Float.class).floatValue();
+		Double d = njdt.queryForObject(sql, paramMap, Double.class);
+		return d.doubleValue();
 	}
 	
 	/**
@@ -198,7 +198,7 @@ public class FinService {
 	public int deleteFinAccountInout(int acioId) {
 		FinAccountInout accountInout = getFinAccountInout(acioId);
 		
-		float acBalance = changeAccountBalance(-accountInout.getAcioMoney(), accountInout.getAcId());
+		double acBalance = changeAccountBalance(-accountInout.getAcioMoney(), accountInout.getAcId());
 		
 		int result = 0;
 		String sql =  "update fin_account_inout set acio_isdelete=1 where acio_id = :acioId";
@@ -235,7 +235,7 @@ public class FinService {
 		
 		
 //		客户端传入的支出数据为正值，需要处理为负值
-		float acioMoney = 0f;
+		double acioMoney = 0f;
 		int aciotypeInorout = finAccountInout.getAciotypeInorout();
 		if(aciotypeInorout == 2){
 			acioMoney = -finAccountInout.getAcioMoney();
@@ -244,10 +244,10 @@ public class FinService {
 		}
 		
 //		如果为更新数据，需要调整更新后账户余额		
-		float changeMoney = acioMoney;
+		double changeMoney = acioMoney;
 		if(isupdate){
 			FinAccountInout finAccountInoutOld = getFinAccountInout(finAccountInout.getAcioId());
-			float oldAcioMoney = finAccountInoutOld.getAcioMoney();
+			double oldAcioMoney = finAccountInoutOld.getAcioMoney();
 			changeMoney = acioMoney - oldAcioMoney;
 			if(finAccountInoutOld.getAcId()==finAccountInout.getAcId()){
 //				调整余额 为收入则增加余额，支出则减少余额
@@ -317,6 +317,10 @@ public class FinService {
 				sql += " and facio.ac_id = :acId";
 				paramMap.put("acId", finAccountInout.getAcId());
 			}
+			if(finAccountInout.getAcCanused()>-1){
+				sql += " and fac.ac_canused = :acCanused";
+				paramMap.put("acCanused", finAccountInout.getAcCanused());
+			}
 			if(finAccountInout.getAciotypeInorout()>-1){
 				sql += " and faciotype.aciotype_inorout = :aciotypeInorout";
 				paramMap.put("aciotypeInorout", finAccountInout.getAciotypeInorout());
@@ -362,11 +366,11 @@ public class FinService {
 
 		
 //		如果为更新数据，需要调整更新后账户余额		
-		float thisChangeMoney = finAccountTransfer.getActrMoney();
+		double thisChangeMoney = finAccountTransfer.getActrMoney();
 		if(isupdate){
 			FinAccountTransfer finAccountTransferOld = getFinAccountTransfer(finAccountTransfer.getActrId());
-			float oldMoney = finAccountTransferOld.getActrMoney();
-			float changeMoney = 0f; 
+			double oldMoney = finAccountTransferOld.getActrMoney();
+			double changeMoney = 0f; 
 			if(finAccountTransferOld.getAcIdFrom() == finAccountTransfer.getAcIdFrom()){
 				changeMoney = thisChangeMoney - oldMoney;
 				changeAccountBalance(-changeMoney, finAccountTransfer.getAcIdFrom());
@@ -457,7 +461,7 @@ public class FinService {
 	 * @return 2017年12月24日 下午6:01:35 by cgp
 	 */
 	public List<Map<String, Object>> getAccountInoutStatistics(FinAccountInout finAccountInout) {
-		String sqlSelect = "SELECT sum(facio.acio_money) sum,";
+		String sqlSelect = "SELECT round(sum(facio.acio_money),2) sum,";
 		String sql = " from fin_account_inout facio,fin_account_inout_type faciotype,fin_user fuser,fin_account fac"
 				+ ",fin_account_type factype,fin_org forg,fin_user faciouser"
 				+ " where facio.acio_isdelete = :isdelete and facio.aciotype_id = faciotype.aciotype_id and fac.actype_id = factype.actype_id "
@@ -470,6 +474,10 @@ public class FinService {
 			if(finAccountInout.getAcId()>-1){
 				sql += " and facio.ac_id = :acId";
 				paramMap.put("acId", finAccountInout.getAcId());
+			}
+			if(finAccountInout.getAcCanused()>-1){
+				sql += " and fac.ac_canused = :acCanused";
+				paramMap.put("acCanused", finAccountInout.getAcCanused());
 			}
 			if(finAccountInout.getAciotypeInorout()>-1){
 				sql += " and faciotype.aciotype_inorout = :aciotypeInorout";
@@ -490,7 +498,7 @@ public class FinService {
 //	   		acioYear:0,//年
 //	   		acioMonth:0,//月
 //	   		acioUserId:0,//经办人
-			if(acioStatisticsKeyList==null||"".equals(acioStatisticsKeyList)){
+			if(acioStatisticsKeyList==null||acioStatisticsKeyList.size()==0){
 				acioStatisticsKeyList =new ArrayList<String>();
 				acioStatisticsKeyList.add("acioYear");
 			}
@@ -504,6 +512,9 @@ public class FinService {
 					}else if(key.equals("acUserId")){
 						sqlgroup += "fac.user_id,";
 						sqlSelect += "fuser.user_name as ac_user_id,";
+					}else if(key.equals("acCanused")){
+						sqlgroup += "fac.ac_canused,";
+						sqlSelect += "fac.ac_canused as ac_canused,";
 					}else if(key.equals("actypeId")){
 						sqlgroup += "fac.actype_id,";
 						sqlSelect += "factype.actype_name as actype_id,";
