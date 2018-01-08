@@ -251,7 +251,7 @@ $(function(){
 			}
 			if(checknum(finAccountInout.accountInoutForm.acioMoney)){
 				if(finAccountInout.accountInoutForm.acioMoney<=0){
-					if(finAccountInout.accountInoutForm.aciotypeId!=0){//余额调整时可能出现负值
+					if(finAccountInout.accountInoutForm.aciotypeInorout==2 && finAccountInout.accountInoutForm.aciotypeId!=0){//余额调整时可能出现负值
 						alert("请输入正确金额");
 						return false;
 					}

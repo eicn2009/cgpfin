@@ -99,7 +99,7 @@ public class FinService {
 			double acBlance = 0f;
 			String sql = "update fin_account set ac_balance = round((ac_balance + :acioMoney),2),ac_update_time = :acUpdateTime where ac_id = :acId";
 			Map<String, Object> paramMap = new HashMap<String, Object>(); 
-			paramMap.put("acioMoney", acioMoney+"");
+			paramMap.put("acioMoney", (double)(Math.round(acioMoney*100)/100.0)+"");
 			paramMap.put("acId", acId);
 			paramMap.put("acUpdateTime", DateTimeUtil.getDateTimeStr());
 			int result = njdt.update(sql, paramMap);
@@ -280,7 +280,7 @@ public class FinService {
 		
 		
 		//支出money记录为负值
-		paramMap.put("money", acioMoney+"");
+		paramMap.put("money", (double)(Math.round(acioMoney*100)/100.0)+"");
 		paramMap.put("userid", finAccountInout.getUserId());
 		paramMap.put("balance", finAccountInout.getAcioBalance());
 		paramMap.put("accountid", finAccountInout.getAcId());
@@ -371,20 +371,19 @@ public class FinService {
 			FinAccountTransfer finAccountTransferOld = getFinAccountTransfer(finAccountTransfer.getActrId());
 			double oldMoney = finAccountTransferOld.getActrMoney();
 			double changeMoney = 0f; 
+			changeMoney = thisChangeMoney - oldMoney;
 			if(finAccountTransferOld.getAcIdFrom() == finAccountTransfer.getAcIdFrom()){
-				changeMoney = thisChangeMoney - oldMoney;
 				changeAccountBalance(-changeMoney, finAccountTransfer.getAcIdFrom());
 			}else{
 				changeAccountBalance(oldMoney, finAccountTransferOld.getAcIdFrom());
-				changeAccountBalance(-changeMoney, finAccountTransfer.getAcIdFrom());
+				changeAccountBalance(-thisChangeMoney, finAccountTransfer.getAcIdFrom());
 			}
 			
 			if(finAccountTransferOld.getAcIdTo() == finAccountTransfer.getAcIdTo()){
-				changeMoney = thisChangeMoney - oldMoney;
 				changeAccountBalance(changeMoney, finAccountTransfer.getAcIdTo());
 			}else{
 				changeAccountBalance(-oldMoney, finAccountTransferOld.getAcIdTo());
-				changeAccountBalance(changeMoney, finAccountTransfer.getAcIdTo());
+				changeAccountBalance(thisChangeMoney, finAccountTransfer.getAcIdTo());
 			}
 			
 			
