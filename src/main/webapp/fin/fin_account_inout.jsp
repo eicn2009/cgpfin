@@ -89,6 +89,7 @@ $(function(){
 // 		    account:accountInfo,
 		   	aciotypeList:null,
 		   	acioList:null,
+		   	acioListMoneySum:0,
 		   	accountInoutForm:accountInout,
 		   	acioStatisticsForm:{
 		   		acId:0,//账号
@@ -354,7 +355,7 @@ $(function(){
 				}
 			}
 // 			finAccountInout.searchForm.aciotypeInorout = finAccountInout.accountInoutForm.aciotypeInorout;
-
+// 收支明细
 			if(finAccountInout.searchForm.searchType == 1){
 				$.ajax({
 					type:"post",
@@ -365,9 +366,17 @@ $(function(){
 					success:function(data){
 						finAccountInout.resultType = 1;
 						finAccountInout.acioList = data;
+						
+// 						页面上计算总和
+						finAccountInout.acioListMoneySum = 0;
+						for(index in finAccountInout.acioList){
+							finAccountInout.acioListMoneySum += finAccountInout.acioList[index].acioMoney;
+						}
+//			 			总和保留两位小数 注意异步方法
+						finAccountInout.acioListMoneySum  = Math.round(finAccountInout.acioListMoneySum*100)/100;
 					}
 				});
-			}else if(finAccountInout.searchForm.searchType == 2){
+			}else if(finAccountInout.searchForm.searchType == 2){//按选择类型分类统计
 				$.ajax({
 					type:"post",
 					url:"/fin/accountinoutstatistics",
@@ -377,9 +386,17 @@ $(function(){
 					success:function(data){
 						finAccountInout.resultType = 2;
 						finAccountInout.acioStatisticsList = data;
+// 						页面上计算总和
+						finAccountInout.acioListMoneySum = 0;
+						for(index in finAccountInout.acioStatisticsList){
+							finAccountInout.acioListMoneySum += finAccountInout.acioStatisticsList[index].sum;
+						}
+//			 			总和保留两位小数 注意异步方法
+						finAccountInout.acioListMoneySum  = Math.round(finAccountInout.acioListMoneySum*100)/100;
 					}
 				});
 			}
+
 			
 		};
 			
@@ -545,7 +562,7 @@ $(function(){
 					<th >id</th>
 					<th >账户名</th>
 					<th >发生时间</th>
-					<th >收支金额</th>
+					<th >收支金额(总和{{acioListMoneySum}})</th>
 					<th >余额</th>
 					<th >收支描述</th>
 					<th >经办人</th>
@@ -583,7 +600,7 @@ $(function(){
 		<table v-if="resultType==2" class="table table-hover table-striped table-bordered ">
 			<thead>
 				<tr>
-					<th width="8%" v-for="(value,key) in acioStatisticsList[0]">{{ getStatisticsName(key) }}</th>
+					<th width="8%" v-for="(value,key) in acioStatisticsList[0]">{{ getStatisticsName(key)}}<span v-if="key=='sum'">(总和{{acioListMoneySum}})</span></th>
 				</tr>
 			</thead>
 			<tbody>
