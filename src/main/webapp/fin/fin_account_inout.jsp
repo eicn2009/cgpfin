@@ -559,17 +559,16 @@ $(function(){
 		<table v-if="resultType==1" class="table table-hover table-striped table-bordered ">
 			<thead>
 				<tr>
-					<th >id</th>
-					<th >账户名</th>
-					<th >发生时间</th>
-					<th >收支金额(总和{{acioListMoneySum}})</th>
-					<th >余额</th>
+					<th style="width:40px;">id</th>
+					<th style="width:150px;">账户名</th>
+					<th style="width:100px;">发生时间</th>
+					<th style="width:100px;">收支金额(总和{{acioListMoneySum}})</th>
 					<th >收支描述</th>
-					<th >经办人</th>
-					<th >收支分类</th>
-					<th >收支具体类别</th>
-					<th >记录时间</th>
-					<th >操作 </th>
+					<th style="width:80px;">经办人</th>
+					<th style="width:60px;">收支分类</th>
+					<th style="width:150px;">收支具体类别</th>
+					<th style="width:160px;">记录时间</th>
+					<th style="width:120px;">操作 </th>
 				</tr>
 			</thead>
 			<tbody>
@@ -578,7 +577,6 @@ $(function(){
 					<td>{{inout.acName}}</td>
 					<td>{{inout.acioHappenedTime}}</td>
 					<td>{{inout.acioMoney}}</td>
-					<td>{{inout.acioBalance}}</td>
 					<td>{{inout.acioDesc}}</td>
 					<td>{{inout.userName}}</td>
 					<td>{{inout.aciotypeInorout == 1?"收入":"支出"}}</td>
