@@ -11,8 +11,8 @@ package cc.cgp.fin;
 public class FinAccount {
 	private int acId;
 	private String acName;
-	private float acBalance;
-	private float acInitbalance;
+	private double acBalance;
+	private double acInitbalance;
 	private String acCreateTime;
 	private String acUpdateTime;
 	private int acCanused;
@@ -60,16 +60,16 @@ public class FinAccount {
 	public void setAcName(String acName) {
 		this.acName = acName;
 	}
-	public float getAcBalance() {
+	public double getAcBalance() {
 		return acBalance;
 	}
-	public void setAcBalance(float acBalance) {
+	public void setAcBalance(double acBalance) {
 		this.acBalance = acBalance;
 	}
-	public float getAcInitbalance() {
+	public double getAcInitbalance() {
 		return acInitbalance;
 	}
-	public void setAcInitbalance(float acInitbalance) {
+	public void setAcInitbalance(double acInitbalance) {
 		this.acInitbalance = acInitbalance;
 	}
 	public String getAcCreateTime() {

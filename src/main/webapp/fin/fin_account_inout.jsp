@@ -172,7 +172,7 @@ $(function(){
 					return name;			    	
 			    },
 			    getAciotypeList:function(event){
-			    	
+			    	this.accountInoutForm.acioMoney = 0;
 // 			    	jQuery.cgp.fin.getAciotypeList(this.accountInoutForm.aciotypeInorout);
 			    }
 			  }

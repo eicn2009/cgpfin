@@ -13,7 +13,7 @@ public class FinAccountTransfer {
 	
 	private int actrId;
 	private String actrDesc;
-	private float actrMoney;
+	private double actrMoney;
 	private String actrHappenedTime;
 	private String actrCreateTime;
 	private int actrIsdelete;
@@ -39,10 +39,10 @@ public class FinAccountTransfer {
 	public void setActrDesc(String actrDesc) {
 		this.actrDesc = actrDesc;
 	}
-	public float getActrMoney() {
+	public double getActrMoney() {
 		return actrMoney;
 	}
-	public void setActrMoney(float actrMoney) {
+	public void setActrMoney(double actrMoney) {
 		this.actrMoney = actrMoney;
 	}
 	public String getActrHappenedTime() {

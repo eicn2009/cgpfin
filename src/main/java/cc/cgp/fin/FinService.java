@@ -49,6 +49,8 @@ public class FinService {
 		String sql = "select fac.ac_id,fac.ac_name,fac.ac_balance,fac.ac_update_time,fac.ac_canused, forg.org_name,fuser.user_name ,factype.actype_name"
 				+ " from fin_account fac,fin_org forg,fin_account_type factype,fin_user fuser"
 				+ " where fac.org_id = forg.org_id and fac.user_id = fuser.user_id and fac.actype_id = factype.actype_id and fac.ac_isdelete = :isdelete ";
+		String sqlOrderBy = " order by fac.ac_update_time desc";
+		
 		Map<String, Object> paramMap = new HashMap<String, Object>(); 
 		paramMap.put("isdelete", 0);
 		
@@ -69,8 +71,9 @@ public class FinService {
 				sql += " and fac.actype_id = :type";
 				paramMap.put("type", finAccount.getActypeId());
 			}
+			
 		}
-		return njdt.query(sql, paramMap, new BeanPropertyRowMapper<FinAccount>(FinAccount.class));
+		return njdt.query(sql+sqlOrderBy, paramMap, new BeanPropertyRowMapper<FinAccount>(FinAccount.class));
 	}
 		/**
 		 * 通过acId获取account实体
@@ -345,7 +348,7 @@ public class FinService {
 				+ " from fin_account_transfer actr,fin_account acf,fin_account act,fin_user user "
 				+ " where actr.actr_isdelete = :actrIsdelete and actr.ac_id_from = acf.ac_id "
 				+ " and actr.ac_id_to = act.ac_id and actr.user_id = user.user_id "
-				+ " order by actr.actr_happened_time DESC,actr.ac_id_from DESC,actr.actr_id DESC";
+				+ " order by actr.actr_happened_time DESC,actr.actr_id DESC";
 		
 		Map<String, Object> paramMap = new HashMap<String, Object>(); 
 		paramMap.put("actrIsdelete", 0);
