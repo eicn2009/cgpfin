@@ -134,6 +134,7 @@ $(function(){
 						<li class="active"><a href="/fin">账户列表</a></li>
 						<li><a href="/fin/accountinout">收支明细</a></li>
 						<li><a href="/fin/accounttransfer">转账明细</a></li>
+						<li><a href="/fin/fintradeaccount">理财交易管理</a></li>
 					</ul>
 				</div>
 			</div>

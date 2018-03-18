@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  */
 @Controller
-@RequestMapping("/fintradeaccount")
+@RequestMapping("/fin/fintradeaccount")
 public class FinTradeAccountController {
 	@Autowired
 	 FinTradeAccountService finTradeAccountService;
