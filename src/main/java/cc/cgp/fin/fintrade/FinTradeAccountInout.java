@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cc.cgp.fin;
+package cc.cgp.fin.fintrade;
 
 /**
  * @author eicn 2018年3月4日 上午1:50:16

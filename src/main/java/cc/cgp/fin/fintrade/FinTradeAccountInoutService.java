@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cc.cgp.fin;
+package cc.cgp.fin.fintrade;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cc.cgp.fin;
+package cc.cgp.fin.fintrade;
 
 import java.io.IOException;
 import java.util.List;

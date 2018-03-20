@@ -1,7 +1,9 @@
 /**
  * 
  */
-package cc.cgp.fin;
+package cc.cgp.fin.fintrade;
+
+import cc.cgp.fin.FinAccount;
 
 /**
  * @author eicn 2018年3月4日 上午1:39:57
@@ -11,12 +13,13 @@ public class FinTradeAccount {
 	private int tradeacId = -1;
 	private String tradeacName;
 	private String tradeacCode;
-	private double tradeacCount;
-	private double tradeacPriceNow;
-	private double tradeacMoneyCost;
+	private double tradeacCount = 0;
+	private double tradeacPriceNow = 0;
+	private double tradeacMoneyCost = 0;
 	private String tradeacCreateTime;
 	private String tradeacUpdateTime;
 	private int acId;
+	private FinAccount finAccount;
 	/**
 	 * @return the tradeacId
 	 */
@@ -124,6 +127,12 @@ public class FinTradeAccount {
 	 */
 	public void setAcId(int acId) {
 		this.acId = acId;
+	}
+	public FinAccount getFinAccount() {
+		return finAccount;
+	}
+	public void setFinAccount(FinAccount finAccount) {
+		this.finAccount = finAccount;
 	}
 	
 	

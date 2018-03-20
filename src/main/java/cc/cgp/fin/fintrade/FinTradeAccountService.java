@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cc.cgp.fin;
+package cc.cgp.fin.fintrade;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import cc.cgp.fin.FinService;
 import cc.cgp.util.DateTimeUtil;
 
 /**
@@ -25,6 +26,9 @@ public class FinTradeAccountService {
 	private NamedParameterJdbcTemplate njdt;
 	@Autowired
 	private JdbcTemplate jdt;
+	
+	@Autowired
+	private FinService finService;
 	
 	/**
 	 * 通过交易账号id获取交易账号实体
@@ -55,7 +59,7 @@ public class FinTradeAccountService {
 				+ ",ftradeac.tradeac_count,ftradeac.tradeac_price_now,ftradeac.tradeac_money_cost"
 				+ ",ftradeac.tradeac_create_time,ftradeac.tradeac_update_time,ftradeac.ac_id "
 				+ " from fin_trade_account ftradeac "
-				+ " where ftradeac.tradeac_isdelete = :tradeac_isdelete ";
+				+ " where ftradeac.tradeac_isdelete = :tradeac_isdelete order by ftradeac.tradeac_update_time desc";
 		
 		Map<String, Object> paramMap = new HashMap<String, Object>(); 
 		paramMap.put("tradeac_isdelete", 0);
@@ -127,11 +131,17 @@ public class FinTradeAccountService {
 	}
 	
 	public FinTradeAccount getFinTradeAccount(int tradeacId){
-		return _getFinTradeAccount(tradeacId);
+		FinTradeAccount finTradeAccount = _getFinTradeAccount(tradeacId);
+		finTradeAccount.setFinAccount(finService.getAccount(finTradeAccount.getAcId()));
+		return finTradeAccount;
 	}
 	
 	public List<FinTradeAccount> getFinTradeAccountList(){
-		return _getFinTradeAccountList();
+		List<FinTradeAccount> finTradeAccountList = _getFinTradeAccountList();
+		for (FinTradeAccount finTradeAccount : finTradeAccountList) {
+			finTradeAccount.setFinAccount(finService.getAccount(finTradeAccount.getAcId()));
+		} 
+		return finTradeAccountList;
 	}
 	
 	public int deleteFinTradeAccount(int tradeacId){
