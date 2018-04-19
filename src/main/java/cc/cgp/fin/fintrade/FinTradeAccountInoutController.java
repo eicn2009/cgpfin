@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  */
 @Controller
-@RequestMapping("/fintradeaccountinout")
+@RequestMapping("/fin/fintradeaccountinout")
 public class FinTradeAccountInoutController {
 	@Autowired
 	 FinTradeAccountInoutService finTradeAccountInoutService;
@@ -34,9 +34,9 @@ public class FinTradeAccountInoutController {
 	}
 	
 	
-	@RequestMapping(value="/fintradeaccountinoutlist",method = RequestMethod.GET)
-	public @ResponseBody List<FinTradeAccountInout> finTradeAccountInoutList() {
-		List<FinTradeAccountInout> finTradeAccountInoutList = finTradeAccountInoutService.getFinTradeAccountInoutList();
+	@RequestMapping(value="/fintradeaccountinoutlist/{tradeacId}",method = RequestMethod.GET)
+	public @ResponseBody List<FinTradeAccountInout> finTradeAccountInoutList(@PathVariable("tradeacId") int tradeacId) {
+		List<FinTradeAccountInout> finTradeAccountInoutList = finTradeAccountInoutService.getFinTradeAccountInoutList(tradeacId);
 		return finTradeAccountInoutList;
 	}
 	

@@ -15,12 +15,29 @@ function getTradeAccount() {
 		"tradeacName" : "",
 		"tradeacCode" : "",
 		"tradeacCount" : 0,
+		"tradeacType" : 1,
 		"tradeacPriceNow" : 0,
 		"tradeacMoneyCost" : 0,
+		"tradeacRemark" : "",
 		"tradeacCreateTime" : "",
 		"tradeacUpdateTime" : "",
 		"acId" : 0,
 		"account" : null
+	}
+}
+function getTradeAccountInout() {
+	return {
+		"tradeacioId" : -1,
+		"tradeacioType" : 1,
+		"tradeacioCount" : 0,
+		"tradeacioPrice" : 0,
+		"tradeacioTax" : 0,
+		"tradeacioFee" : 0,
+		"tradeacioRemark" : "",
+		"tradeacioCreateTime" : "",
+		"tradeacioUpdateTime" : "",
+		"tradeacId" : 0,
+		"tradeAccount" : null
 	}
 }
 function getTradeAccountSearchForm() {
@@ -62,3 +79,27 @@ $.cgp.fin.getAccountList = function(fnsuccess) {
 		}
 	});
 };
+//通过交易账户id获取交易信息列表
+$.cgp.fin.getTradeAccountInoutList = function(tradeacId,fnsuccess){
+	$.ajax({
+		type:"get",
+		url:"/fin/fintradeaccountinout/fintradeaccountinoutlist/"+tradeacId,
+		dataType: "json",
+		success:function(data){
+			fnsuccess(data);
+		}
+	});
+}
+
+jQuery.cgp.fin.getTradeAccount = function(tradeacId,fnsuccess){
+	$.ajax({
+		type:"get",
+		url:"/fin/fintradeaccount/fintradeaccount"+tradeacId,
+		dataType: "json",
+		success:function(data){
+			fnsuccess(data);
+		}
+	});
+}
+
+

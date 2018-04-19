@@ -11,14 +11,14 @@ public class FinTradeAccountInout {
 	
 	private int tradeacioId = -1;
 	private int tradeacioType;
-	private double tradeacioCount;
-	private double tradeacioPrice;
+	private double tradeacioCount = 0;
+	private double tradeacioPrice = 0;
 	private String tradeacioCreateTime;
 	private String tradeacioUpdateTime;
-	private double tradeacioFee;
-	private double tradeacioTax;
+	private double tradeacioFee = 0;
+	private double tradeacioTax = 0;
 	private String tradeacioRemark;
-	private int tradeacId;
+	private int tradeacId = -1;
 	
 	/**
 	 * @return the tradeacioRemark

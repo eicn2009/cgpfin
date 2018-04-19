@@ -31,13 +31,13 @@ public class FinTradeAccountService {
 	private FinService finService;
 	
 	/**
-	 * 通过交易账号id获取交易账号实体
+	 * 通过交易账号id获取股票账号实体
 	 * @author 2018年3月4日 上午2:11:03
 	 * @param tradeacId
 	 * @return
 	 */
 	private FinTradeAccount _getFinTradeAccount(int tradeacId){
-		String sql = "select ftradeac.tradeac_id,ftradeac.tradeac_name,ftradeac.tradeac_code"
+		String sql = "select ftradeac.tradeac_id,ftradeac.tradeac_name,ftradeac.tradeac_code,ftradeac.tradeac_type,ftradeac.tradeac_remark"
 				+ ",ftradeac.tradeac_count,ftradeac.tradeac_price_now,ftradeac.tradeac_money_cost"
 				+ ",ftradeac.tradeac_create_time,ftradeac.tradeac_update_time,ftradeac.ac_id "
 				+ " from fin_trade_account ftradeac"
@@ -47,15 +47,36 @@ public class FinTradeAccountService {
 		paramMap.put("tradeac_isdelete", 0);
 		paramMap.put("tradeac_id", tradeacId);
 		return njdt.queryForObject(sql, paramMap, new BeanPropertyRowMapper<FinTradeAccount>(FinTradeAccount.class));
-
 	}
+	
+	
+	/**
+	 * 通过主账户id获取对应证券资金账号实体
+	 * @param acId
+	 * @return 2018年4月15日 下午11:40:23 by cgp
+	 */
+	private FinTradeAccount _getFinTradeAccountByAcId(int acId){
+		String sql = "select ftradeac.tradeac_id,ftradeac.tradeac_name,ftradeac.tradeac_code,ftradeac.tradeac_type,ftradeac.tradeac_remark"
+				+ ",ftradeac.tradeac_count,ftradeac.tradeac_price_now,ftradeac.tradeac_money_cost"
+				+ ",ftradeac.tradeac_create_time,ftradeac.tradeac_update_time,ftradeac.ac_id "
+				+ " from fin_trade_account ftradeac"
+				+ " where ftradeac.ac_id = :ac_id and ftradeac.tradeac_isdelete = :tradeac_isdelete and ftradeac.tradeac_type = :tradeac_type ";
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>(); 
+		paramMap.put("tradeac_isdelete", 0);
+		paramMap.put("tradeac_type", 0);
+		paramMap.put("ac_id", acId);
+		return njdt.queryForObject(sql, paramMap, new BeanPropertyRowMapper<FinTradeAccount>(FinTradeAccount.class));
+		
+	}
+	
 	/**
 	 * 获取交易账号实体列表
 	 * @author 2018年3月4日 上午2:14:24
 	 * @return
 	 */
 	private List<FinTradeAccount> _getFinTradeAccountList(){
-		String sql = "select ftradeac.tradeac_id,ftradeac.tradeac_name,ftradeac.tradeac_code"
+		String sql = "select ftradeac.tradeac_id,ftradeac.tradeac_name,ftradeac.tradeac_code,ftradeac.tradeac_type,ftradeac.tradeac_remark"
 				+ ",ftradeac.tradeac_count,ftradeac.tradeac_price_now,ftradeac.tradeac_money_cost"
 				+ ",ftradeac.tradeac_create_time,ftradeac.tradeac_update_time,ftradeac.ac_id "
 				+ " from fin_trade_account ftradeac "
@@ -80,6 +101,8 @@ public class FinTradeAccountService {
 		if (isupdate) {
 			sql = "update fin_trade_account set "
 				+ "tradeac_name = :tradeac_name,"
+				+ "tradeac_type = :tradeac_type,"
+				+ "tradeac_remark = :tradeac_remark,"
 				+ "tradeac_code = :tradeac_code,"
 				+ "tradeac_count = :tradeac_count,"
 				+ "tradeac_price_now = :tradeac_price_now,"
@@ -89,10 +112,10 @@ public class FinTradeAccountService {
 				+ " where tradeac_id = :tradeac_id";
 		}else {
 			sql = "insert into fin_trade_account("
-					+ "tradeac_name,tradeac_code,tradeac_count,"
+					+ "tradeac_name,tradeac_code,tradeac_count,tradeac_type,tradeac_remark,"
 					+ "tradeac_price_now,tradeac_money_cost,tradeac_create_time"
 					+ ",tradeac_update_time,ac_id) "
-					+ " values(:tradeac_name,:tradeac_code,:tradeac_count"
+					+ " values(:tradeac_name,:tradeac_code,:tradeac_count,:tradeac_type,:tradeac_remark"
 					+ ",:tradeac_price_now,:tradeac_money_cost,:tradeac_create_time"
 					+ ",:tradeac_update_time,:ac_id)";
 		
@@ -100,6 +123,8 @@ public class FinTradeAccountService {
 		Map<String, Object> paramMap = new HashMap<String, Object>(); 
 		paramMap.put("tradeac_name", finTradeAccount.getTradeacName());
 		paramMap.put("tradeac_code", finTradeAccount.getTradeacCode());
+		paramMap.put("tradeac_type", finTradeAccount.getTradeacType());
+		paramMap.put("tradeac_remark", finTradeAccount.getTradeacRemark());
 		paramMap.put("tradeac_count", finTradeAccount.getTradeacCount());
 		paramMap.put("tradeac_price_now", finTradeAccount.getTradeacPriceNow());
 		paramMap.put("tradeac_money_cost", finTradeAccount.getTradeacMoneyCost());
@@ -136,6 +161,11 @@ public class FinTradeAccountService {
 		return finTradeAccount;
 	}
 	
+	public FinTradeAccount getFinTradeAccountByAcId(int acId){
+		FinTradeAccount finTradeAccount = _getFinTradeAccountByAcId(acId);
+		return finTradeAccount;
+	}
+
 	public List<FinTradeAccount> getFinTradeAccountList(){
 		List<FinTradeAccount> finTradeAccountList = _getFinTradeAccountList();
 		for (FinTradeAccount finTradeAccount : finTradeAccountList) {

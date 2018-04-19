@@ -7,7 +7,7 @@ import cc.cgp.fin.FinAccount;
 
 /**
  * @author eicn 2018年3月4日 上午1:39:57
- *
+ * tradeacRemark tradeacType
  */
 public class FinTradeAccount { 
 	private int tradeacId = -1;
@@ -16,9 +16,11 @@ public class FinTradeAccount {
 	private double tradeacCount = 0;
 	private double tradeacPriceNow = 0;
 	private double tradeacMoneyCost = 0;
+	private String tradeacRemark;
 	private String tradeacCreateTime;
 	private String tradeacUpdateTime;
-	private int acId;
+	private int tradeacType = 0;//0 理财产品 1 股票资金账号 3 股票投资账户
+	private int acId = -1;
 	private FinAccount finAccount;
 	/**
 	 * @return the tradeacId
@@ -133,6 +135,18 @@ public class FinTradeAccount {
 	}
 	public void setFinAccount(FinAccount finAccount) {
 		this.finAccount = finAccount;
+	}
+	public String getTradeacRemark() {
+		return tradeacRemark;
+	}
+	public void setTradeacRemark(String tradeacRemark) {
+		this.tradeacRemark = tradeacRemark;
+	}
+	public int getTradeacType() {
+		return tradeacType;
+	}
+	public void setTradeacType(int tradeacType) {
+		this.tradeacType = tradeacType;
 	}
 	
 	
