@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cc.cgp.fin.FinAccount;
+import cc.cgp.fin.FinService;
 import cc.cgp.util.DateTimeUtil;
 
 /**
@@ -29,6 +31,8 @@ public class FinTradeAccountInoutService {
 	private JdbcTemplate jdt;
 	@Autowired
 	private FinTradeAccountService finTradeAccountService;
+	@Autowired
+	private FinService finService;
 
 	/**
 	 * 通过交易账号id获取交易账号实体
@@ -201,6 +205,7 @@ public class FinTradeAccountInoutService {
 		finTradeAccountService.addOrUpdateFinTradeAccount(finTradeAccount);
 		finTradeAccountService.addOrUpdateFinTradeAccount(finTradeAccountMoney);
 	}
+
 	/**
 	 * 保存理财产品操作明细
 	 * 
@@ -209,10 +214,33 @@ public class FinTradeAccountInoutService {
 	 */
 	@Transactional
 	public int addOrUpdateFinTradeAccountInout(FinTradeAccountInout finTradeAccountInout) {
-		// 1.保存理财产品买卖明细，2.修改对应理财产品的持有数量，总成本等 3.修改对应理财产品资金账号额度
-		_doBeforeAddOrUpdateFinTradeAccountInout(finTradeAccountInout);
+		int tradeacId = finTradeAccountInout.getTradeacId();
+		FinTradeAccount finTradeAccount = finTradeAccountService.getFinTradeAccount(tradeacId);
+		if (finTradeAccount.getTradeacType() == 0) {
+			// 资金账户操作
+			_doBeforeAddOrUpdateFinTradeAccountMoneyInout(finTradeAccountInout);
+		} else if (finTradeAccount.getTradeacType() == 1) {
+			// 股票账户操作
+			// 1.保存理财产品买卖明细，2.修改对应理财产品的持有数量，总成本等 3.修改对应理财产品资金账号额度
+			_doBeforeAddOrUpdateFinTradeAccountInout(finTradeAccountInout);
+		}
+
 		int rowcount = _addOrUpdateFinTradeAccountInout(finTradeAccountInout);
 		return rowcount;
+	}
+
+	/**
+	 * @author 2018年4月23日 下午11:34:44
+	 * @param finTradeAccountInout
+	 */
+	private void _doBeforeAddOrUpdateFinTradeAccountMoneyInout(FinTradeAccountInout finTradeAccountInout) {
+		int tradeacId = finTradeAccountInout.getTradeacId();
+		FinTradeAccount finTradeAccount = finTradeAccountService.getFinTradeAccount(tradeacId);
+		int acId = finTradeAccount.getAcId();
+		FinAccount finAccount = finService.getAccount(acId);
+		// 1.主账户与对应证券账户之间转账：修改主账户和对应证券账户余额；增加转账记录；如果是修改，则修改余额，增加转账记录两条，因为找不到对应转账记录；
+		// 2.修改对应证券资金账户余额，增加转账记录一条，如果是修改，删除一条记录，增加一条记录；
+		
 	}
 
 }

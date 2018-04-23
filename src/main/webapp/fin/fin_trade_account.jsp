@@ -106,25 +106,33 @@ $(function(){
 	}
 	
 	jQuery.cgp.fin.addOrUpdateTradeAccountInout = function(){
-		if(!(finTradeAccount.tradeAccountInout.tradeacioType==1 || finTradeAccount.tradeAccountInout.tradeacioType==-1)){
-			alert("请选择交易类型");
-			return false;
-		}
-		if(!finTradeAccount.tradeAccountInout.tradeacioCount){
-			alert("请输入交易数量");
-			return false;
-		}
-		if(!finTradeAccount.tradeAccountInout.tradeacioPrice){
-			alert("请输入交易价格");
-			return false;
-		}
-		if(!finTradeAccount.tradeAccountInout.tradeacioFee){
-			alert("请输入交易费用");
-			return false;
-		}
-		if(!finTradeAccount.tradeAccountInout.tradeacioTax){
-			alert("请输入交易税费");
-			return false;
+// 		如果是股票账户交易明细保存
+		if(finTradeAccount.tradeAccount.tradeacType == 1){
+			if(!(finTradeAccount.tradeAccountInout.tradeacioType==1 || finTradeAccount.tradeAccountInout.tradeacioType==-1)){
+				alert("请选择交易类型");
+				return false;
+			}
+			if(!finTradeAccount.tradeAccountInout.tradeacioCount){
+				alert("请输入交易数量");
+				return false;
+			}
+			if(!finTradeAccount.tradeAccountInout.tradeacioPrice){
+				alert("请输入交易价格");
+				return false;
+			}
+			if(!finTradeAccount.tradeAccountInout.tradeacioFee){
+				alert("请输入交易费用");
+				return false;
+			}
+			if(!finTradeAccount.tradeAccountInout.tradeacioTax){
+				alert("请输入交易税费");
+				return false;
+			}
+		}else{
+			if(!finTradeAccount.tradeAccountInout.tradeacioCount){
+				alert("请输入交易数量");
+				return false;
+			}
 		}
 		
 		finTradeAccount.tradeAccountInout.tradeacId = finTradeAccount.tradeAccount.tradeacId;
@@ -327,9 +335,9 @@ $(function(){
 									<th>序号</th>
 									<th>操作类型</th>
 									<th>交易数量</th>
-									<th>交易价格</th>
-									<th>交易手续费</th>
-									<th>交易税费</th>
+									<th v-if="tradeAccountItem.tradeacType==1">交易价格</th>
+									<th v-if="tradeAccountItem.tradeacType==1">交易手续费</th>
+									<th v-if="tradeAccountItem.tradeacType==1">交易税费</th>
 									<th>备注</th>
 									<th>操作时间</th>
 									<th>操作</th>
@@ -338,20 +346,24 @@ $(function(){
 									<td></td>
 									<td>
 										<select v-model="tradeAccountInout.tradeacioType">
-											<option value="1">买入</option>
-											<option value="-1">卖出</option>
+
+											<option v-if="tradeAccountItem.tradeacType==0" value="1">转入证券</option>
+											<option v-if="tradeAccountItem.tradeacType==0" value="-1">证券转出</option>
+											<option v-if="tradeAccountItem.tradeacType==1" value="1">买入</option>
+											<option v-if="tradeAccountItem.tradeacType==1" value="-1">卖出</option>
+
 										</select>
 									</td>
 									<td>
 										<input type="text" v-model="tradeAccountInout.tradeacioCount">
 									</td>
-									<td>
+									<td v-if="tradeAccountItem.tradeacType==1">
 										<input type="text" v-model="tradeAccountInout.tradeacioPrice">
 									</td>
-									<td>
+									<td v-if="tradeAccountItem.tradeacType==1">
 										<input type="text" v-model="tradeAccountInout.tradeacioFee">
 									</td>
-									<td>
+									<td v-if="tradeAccountItem.tradeacType==1">
 										<input type="text" v-model="tradeAccountInout.tradeacioTax">
 									</td>
 									<td>
