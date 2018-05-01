@@ -91,6 +91,17 @@ public class FinService {
 			return njdt.queryForObject(sql, paramMap, new BeanPropertyRowMapper<FinAccount>(FinAccount.class));
 		}
 
+		public FinAccount getAccountByStockId(int acStockId){
+			String sql = "select fac.ac_id,fac.ac_name,fac.ac_balance,fac.ac_update_time,fac.ac_canused, forg.org_name,fuser.user_name ,factype.actype_name"
+					+ " from fin_account fac,fin_org forg,fin_account_type factype,fin_user fuser"
+					+ " where fac.org_id = forg.org_id and fac.user_id = fuser.user_id and fac.actype_id = factype.actype_id"
+					+ " and fac.ac_isdelete = :isdelete and fac.ac_stock_id = :acStockId";
+			Map<String, Object> paramMap = new HashMap<String, Object>(); 
+			paramMap.put("isdelete", 0);
+			paramMap.put("acStockId", acStockId);
+			return njdt.queryForObject(sql, paramMap, new BeanPropertyRowMapper<FinAccount>(FinAccount.class));
+		}
+		
 		
 		/**
 		 * 根据收支数据调整余额后返回调整后的余额数据
@@ -396,9 +407,21 @@ public class FinService {
 			changeAccountBalance(thisChangeMoney, finAccountTransfer.getAcIdTo());
 		}
 		
-
-		
-		
+		int result = _addOrUpdateFinAccountTransfer(finAccountTransfer);
+		return result;
+	}
+	
+	public int createFinAccountTransfer(FinAccountTransfer finAccountTransfer) {
+		finAccountTransfer.setActrId(-1);
+		int result = _addOrUpdateFinAccountTransfer(finAccountTransfer);
+		return result;
+	}
+	
+	private int _addOrUpdateFinAccountTransfer(FinAccountTransfer finAccountTransfer) {
+		boolean isupdate = false;
+		if (finAccountTransfer.getActrId() != -1){
+			isupdate = true;
+		}
 		int result = 0;
 		String sql = "";
 		if (isupdate) {
@@ -422,6 +445,7 @@ public class FinService {
 		result = njdt.update(sql, paramMap);
 		return result;
 	}
+	
 	/**
 	 * @param actrId
 	 * @return 2017年12月17日 下午9:48:48 by cgp

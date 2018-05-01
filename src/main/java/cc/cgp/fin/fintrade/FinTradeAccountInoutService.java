@@ -142,9 +142,16 @@ public class FinTradeAccountInoutService {
 		FinTradeAccountInout finTradeAccountInout = _getFinTradeAccountInout(tradeacioId);
 		finTradeAccountInout.setTradeacioCount(0);
 		finTradeAccountInout.setTradeacioFee(0);
-		finTradeAccountInout.setTradeacioPrice(0);
 		finTradeAccountInout.setTradeacioTax(0);
-		_doBeforeAddOrUpdateFinTradeAccountInout(finTradeAccountInout);
+
+		FinTradeAccount finTradeAccount = finTradeAccountService.getFinTradeAccount(finTradeAccountInout.getTradeacId());
+
+		if (finTradeAccount.getTradeacType() == 0) {
+			_doBeforeAddOrUpdateFinTradeMoneyAccountInout(finTradeAccountInout);
+		} else {
+			_doBeforeAddOrUpdateFinTradeAccountInout(finTradeAccountInout);
+		}
+
 		return _deleteFinTradeAccountInout(tradeacioId);
 	}
 
@@ -159,6 +166,11 @@ public class FinTradeAccountInoutService {
 			// 还原上一次操作的影响；
 			finTradeAccountInoutOld = _getFinTradeAccountInout(finTradeAccountInout.getTradeacioId());
 		}
+		
+		int tradeacioType = finTradeAccountInout.getTradeacioType();
+		int tradeacioTypeOld = finTradeAccountInoutOld.getTradeacioType();
+		
+		
 		// 买卖数量
 		double tradeacioCount = finTradeAccountInout.getTradeacioCount();
 		double tradeacioCountOld = finTradeAccountInoutOld.getTradeacioCount();
@@ -184,26 +196,72 @@ public class FinTradeAccountInoutService {
 		FinTradeAccount finTradeAccountMoney = finTradeAccountService.getFinTradeAccountByAcId(finTradeAccount.getAcId());
 		double tradeacCountMoney = finTradeAccountMoney.getTradeacCount();
 
-		if (finTradeAccountInout.getTradeacioType() == 1) {
-			// 买入理财产品持有数量增加，成本增加；
-			finTradeAccount.setTradeacCount(tradeacCount + tradeacioCount - tradeacioCountOld);
-			finTradeAccount.setTradeacMoneyCost(tradeacMoneyCost + tradeacioCount * tradeacioPrice + tradeacioFee + tradeacioTax - (tradeacioCountOld * tradeacioPriceOld + tradeacioFeeOld + tradeacioTaxOld));
-			// 资金账户数量减少，成本字段用于表达资金实际转账情况；即和主账户进行转账时同步变化，在买卖时不发生变化，最终表达的是原始投入资金，和所有市值的差额可以表达浮盈；
-
-			finTradeAccountMoney.setTradeacCount(tradeacCountMoney - tradeacioCount * tradeacioPrice - tradeacioFee - tradeacioTax + (tradeacioCountOld * tradeacioPriceOld + tradeacioFeeOld + tradeacioTaxOld));
-
-		} else if (finTradeAccountInout.getTradeacioType() == -1) {
-			// 卖出持有数量减少，持有成本减少；
-			finTradeAccount.setTradeacCount(finTradeAccount.getTradeacCount() - finTradeAccountInout.getTradeacioCount());
-			finTradeAccount.setTradeacMoneyCost(tradeacMoneyCost - tradeacioCount * tradeacioPrice + tradeacioFee + tradeacioTax + (tradeacioCountOld * tradeacioPriceOld - tradeacioFeeOld - tradeacioTaxOld));
-			// 资金账号增加卖出所得，减去手续费和税费
-			finTradeAccountMoney.setTradeacCount(tradeacCountMoney + tradeacioCount * tradeacioPrice - tradeacioFee - tradeacioTax - (tradeacioCountOld * tradeacioPriceOld - tradeacioFeeOld - tradeacioTaxOld));
-		}
+		// 买入理财产品持有数量增加，成本增加；(扣除原有数量、成本增加部分)
+		finTradeAccount.setTradeacCount(tradeacCount + tradeacioCount*tradeacioType - tradeacioCountOld*tradeacioTypeOld);
+		finTradeAccount.setTradeacMoneyCost(tradeacMoneyCost + tradeacioCount * tradeacioPrice*tradeacioType  + tradeacioFee + tradeacioTax - (tradeacioCountOld * tradeacioPriceOld*tradeacioTypeOld + tradeacioFeeOld + tradeacioTaxOld));
+		// 资金账户数量减少，成本字段用于表达资金实际转账情况；即和主账户进行转账时同步变化，在买卖时不发生变化，最终表达的是原始投入资金，和所有市值的差额可以表达浮盈；
+		finTradeAccountMoney.setTradeacCount(tradeacCountMoney - (tradeacioCount * tradeacioPrice*tradeacioType + tradeacioFee + tradeacioTax) + (tradeacioCountOld * tradeacioPriceOld*tradeacioTypeOld + tradeacioFeeOld + tradeacioTaxOld));
+		
+//		// 买入
+//		if (finTradeAccountInout.getTradeacioType() == 1) {
+//			// 买入理财产品持有数量增加，成本增加；
+//			finTradeAccount.setTradeacCount(tradeacCount + tradeacioCount - tradeacioCountOld);
+//			finTradeAccount.setTradeacMoneyCost(tradeacMoneyCost + tradeacioCount * tradeacioPrice + tradeacioFee + tradeacioTax - (tradeacioCountOld * tradeacioPriceOld + tradeacioFeeOld + tradeacioTaxOld));
+//			// 资金账户数量减少，成本字段用于表达资金实际转账情况；即和主账户进行转账时同步变化，在买卖时不发生变化，最终表达的是原始投入资金，和所有市值的差额可以表达浮盈；
+//
+//			finTradeAccountMoney.setTradeacCount(tradeacCountMoney - tradeacioCount * tradeacioPrice - tradeacioFee - tradeacioTax + (tradeacioCountOld * tradeacioPriceOld + tradeacioFeeOld + tradeacioTaxOld));
+//			// 卖出
+//		} else if (finTradeAccountInout.getTradeacioType() == -1) {
+//			// 卖出持有数量减少，持有成本减少；
+//			finTradeAccount.setTradeacCount(finTradeAccount.getTradeacCount() - finTradeAccountInout.getTradeacioCount());
+//			finTradeAccount.setTradeacMoneyCost(tradeacMoneyCost - tradeacioCount * tradeacioPrice + tradeacioFee + tradeacioTax + (tradeacioCountOld * tradeacioPriceOld - tradeacioFeeOld - tradeacioTaxOld));
+//			// 资金账号增加卖出所得，减去手续费和税费
+//			finTradeAccountMoney.setTradeacCount(tradeacCountMoney + tradeacioCount * tradeacioPrice - tradeacioFee - tradeacioTax - (tradeacioCountOld * tradeacioPriceOld - tradeacioFeeOld - tradeacioTaxOld));
+//		}
 		// 更新时间
 		finTradeAccount.setTradeacUpdateTime(DateTimeUtil.getDateTimeStr());
 		finTradeAccountMoney.setTradeacUpdateTime(DateTimeUtil.getDateTimeStr());
 		finTradeAccountService.addOrUpdateFinTradeAccount(finTradeAccount);
 		finTradeAccountService.addOrUpdateFinTradeAccount(finTradeAccountMoney);
+	}
+
+	public void _doBeforeAddOrUpdateFinTradeMoneyAccountInout(FinTradeAccountInout finTradeAccountInout) {
+		finTradeAccountInout.setTradeacioFee(0);
+		finTradeAccountInout.setTradeacioPrice(1);
+		finTradeAccountInout.setTradeacioTax(0);
+
+		// 获取理财产品账户信息
+		int tradeacId = finTradeAccountInout.getTradeacId();
+		FinTradeAccount finTradeAccount = finTradeAccountService.getFinTradeAccount(tradeacId);
+
+		// id为-1表示为新增数据
+		boolean isupdate = false;
+		if (finTradeAccountInout.getTradeacioId() != -1) {
+			isupdate = true;
+		}
+
+		// 修改银行资金账户余额
+		FinAccount finAccount = finService.getAccountByStockId(finTradeAccount.getAcId());
+		double changeMoney = 0;
+		FinTradeAccountInout finTradeAccountInoutOld = new FinTradeAccountInout();
+		if (isupdate) {
+			finTradeAccountInoutOld = _getFinTradeAccountInout(finTradeAccountInout.getTradeacioId());
+			changeMoney = finTradeAccountInoutOld.getTradeacioCount() * finTradeAccountInoutOld.getTradeacioType() - finTradeAccountInout.getTradeacioCount() * finTradeAccountInout.getTradeacioType();
+		} else {
+			changeMoney = -finTradeAccountInout.getTradeacioCount() * finTradeAccountInout.getTradeacioType();
+		}
+		finService.changeAccountBalance(changeMoney, finAccount.getAcId());
+
+		// 买卖数量
+		double tradeacioCount = finTradeAccountInout.getTradeacioCount();
+		double tradeacioCountOld = finTradeAccountInoutOld.getTradeacioCount();
+
+		double changeCount = finTradeAccountInout.getTradeacioCount() * finTradeAccountInout.getTradeacioType() - finTradeAccountInoutOld.getTradeacioCount() * finTradeAccountInoutOld.getTradeacioType();
+		finTradeAccount.setTradeacCount(finTradeAccount.getTradeacCount() + changeCount);
+		finTradeAccount.setTradeacMoneyCost(finTradeAccount.getTradeacMoneyCost()+changeCount);
+		// 更新时间
+		finTradeAccount.setTradeacUpdateTime(DateTimeUtil.getDateTimeStr());
+		finTradeAccountService.addOrUpdateFinTradeAccount(finTradeAccount);
 	}
 
 	/**
@@ -216,10 +274,10 @@ public class FinTradeAccountInoutService {
 	public int addOrUpdateFinTradeAccountInout(FinTradeAccountInout finTradeAccountInout) {
 		int tradeacId = finTradeAccountInout.getTradeacId();
 		FinTradeAccount finTradeAccount = finTradeAccountService.getFinTradeAccount(tradeacId);
+		// 如果是资金账户的转入和转出，需要更改对应的银行资金账户；
 		if (finTradeAccount.getTradeacType() == 0) {
-			// 资金账户操作
-			_doBeforeAddOrUpdateFinTradeAccountMoneyInout(finTradeAccountInout);
-		} else if (finTradeAccount.getTradeacType() == 1) {
+			_doBeforeAddOrUpdateFinTradeMoneyAccountInout(finTradeAccountInout);
+		} else {
 			// 股票账户操作
 			// 1.保存理财产品买卖明细，2.修改对应理财产品的持有数量，总成本等 3.修改对应理财产品资金账号额度
 			_doBeforeAddOrUpdateFinTradeAccountInout(finTradeAccountInout);
@@ -234,13 +292,18 @@ public class FinTradeAccountInoutService {
 	 * @param finTradeAccountInout
 	 */
 	private void _doBeforeAddOrUpdateFinTradeAccountMoneyInout(FinTradeAccountInout finTradeAccountInout) {
-		int tradeacId = finTradeAccountInout.getTradeacId();
-		FinTradeAccount finTradeAccount = finTradeAccountService.getFinTradeAccount(tradeacId);
-		int acId = finTradeAccount.getAcId();
-		FinAccount finAccount = finService.getAccount(acId);
-		// 1.主账户与对应证券账户之间转账：修改主账户和对应证券账户余额；增加转账记录；如果是修改，则修改余额，增加转账记录两条，因为找不到对应转账记录；
-		// 2.修改对应证券资金账户余额，增加转账记录一条，如果是修改，删除一条记录，增加一条记录；
-		
+
+		// int tradeacId = finTradeAccountInout.getTradeacId();
+		// FinTradeAccount finTradeAccount =
+		// finTradeAccountService.getFinTradeAccount(tradeacId);
+		// int acId = finTradeAccount.getAcId();
+		// FinAccount finAccount = finService.getAccount(acId);
+		//
+		//
+
+		// 1.主账户与对应证券账户之间转账：修改主账户和对应证券账户余额；
+		// 2.修改对应证券资金账户余额，增加或者修改转账记录一条；
+
 	}
 
 }

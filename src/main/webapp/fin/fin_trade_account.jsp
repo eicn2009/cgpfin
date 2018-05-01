@@ -116,18 +116,18 @@ $(function(){
 				alert("请输入交易数量");
 				return false;
 			}
-			if(!finTradeAccount.tradeAccountInout.tradeacioPrice){
+			if(!finTradeAccount.tradeAccountInout.tradeacioPrice ){
 				alert("请输入交易价格");
 				return false;
 			}
-			if(!finTradeAccount.tradeAccountInout.tradeacioFee){
-				alert("请输入交易费用");
-				return false;
-			}
-			if(!finTradeAccount.tradeAccountInout.tradeacioTax){
-				alert("请输入交易税费");
-				return false;
-			}
+// 			if(!finTradeAccount.tradeAccountInout.tradeacioFee){
+// 				alert("请输入交易费用");
+// 				return false;
+// 			}
+// 			if(!finTradeAccount.tradeAccountInout.tradeacioTax){
+// 				alert("请输入交易税费");
+// 				return false;
+// 			}
 		}else{
 			if(!finTradeAccount.tradeAccountInout.tradeacioCount){
 				alert("请输入交易数量");
@@ -186,9 +186,13 @@ $(function(){
 	
 	jQuery.cgp.fin.tradeAccountEdit = function(str){
 		finTradeAccount.tradeAccount = JSON.parse(str);
+		finTradeAccount.tradeAccountInoutList = null;
+		finTradeAccount.tradeAccountInoutShow = false;
 	}
 	jQuery.cgp.fin.resetTradeAccount = function(str){
 		finTradeAccount.tradeAccount = getTradeAccount();
+		finTradeAccount.tradeAccountInoutList = null;
+		finTradeAccount.tradeAccountInoutShow = false;
 	}
 	
 	
@@ -204,6 +208,7 @@ $(function(){
 	//打开买卖详细页面
 	jQuery.cgp.fin.tradeAccountInoutInfo = function(str){
 		finTradeAccount.tradeAccount = JSON.parse(str);
+		finTradeAccount.tradeAccountInout = getTradeAccountInout();
 		jQuery.cgp.fin.getTradeAccountInoutList(finTradeAccount.tradeAccount.tradeacId,data=>{
 			finTradeAccount.tradeAccountInoutList = data;
 			finTradeAccount.tradeAccountInoutShow = true;
@@ -343,7 +348,7 @@ $(function(){
 									<th>操作</th>
 								</tr>
 								<tr>
-									<td></td>
+									<td>{{tradeAccountInout.tradeacioId}}</td>
 									<td>
 										<select v-model="tradeAccountInout.tradeacioType">
 
@@ -369,17 +374,18 @@ $(function(){
 									<td>
 										<input type="text" v-model="tradeAccountInout.tradeacioRemark">
 									</td>
+									<td></td>
 									<td>
 										<input type="button" id="tradeAccountInoutId0" :name="JSON.stringify(tradeAccountInout)" value="保存" onclick="jQuery.cgp.fin.addOrUpdateTradeAccountInout(this.name)">
 									</td>
 								</tr>
-								<tr v-for="tradeAccountInoutItem in tradeAccountInoutList">
+								<tr v-for="tradeAccountInoutItem in tradeAccountInoutList" :style='{color:tradeAccountInoutItem.tradeacioType==-1?"green":"red"}'>
 									<td>{{tradeAccountInoutItem.tradeacioId}}</td>
-									<td>{{tradeAccountInoutItem.tradeacioType==-1?"卖出":"买入"}}</td>
+									<td>{{tradeAccountInoutItem.tradeacioType==-1?"出":"入"}}</td>
 									<td>{{tradeAccountInoutItem.tradeacioCount}}</td>
-									<td>{{tradeAccountInoutItem.tradeacioPrice}}</td>
-									<td>{{tradeAccountInoutItem.tradeacioFee}}</td>
-									<td>{{tradeAccountInoutItem.tradeacioTax}}</td>
+									<td v-if="tradeAccountItem.tradeacType==1">{{tradeAccountInoutItem.tradeacioPrice}}</td>
+									<td v-if="tradeAccountItem.tradeacType==1">{{tradeAccountInoutItem.tradeacioFee}}</td>
+									<td v-if="tradeAccountItem.tradeacType==1">{{tradeAccountInoutItem.tradeacioTax}}</td>
 									<td>{{tradeAccountInoutItem.tradeacioRemark}}</td>
 									<td>{{tradeAccountInoutItem.tradeacioUpdateTime}}</td>
 									<td>
