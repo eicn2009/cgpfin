@@ -55,7 +55,7 @@ public class FinTradeAccountService {
 	 * @param acId
 	 * @return 2018年4月15日 下午11:40:23 by cgp
 	 */
-	private FinTradeAccount _getFinTradeAccountByAcId(int acId){
+	private FinTradeAccount _getFinTradeAccountMoneyByAcId(int acId){
 		String sql = "select ftradeac.tradeac_id,ftradeac.tradeac_name,ftradeac.tradeac_code,ftradeac.tradeac_type,ftradeac.tradeac_remark"
 				+ ",ftradeac.tradeac_count,ftradeac.tradeac_price_now,ftradeac.tradeac_money_cost"
 				+ ",ftradeac.tradeac_create_time,ftradeac.tradeac_update_time,ftradeac.ac_id "
@@ -162,7 +162,7 @@ public class FinTradeAccountService {
 	}
 	
 	public FinTradeAccount getFinTradeAccountByAcId(int acId){
-		FinTradeAccount finTradeAccount = _getFinTradeAccountByAcId(acId);
+		FinTradeAccount finTradeAccount = _getFinTradeAccountMoneyByAcId(acId);
 		return finTradeAccount;
 	}
 

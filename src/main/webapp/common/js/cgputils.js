@@ -6,3 +6,8 @@
 function checknum(num) {
 	return !isNaN(parseFloat(num)); 
 }
+
+function floatRound(fnum,num){
+	var pownum = Math.pow(10,num);
+	return Math.round(fnum*pownum)/pownum;
+}

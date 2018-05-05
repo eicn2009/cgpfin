@@ -30,7 +30,20 @@ $(function(){
 		    accountList:null,
 		    tradeAccountInoutList:null,
 		    tradeAccountInoutShow:false,
-		    tradeAccountInout:getTradeAccountInout()
+		    tradeAccountInout:getTradeAccountInout(),
+		    staticInfo:{}
+		  },
+		  watch:{
+// 			  acId:function(newid){
+// 				  for(item in this.accountList){
+// 						if(newid == this.accountList[item].id){
+// 							this.account = this.accountList[item];
+// 						}
+// 					}
+// 			  },
+// 			  this:function(newdata){
+// 				  console.log(newdata);
+// 			  }
 		  },
 		  methods: {
 			    methodtest: function () {
@@ -46,10 +59,46 @@ $(function(){
 			dataType: "json",
 			success:function(data){
 				finTradeAccount.tradeAccountList = data;
+				finTradeAccount.staticInfo =  getStaticInfo(data);
 			}
 		});
 	}
 	
+	//通过理财产品列表获取统计信息
+	function getStaticInfo(list){
+		debugger;
+		//当前市值  当前资金 当前盈利   
+		var staticInfo = {};
+		//当前市值
+		staticInfo.marketCapitalization = 0;
+		//当前资金
+		staticInfo.money = 0;
+		//当前盈亏
+		staticInfo.profit = 0;
+		//总资产
+		staticInfo.capitalizationSum = 0;
+		
+		
+// 		var moneyAccount = null;
+		
+		for(var i = 0;i<list.length;i++){
+			var tradeAccountItem = list[i];
+			if(tradeAccountItem.tradeacType == 0){
+				staticInfo.money = tradeAccountItem.tradeacCount;
+			}else if(tradeAccountItem.tradeacType == 1){
+				staticInfo.profit += tradeAccountItem.tradeacCount * tradeAccountItem.tradeacPriceNow-tradeAccountItem.tradeacMoneyCost;
+				staticInfo.marketCapitalization +=  tradeAccountItem.tradeacCount * tradeAccountItem.tradeacPriceNow;
+			}
+		}
+		staticInfo.capitalizationSum = staticInfo.marketCapitalization + staticInfo.money;
+		
+		staticInfo.capitalizationSum = floatRound(staticInfo.capitalizationSum,2);
+		staticInfo.money = floatRound(staticInfo.money,2);
+		staticInfo.marketCapitalization = floatRound(staticInfo.marketCapitalization,2);
+		staticInfo.profit = floatRound(staticInfo.profit,2);
+		
+		return staticInfo;
+	}
 	
 	jQuery.cgp.fin.addOrUpdateTradeAccount = function(){
 		if(finTradeAccount.tradeAccount.acId<0){
@@ -249,8 +298,14 @@ $(function(){
 			</div>
 		</nav>
 		<!-- 页头导航结束 -->
-
-
+		<table class="table table-hover table-striped table-bordered ">
+			<tr>
+				<td>总资产: {{staticInfo.capitalizationSum}}</td>
+				<td>当前市值: {{staticInfo.marketCapitalization}}</td>
+				<td>当前资金: {{staticInfo.money}}</td>
+				<td>盈亏: {{staticInfo.profit}}</td>
+			</tr>
+		</table>
 		<!-- 	账户列表开始 -->
 		<div class="table-responsive">
 			<table class="table table-hover table-striped table-bordered ">
@@ -306,7 +361,8 @@ $(function(){
 						<th style="width: 100px;">持有市值</th>
 						<th style="width: 100px;">持有总成本</th>
 						<th style="width: 100px;">当前单价</th>
-						<th style="width: 100px;">持有成本价</th>
+						<th style="width: 100px;">成本价</th>
+						<th style="width: 100px;">浮盈</th>
 						<th style="width: 200px;">更新时间</th>
 						<th style="width: 200px;">资金账户名</th>
 						<th style="width: 260px;">操作</th>
@@ -320,11 +376,13 @@ $(function(){
 						<td>{{ tradeAccountItem.tradeacCode }}</td>
 						<td>{{ tradeAccountItem.tradeacRemark }}</td>
 						<td>{{ tradeAccountItem.tradeacType==0?"资金账户":"股票" }}</td>
-						<td>{{ tradeAccountItem.tradeacCount }}</td>
+						<td>{{ Math.round(tradeAccountItem.tradeacCount*100)/100 }}</td>
 						<td>{{ tradeAccountItem.tradeacCount * tradeAccountItem.tradeacPriceNow }}</td>
-						<td>{{ tradeAccountItem.tradeacMoneyCost}}</td>
-						<td>{{ tradeAccountItem.tradeacPriceNow }}</td>
-						<td>{{Math.round(tradeAccountItem.tradeacMoneyCost/tradeAccountItem.tradeacCount*1000)/1000 }}</td>
+						<td>{{ Math.round(tradeAccountItem.tradeacMoneyCost*100)/100}}</td>
+						<td>{{ Math.round(tradeAccountItem.tradeacPriceNow*1000)/1000 }}</td>
+						<td >{{Math.round(tradeAccountItem.tradeacMoneyCost/tradeAccountItem.tradeacCount*1000)/1000 }}</td>
+						<td v-if="tradeAccountItem.tradeacType==1">{{Math.round((tradeAccountItem.tradeacCount * tradeAccountItem.tradeacPriceNow-tradeAccountItem.tradeacMoneyCost)*100)/100}}</td>
+						<td v-if="tradeAccountItem.tradeacType==0"></td>
 						<td>{{ tradeAccountItem.tradeacUpdateTime }}</td>
 						<td>{{ tradeAccountItem.finAccount.acName }}</td>
 						<td>
