@@ -180,4 +180,13 @@ public class FinTradeAccountService {
 	public int addOrUpdateFinTradeAccount(FinTradeAccount finTradeAccount){
 		return _addOrUpdateFinTradeAccount(finTradeAccount);
 	}
+
+
+	/**
+	 * @param acId
+	 * @return 2018年5月6日 下午5:21:36 by cgp
+	 */
+	public int updateAccountBalance(double acBalance,int acId) {
+		return finService.updateAccountBalance(acBalance, acId);
+	}
 }

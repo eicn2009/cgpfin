@@ -123,6 +123,17 @@ public class FinService {
 			}
 			return acBlance;
 		}
+		
+		
+		public int updateAccountBalance(double acBalance,int acId){
+			String sql = "update fin_account set ac_balance = round(:acBalance,2),ac_update_time = :acUpdateTime where ac_id = :acId";
+			Map<String, Object> paramMap = new HashMap<String, Object>(); 
+			paramMap.put("acBalance", (double)(Math.round(acBalance*100)/100.0)+"");
+			paramMap.put("acId", acId);
+			paramMap.put("acUpdateTime", DateTimeUtil.getDateTimeStr());
+			int result = njdt.update(sql, paramMap);
+			return result;
+		}
 	
 	/**
 	 * 获取账户余额总数

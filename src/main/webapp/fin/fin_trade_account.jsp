@@ -31,7 +31,8 @@ $(function(){
 		    tradeAccountInoutList:null,
 		    tradeAccountInoutShow:false,
 		    tradeAccountInout:getTradeAccountInout(),
-		    staticInfo:{}
+		    staticInfo:{},
+		    tradeAccountMoney:null
 		  },
 		  watch:{
 // 			  acId:function(newid){
@@ -66,7 +67,6 @@ $(function(){
 	
 	//通过理财产品列表获取统计信息
 	function getStaticInfo(list){
-		debugger;
 		//当前市值  当前资金 当前盈利   
 		var staticInfo = {};
 		//当前市值
@@ -85,6 +85,7 @@ $(function(){
 			var tradeAccountItem = list[i];
 			if(tradeAccountItem.tradeacType == 0){
 				staticInfo.money = tradeAccountItem.tradeacCount;
+				finTradeAccount.tradeAccountMoney = tradeAccountItem;
 			}else if(tradeAccountItem.tradeacType == 1){
 				staticInfo.profit += tradeAccountItem.tradeacCount * tradeAccountItem.tradeacPriceNow-tradeAccountItem.tradeacMoneyCost;
 				staticInfo.marketCapitalization +=  tradeAccountItem.tradeacCount * tradeAccountItem.tradeacPriceNow;
@@ -98,6 +99,24 @@ $(function(){
 		staticInfo.profit = floatRound(staticInfo.profit,2);
 		
 		return staticInfo;
+	}
+	
+	jQuery.cgp.fin.updateAccount = function(){
+		var inputdata = {};
+		inputdata.acId = finTradeAccount.tradeAccountMoney.acId;
+		inputdata.acBalance = finTradeAccount.staticInfo.capitalizationSum;
+		$.ajax({
+			type:"post",
+			url:"/fin/fintradeaccount/updateaccount",
+			data: inputdata,
+			dataType: "json",
+// 			contentType:"application/json;charset=utf-8",
+			success:function(data){
+				if(data>0){
+					alert("更新成功");
+				}
+			}
+		});
 	}
 	
 	jQuery.cgp.fin.addOrUpdateTradeAccount = function(){
@@ -263,6 +282,7 @@ $(function(){
 			finTradeAccount.tradeAccountInoutShow = true;
 		})
 	}
+	
 });
 
 </script>
@@ -300,7 +320,7 @@ $(function(){
 		<!-- 页头导航结束 -->
 		<table class="table table-hover table-striped table-bordered ">
 			<tr>
-				<td>总资产: {{staticInfo.capitalizationSum}}</td>
+				<td>总资产: {{staticInfo.capitalizationSum}} <input type="button" id="updateMoney" value="更新到主账户" onclick="jQuery.cgp.fin.updateAccount()"></td>
 				<td>当前市值: {{staticInfo.marketCapitalization}}</td>
 				<td>当前资金: {{staticInfo.money}}</td>
 				<td>盈亏: {{staticInfo.profit}}</td>

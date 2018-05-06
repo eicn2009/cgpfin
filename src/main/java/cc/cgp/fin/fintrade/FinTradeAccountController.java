@@ -55,6 +55,19 @@ public class FinTradeAccountController {
 		return finTradeAccountService.addOrUpdateFinTradeAccount(finTradeAccount);
 	}
 	
+	/**
+	 * 更新主账户中对应证券账户的总资产
+	 * @param acBalance
+	 * @param acId
+	 * @return 2018年5月6日 下午5:34:33 by cgp
+	 */
+	@RequestMapping(value="/updateaccount",method = RequestMethod.POST)
+	public @ResponseBody int updateAccount(double acBalance,int acId){
+		return finTradeAccountService.updateAccountBalance(acBalance,acId);
+	}
+	
+	
+	
 	@RequestMapping(value="/fintradeaccount/{tradeacId}",method = RequestMethod.DELETE)
 	public @ResponseBody int deleteFinTradeAccount(@PathVariable("tradeacId") int tradeacId){
 		return finTradeAccountService.deleteFinTradeAccount(tradeacId);
